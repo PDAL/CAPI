@@ -1,0 +1,59 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "pdalc-vc14-release",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}\\make.bat"
+            },
+            "options": {
+                "env": {
+                    "BUILD_TYPE": "Release",
+                    "COMPILER_ID": "vc.14",
+                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
+                    "GENERATOR": "Visual Studio 14 2015 Win64",
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]            
+        },
+        {
+            "label": "pdalc-vc14-debug",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}\\make.bat"
+            },
+            "options": {
+                "env": {
+                    "BUILD_TYPE": "Debug",
+                    "COMPILER_ID": "vc.14",
+                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
+                    "GENERATOR": "Visual Studio 14 2015 Win64",
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        }
+    ]
+}
