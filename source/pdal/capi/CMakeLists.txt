@@ -1,8 +1,7 @@
 set(TARGET pdal_c)
 
 find_package(PDAL 1.6.0 REQUIRED CONFIG)
-message(STATUS "Found PDAL ${PDAL_VERSION}: ${PDAL_LIBRARIES} (${PDAL_INCLUDE_DIRS})")
-message(STATUS "PDAL_DEFINITIONS: ${PDAL_DEFINITIONS}")
+message(STATUS "Found PDAL ${PDAL_VERSION}")
 
 set(SOURCES
 	Pipeline.cpp
