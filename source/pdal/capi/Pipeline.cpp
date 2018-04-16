@@ -14,12 +14,12 @@ namespace pdal
 	{
 		extern "C"
 		{
-			pdal::capi::PipelineWrapper *PDALCreatePipeline(const char* json)
+			pdal::capi::Pipeline *PDALCreatePipeline(const char* json)
 			{
-				return new pdal::capi::PipelineWrapper(new pdal::PipelineExecutor(json));
+				return new pdal::capi::Pipeline(new pdal::PipelineExecutor(json));
 			}
 
-			void PDALDisposePipeline(pdal::capi::PipelineWrapper* pipeline)
+			void PDALDisposePipeline(pdal::capi::Pipeline* pipeline)
 			{
 				if (pipeline)
 				{
@@ -27,27 +27,27 @@ namespace pdal
 				}
 			}
 
-			const char* PDALGetPipelineAsString(pdal::capi::PipelineWrapper* pipeline)
+			const char* PDALGetPipelineAsString(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getPipeline().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineMetadata(pdal::capi::PipelineWrapper* pipeline)
+			const char* PDALGetPipelineMetadata(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getMetadata().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineSchema(pdal::capi::PipelineWrapper* pipeline)
+			const char* PDALGetPipelineSchema(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getSchema().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineLog(pdal::capi::PipelineWrapper* pipeline)
+			const char* PDALGetPipelineLog(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getLog().c_str() : nullptr;
 			}
 
-			void PDALSetPipelineLogLevel(pdal::capi::PipelineWrapper* pipeline, int level)
+			void PDALSetPipelineLogLevel(pdal::capi::Pipeline* pipeline, int level)
 			{
 				if (pipeline && pipeline->get())
 				{
@@ -55,17 +55,17 @@ namespace pdal
 				}
 			}
 
-			int PDALGetPipelineLogLevel(pdal::capi::PipelineWrapper* pipeline)
+			int PDALGetPipelineLogLevel(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getLogLevel() : 0;
 			}
 
-			int64_t PDALExecutePipeline(pdal::capi::PipelineWrapper* pipeline)
+			int64_t PDALExecutePipeline(pdal::capi::Pipeline* pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->execute() : 0;
 			}
 
-			bool PDALValidatePipeline(pdal::capi::PipelineWrapper* pipeline)
+			bool PDALValidatePipeline(pdal::capi::Pipeline* pipeline)
 			{
 				return pipeline && pipeline->get() && pipeline->get()->validate();
 			}

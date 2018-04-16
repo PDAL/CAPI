@@ -12,25 +12,25 @@ namespace pdal
 	{
 		extern "C"
 		{
-			PDAL_C_API pdal::capi::PipelineWrapper *PDALCreatePipeline(const char* json);
+			PDAL_C_API pdal::capi::Pipeline *PDALCreatePipeline(const char* json);
 
-			PDAL_C_API void PDALDisposePipeline(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API void PDALDisposePipeline(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API const char* PDALGetPipelineAsString(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API const char* PDALGetPipelineAsString(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API const char* PDALGetPipelineMetadata(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API const char* PDALGetPipelineMetadata(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API const char* PDALGetPipelineSchema(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API const char* PDALGetPipelineSchema(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API const char* PDALGetPipelineLog(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API const char* PDALGetPipelineLog(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API void PDALSetPipelineLogLevel(pdal::capi::PipelineWrapper* pipeline, int level);
+			PDAL_C_API void PDALSetPipelineLogLevel(pdal::capi::Pipeline* pipeline, int level);
 
-			PDAL_C_API int PDALGetPipelineLogLevel(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API int PDALGetPipelineLogLevel(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API int64_t PDALExecutePipeline(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API int64_t PDALExecutePipeline(pdal::capi::Pipeline* pipeline);
 
-			PDAL_C_API bool PDALValidatePipeline(pdal::capi::PipelineWrapper* pipeline);
+			PDAL_C_API bool PDALValidatePipeline(pdal::capi::Pipeline* pipeline);
 
 			// TODO Provide access to PointViews
 		}

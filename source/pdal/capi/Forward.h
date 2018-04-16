@@ -23,7 +23,7 @@ namespace pdal
 
 	namespace capi
 	{
-		using PipelineWrapper = std::unique_ptr<pdal::PipelineExecutor>;
+		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 	}
 }
 
