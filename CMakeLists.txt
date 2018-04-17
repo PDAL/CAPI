@@ -22,3 +22,5 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 include_directories("${CMAKE_SOURCE_DIR}/source")
 add_subdirectory("source/pdal/capi")
 
+include(CTest)
+add_subdirectory("tests/pdal/capi")
