@@ -3,6 +3,7 @@
  */
 
 #include "Pipeline.h"
+#include "PointViewCollection.h"
 
 #include <pdal/PipelineExecutor.hpp>
 
@@ -68,6 +69,23 @@ namespace pdal
 			bool PDALValidatePipeline(pdal::capi::Pipeline* pipeline)
 			{
 				return pipeline && pipeline->get() && pipeline->get()->validate();
+			}
+
+			pdal::capi::PointViewCollection *PDALGetPointViews(pdal::capi::Pipeline *pipeline)
+			{
+				pdal::capi::PointViewCollection *views = nullptr;
+				
+				if (pipeline && pipeline->get())
+				{
+					auto &v = pipeline->get()->getManagerConst().views();
+
+					if (!v.empty())
+					{
+						views = new pdal::capi::PointViewCollection(v);
+					}
+				}
+
+				return views;
 			}
 		}
 	}

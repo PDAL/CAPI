@@ -32,7 +32,7 @@ namespace pdal
 
 			PDAL_C_API bool PDALValidatePipeline(pdal::capi::Pipeline* pipeline);
 
-			// TODO Provide access to PointViews
+			PDAL_C_API pdal::capi::PointViewCollection *PDALGetPointViews(pdal::capi::Pipeline *pipeline);
 		}
 	}
 }

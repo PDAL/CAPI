@@ -16,13 +16,16 @@
 #endif
 
 #include <memory>
+#include <set>
 
 namespace pdal
 {
 	class PipelineExecutor;
-
+	class PointView;
+	
 	namespace capi
 	{
+		class PointViewCollection;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 	}
 }
