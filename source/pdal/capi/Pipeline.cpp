@@ -15,12 +15,12 @@ namespace pdal
 	{
 		extern "C"
 		{
-			pdal::capi::Pipeline *PDALCreatePipeline(const char* json)
+			PipelinePtr PDALCreatePipeline(const char* json)
 			{
-				return new pdal::capi::Pipeline(new pdal::PipelineExecutor(json));
+				return new Pipeline(new pdal::PipelineExecutor(json));
 			}
 
-			void PDALDisposePipeline(pdal::capi::Pipeline* pipeline)
+			void PDALDisposePipeline(PipelinePtr pipeline)
 			{
 				if (pipeline)
 				{
@@ -28,27 +28,27 @@ namespace pdal
 				}
 			}
 
-			const char* PDALGetPipelineAsString(pdal::capi::Pipeline* pipeline)
+			const char* PDALGetPipelineAsString(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getPipeline().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineMetadata(pdal::capi::Pipeline* pipeline)
+			const char* PDALGetPipelineMetadata(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getMetadata().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineSchema(pdal::capi::Pipeline* pipeline)
+			const char* PDALGetPipelineSchema(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getSchema().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineLog(pdal::capi::Pipeline* pipeline)
+			const char* PDALGetPipelineLog(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getLog().c_str() : nullptr;
 			}
 
-			void PDALSetPipelineLogLevel(pdal::capi::Pipeline* pipeline, int level)
+			void PDALSetPipelineLogLevel(PipelinePtr pipeline, int level)
 			{
 				if (pipeline && pipeline->get())
 				{
@@ -56,22 +56,22 @@ namespace pdal
 				}
 			}
 
-			int PDALGetPipelineLogLevel(pdal::capi::Pipeline* pipeline)
+			int PDALGetPipelineLogLevel(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->getLogLevel() : 0;
 			}
 
-			int64_t PDALExecutePipeline(pdal::capi::Pipeline* pipeline)
+			int64_t PDALExecutePipeline(PipelinePtr pipeline)
 			{
 				return (pipeline && pipeline->get()) ? pipeline->get()->execute() : 0;
 			}
 
-			bool PDALValidatePipeline(pdal::capi::Pipeline* pipeline)
+			bool PDALValidatePipeline(PipelinePtr pipeline)
 			{
 				return pipeline && pipeline->get() && pipeline->get()->validate();
 			}
 
-			pdal::capi::PointViewCollection *PDALGetPointViews(pdal::capi::Pipeline *pipeline)
+			pdal::capi::PointViewCollection *PDALGetPointViews(Pipeline *pipeline)
 			{
 				pdal::capi::PointViewCollection *views = nullptr;
 				

@@ -15,6 +15,7 @@
 #define PDAL_C_API PDAL_C_IMPORT_API
 #endif
 
+#ifdef __cplusplus
 #include <memory>
 #include <set>
 
@@ -27,7 +28,11 @@ namespace pdal
 	{
 		class PointViewCollection;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
+		using PipelinePtr = Pipeline *;
 	}
 }
 
-#endif
+#else
+typedef void * PipelinePtr;
+#endif /* __cplusplus */
+#endif /* PDAL_CAPI_FORWARD_H */
