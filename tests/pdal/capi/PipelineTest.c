@@ -12,31 +12,55 @@
 
 SUITE(PipelineTest);
 
-TEST PDALCreatePipelineTest(void) {
+TEST PDALCreatePipelineTest(void)
+{
+	PDALPipelinePtr pipeline = PDALCreatePipeline("");
+	ASSERT_EQ(NULL, pipeline);
+
+	char *json =
+	"{\n"
+	"  \"pipeline\":[\n"
+	"    \"C:/workspace/pdal/test/data/las/1.2-with-color.las\",\n"
+	"    {\n"
+	"      \"type\":\"filters.stats\"\n"
+	"    },\n"
+	"    \"C:/workspace/pdal/test/temp/pdal-stats.las\"\n"
+	"  ]\n"
+	"}\n";
+
+	pipeline = PDALCreatePipeline(json);
+	ASSERT_FALSE(pipeline == NULL);
+
+	PASS();
+}
+
+TEST PDALDisposePipelineTest(void)
+{
 	SKIPm("TODO");
 }
 
-TEST PDALDisposePipelineTest(void) {
+TEST PDALGetPipelineAsStringTest(void)
+{
 	SKIPm("TODO");
 }
 
-TEST PDALGetPipelineAsStringTest(void) {
+TEST PDALGetPipelineMetadataTest(void)
+{
 	SKIPm("TODO");
 }
 
-TEST PDALGetPipelineMetadataTest(void) {
+TEST PDALGetPipelineSchemaTest(void)
+{
 	SKIPm("TODO");
 }
 
-TEST PDALGetPipelineSchemaTest(void) {
+TEST PDALGetSetPipelineLogTest(void)
+{
 	SKIPm("TODO");
 }
 
-TEST PDALGetSetPipelineLogTest(void) {
-	SKIPm("TODO");
-}
-
-TEST PDALExecutePipelineTest(void) {
+TEST PDALExecutePipelineTest(void)
+{
 	SKIPm("TODO");
 }
 
