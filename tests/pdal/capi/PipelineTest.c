@@ -40,10 +40,11 @@ TEST PDALExecutePipelineTest(void) {
 	SKIPm("TODO");
 }
 
-TEST PDALValidatePipelineTest(void) {
-	PipelinePtr pipeline = PDALCreatePipeline(NULL);
-	bool valid = PDALValidatePipeline(pipeline);
-	ASSERT_EQm("Pipeline evaluated as valid when it should be invalid", false, valid);
+TEST PDALValidatePipelineTest(void)
+{
+	bool valid = PDALValidatePipeline(NULL);
+	ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
+	PASS();
 }
 
 GREATEST_SUITE(PipelineTest)

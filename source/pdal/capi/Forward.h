@@ -28,11 +28,12 @@ namespace pdal
 	{
 		class PointViewCollection;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
-		using PipelinePtr = Pipeline *;
 	}
 }
 
-#else
-typedef void * PipelinePtr;
 #endif /* __cplusplus */
+
+typedef void* PDALPipelinePtr;
+typedef void* PDAPointViewCollectionPtr;
+
 #endif /* PDAL_CAPI_FORWARD_H */

@@ -24,7 +24,7 @@ link_directories(
 )
 
 include_directories(
-#	${PDAL_INCLUDE_DIRS}
+	${PDAL_INCLUDE_DIRS}
 )
 
 add_definitions(${PDAL_DEFINITIONS})

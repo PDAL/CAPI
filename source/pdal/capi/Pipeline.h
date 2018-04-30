@@ -27,14 +27,14 @@ namespace pdal
 			 * @param json The JSON text string
 			 * @return A pointer to a PDAL pipeline
 			 */
-			PDAL_C_API PipelinePtr PDALCreatePipeline(const char* json);
+			PDAL_C_API PDALPipelinePtr PDALCreatePipeline(const char* json);
 
 			/**
 			 * Disposes a PDAL pipeline.
 			 * 
 			 * @param The pipeline to dispose
 			 */
-			PDAL_C_API void PDALDisposePipeline(PipelinePtr pipeline);
+			PDAL_C_API void PDALDisposePipeline(PDALPipelinePtr pipeline);
 
 			/**
 			 * Returns a string representation of a pipeline.
@@ -42,7 +42,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The transliterated pipeline
 			 */
-			PDAL_C_API const char* PDALGetPipelineAsString(PipelinePtr pipeline);
+			PDAL_C_API const char* PDALGetPipelineAsString(PDALPipelinePtr pipeline);
 
 			/**
 			 * Returns a pipeline's computed metadata.
@@ -50,7 +50,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The computed metadata for the pipeline and all stages
 			 */
-			PDAL_C_API const char* PDALGetPipelineMetadata(PipelinePtr pipeline);
+			PDAL_C_API const char* PDALGetPipelineMetadata(PDALPipelinePtr pipeline);
 
 			/**
 			 * Returns a pipeline's computed schema.
@@ -58,7 +58,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The computed schema for the pipeline
 			 */
-			PDAL_C_API const char* PDALGetPipelineSchema(PipelinePtr pipeline);
+			PDAL_C_API const char* PDALGetPipelineSchema(PDALPipelinePtr pipeline);
 
 			/**
 			 * Returns a pipeline's execution log.
@@ -68,7 +68,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The log output for the executed pipeline 
 			 */
-			PDAL_C_API const char* PDALGetPipelineLog(PipelinePtr pipeline);
+			PDAL_C_API const char* PDALGetPipelineLog(PDALPipelinePtr pipeline);
 
 			/**
 			 * Sets a pipeline's log level
@@ -76,7 +76,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @param level The log level ranging from 0 for ? to 8 for ?
 			 */
-			PDAL_C_API void PDALSetPipelineLogLevel(PipelinePtr pipeline, int level);
+			PDAL_C_API void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level);
 
 			/**
 			 * Returns a pipeline's log level
@@ -84,7 +84,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The log verbosity as an integer, ranging from 0 for ? to 8 for ?
 			 */
-			PDAL_C_API int PDALGetPipelineLogLevel(PipelinePtr pipeline);
+			PDAL_C_API int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline);
 
 			/**
 			 * Executes a pipeline.
@@ -92,7 +92,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The total number of points produced by the pipeline
 			 */
-			PDAL_C_API int64_t PDALExecutePipeline(PipelinePtr pipeline);
+			PDAL_C_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
 
 			/**
 			 * Validates a pipeline.
@@ -100,19 +100,20 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return Whether the pipeline is valid
 			 */
-			PDAL_C_API bool PDALValidatePipeline(PipelinePtr pipeline);
+			PDAL_C_API bool PDALValidatePipeline(PDALPipelinePtr pipeline);
 
-#ifdef __cplusplus
 			/**
 			 * Gets the resulting point views from a pipeline execution.
 			 * 
 			 * @param pipeline The pipeline
 			 * @return A pointer to a point view collection or nullptr if no point views are available
 			 */
-			PDAL_C_API pdal::capi::PointViewCollection *PDALGetPointViews(PipelinePtr pipeline);
+			PDAL_C_API PDAPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline);
+
+#ifdef __cplusplus
 
 		}
 	}
 }
-#endif /* __cplusplus */
+#endif /* _cplusplus */
 #endif /* PDAL_CAPI_PIPELINE_H */

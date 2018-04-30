@@ -15,69 +15,101 @@ namespace pdal
 	{
 		extern "C"
 		{
-			PipelinePtr PDALCreatePipeline(const char* json)
+			PDALPipelinePtr PDALCreatePipeline(const char* json)
 			{
-				return new Pipeline(new pdal::PipelineExecutor(json));
+				PDALPipelinePtr pipeline = NULL;
+				pdal::PipelineExecutor *executor = new pdal::PipelineExecutor(json);
+
+				if (executor)
+				{
+					try
+					{
+						executor->validate();
+					}
+					catch (...)
+					{
+						delete executor;
+						executor = NULL;
+					}
+
+					if (executor)
+					{
+						pipeline = new Pipeline(executor);
+					}
+				}
+
+				return pipeline;
 			}
 
-			void PDALDisposePipeline(PipelinePtr pipeline)
+			void PDALDisposePipeline(PDALPipelinePtr pipeline)
 			{
 				if (pipeline)
 				{
-					delete pipeline;
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					delete ptr;
 				}
 			}
 
-			const char* PDALGetPipelineAsString(PipelinePtr pipeline)
+			const char* PDALGetPipelineAsString(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->getPipeline().c_str() : nullptr;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->getPipeline().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineMetadata(PipelinePtr pipeline)
+			const char* PDALGetPipelineMetadata(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->getMetadata().c_str() : nullptr;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->getMetadata().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineSchema(PipelinePtr pipeline)
+			const char* PDALGetPipelineSchema(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->getSchema().c_str() : nullptr;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->getSchema().c_str() : nullptr;
 			}
 
-			const char* PDALGetPipelineLog(PipelinePtr pipeline)
+			const char* PDALGetPipelineLog(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->getLog().c_str() : nullptr;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->getLog().c_str() : nullptr;
 			}
 
-			void PDALSetPipelineLogLevel(PipelinePtr pipeline, int level)
+			void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level)
 			{
-				if (pipeline && pipeline->get())
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+
+				if (ptr && ptr->get())
 				{
-					pipeline->get()->setLogLevel(level);
+					ptr->get()->setLogLevel(level);
 				}
 			}
 
-			int PDALGetPipelineLogLevel(PipelinePtr pipeline)
+			int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->getLogLevel() : 0;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->getLogLevel() : 0;
 			}
 
-			int64_t PDALExecutePipeline(PipelinePtr pipeline)
+			int64_t PDALExecutePipeline(PDALPipelinePtr pipeline)
 			{
-				return (pipeline && pipeline->get()) ? pipeline->get()->execute() : 0;
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return (ptr && ptr->get()) ? ptr->get()->execute() : 0;
 			}
 
-			bool PDALValidatePipeline(PipelinePtr pipeline)
+			bool PDALValidatePipeline(PDALPipelinePtr pipeline)
 			{
-				return pipeline && pipeline->get() && pipeline->get()->validate();
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+				return ptr && ptr->get() && ptr->get()->validate();
 			}
 
-			pdal::capi::PointViewCollection *PDALGetPointViews(Pipeline *pipeline)
+			PDAPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline)
 			{
+				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
 				pdal::capi::PointViewCollection *views = nullptr;
 				
-				if (pipeline && pipeline->get())
+				if (ptr && ptr->get())
 				{
-					auto &v = pipeline->get()->getManagerConst().views();
+					auto &v = ptr->get()->getManagerConst().views();
 
 					if (!v.empty())
 					{
