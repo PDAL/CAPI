@@ -1,8 +1,10 @@
 # Top-level CMake configuration file for pdal-c
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.9)
 
 project(pdal-c C CXX)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Use C11 and C++11 standards
 set(CMAKE_C_STANDARD 11)
@@ -21,6 +23,18 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 
 include_directories("${CMAKE_SOURCE_DIR}/source")
 add_subdirectory("source/pdal/capi")
+
+# Measure code coverage on gcc
+if(CMAKE_COMPILER_IS_GNUCXX)
+	include(CodeCoverage)
+	APPEND_COVERAGE_COMPILER_FLAGS()
+	set(COVERAGE_EXCLUDES
+		'build/*'
+		'cmake/*'
+		'tests/*'
+		'/usr/include/*'
+	)
+endif()
 
 include(CTest)
 add_subdirectory("tests/pdal/capi")

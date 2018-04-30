@@ -39,6 +39,15 @@ set_target_properties(${TARGET} PROPERTIES
 	SOVERSION ${PDAL_VERSION}
 )
 
+# Measure code coverage on gcc
+if(CMAKE_COMPILER_IS_GNUCXX)
+	SETUP_TARGET_FOR_COVERAGE(
+		NAME coverage_${TARGET}
+		EXECUTABLE test_${TARGET}
+		DEPENDENCIES test_${TARGET}
+	)
+endif()
+
 target_link_libraries(${TARGET} ${DEPENDENCIES})
 
 install(TARGETS ${TARGET}
