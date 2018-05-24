@@ -17,24 +17,39 @@ namespace pdal
 		{
 			PDALPipelinePtr PDALCreatePipeline(const char* json)
 			{
-				PDALPipelinePtr pipeline = NULL;
-				pdal::PipelineExecutor *executor = new pdal::PipelineExecutor(json);
+				PDALPipelinePtr pipeline = nullptr;
 
-				if (executor)
+				if (json && std::strlen(json) > 0)
 				{
+					pdal::PipelineExecutor *executor = nullptr;
+					
 					try
 					{
-						executor->validate();
+						pdal::PipelineExecutor stackpipe(json);
+						executor = new pdal::PipelineExecutor(json);
 					}
-					catch (...)
+					catch (const std::exception &e)
 					{
-						delete executor;
-						executor = NULL;
+						printf("Could not create pipeline: %s\n", e.what());
+						executor = nullptr;
 					}
 
 					if (executor)
 					{
-						pipeline = new Pipeline(executor);
+						try
+						{
+							executor->validate();
+						}
+						catch (...)
+						{
+							delete executor;
+							executor = NULL;
+						}
+
+						if (executor)
+						{
+							pipeline = new Pipeline(executor);
+						}
 					}
 				}
 
