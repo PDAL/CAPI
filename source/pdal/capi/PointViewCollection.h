@@ -15,6 +15,7 @@ namespace pdal
 		{
 		public:
 			PointViewCollection(const pdal::PointViewSet& views);
+			bool hasNext() const;
 			const pdal::PointView *next();
 			void reset();
 

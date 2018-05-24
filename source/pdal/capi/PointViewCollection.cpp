@@ -13,22 +13,20 @@ namespace pdal
 			reset();
 		}
 
+		bool PointViewCollection::hasNext() const
+		{
+			return (mItr != mViews.cend());
+		}
+
 		const pdal::PointView *PointViewCollection::next()
 		{
-			pdal::PointView *view = nullptr;
-
-			if (mItr != mViews.cend())
-			{
-				view = (mItr++)->get();
-			}
-
-			return view;
+			return hasNext() ? (mItr++)->get() : nullptr;
 		}
 
 		void PointViewCollection::reset()
 		{
 			mItr = mViews.cbegin();
-			mItr++;
 		}
+
 	}
 }
