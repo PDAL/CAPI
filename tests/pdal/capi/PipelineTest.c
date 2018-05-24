@@ -12,12 +12,7 @@
 
 SUITE(PipelineTest);
 
-TEST PDALCreatePipelineTest(void)
-{
-	PDALPipelinePtr pipeline = PDALCreatePipeline("");
-	ASSERT_EQ(NULL, pipeline);
-
-	char *json =
+char *gPipelineJson =
 	"{\n"
 	"  \"pipeline\":[\n"
 	"    \"C:/workspace/pdal/test/data/las/1.2-with-color.las\",\n"
@@ -28,20 +23,43 @@ TEST PDALCreatePipelineTest(void)
 	"  ]\n"
 	"}\n";
 
-	pipeline = PDALCreatePipeline(json);
+TEST PDALCreateAndDisposePipelineTest(void)
+{
+	PDALPipelinePtr pipeline = PDALCreatePipeline(NULL);
+	ASSERT_EQ(NULL, pipeline);
+
+	pipeline = PDALCreatePipeline("");
+	ASSERT_EQ(NULL, pipeline);
+
+	pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
+
+	PDALDisposePipeline(pipeline);
+	PDALDisposePipeline(NULL);
 
 	PASS();
 }
 
-TEST PDALDisposePipelineTest(void)
-{
-	SKIPm("TODO");
-}
-
 TEST PDALGetPipelineAsStringTest(void)
 {
-	SKIPm("TODO");
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+
+	int64_t count = PDALExecutePipeline(pipeline);
+	ASSERT_FALSE(count < 1);
+
+	const char *json = PDALGetPipelineAsString(pipeline);
+	ASSERT_FALSE(json == NULL);
+
+	printf(json);
+	// Make sure that the JSON object's name is "pipeline"
+	char jsonName[16];
+	sscanf(json, "%*s\n\t%10s", &jsonName);
+	printf(jsonName);
+	//ASSERT_STR_EQ("\"pipeline\"", jsonName);
+
+	PDALDisposePipeline(pipeline);
+	PASS();
 }
 
 TEST PDALGetPipelineMetadataTest(void)
@@ -51,17 +69,61 @@ TEST PDALGetPipelineMetadataTest(void)
 
 TEST PDALGetPipelineSchemaTest(void)
 {
-	SKIPm("TODO");
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+
+	int64_t count = PDALExecutePipeline(pipeline);
+	ASSERT_FALSE(count < 1);
+
+	const char *schema = PDALGetPipelineSchema(pipeline);
+	ASSERT_FALSE(schema == NULL);
+
+	printf(schema);
+	// Make sure that the schema's object's name is "schema"
+	char name[16];
+	sscanf(schema, "%*s\n\t%10s", &name);
+	//ASSERT_STR_EQ("\"schema\"", name);
+
+	PDALDisposePipeline(pipeline);
+	PASS();
 }
 
 TEST PDALGetSetPipelineLogTest(void)
 {
-	SKIPm("TODO");
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+
+	int64_t count = PDALExecutePipeline(pipeline);
+	ASSERT_FALSE(count < 1);
+
+	// Test valid cases: 0 to 8
+	for (int i = 0; i < 9; ++i)
+	{
+		PDALSetPipelineLogLevel(pipeline, i);
+		int j = PDALGetPipelineLogLevel(pipeline);
+		ASSERT_EQ(i, j);
+	}
+
+	const char *log = PDALGetPipelineLog(pipeline);
+	ASSERT_FALSE(log == NULL);
+
+	PDALDisposePipeline(pipeline);
+	PASS();
 }
 
 TEST PDALExecutePipelineTest(void)
 {
-	SKIPm("TODO");
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+
+	int64_t count = PDALExecutePipeline(pipeline); // 1065
+	ASSERT_FALSE(count < 1);
+
+	count = PDALExecutePipeline(NULL);
+	ASSERT_FALSE(count > 0);
+
+	PDALDisposePipeline(pipeline);
+	PASS();
 }
 
 TEST PDALValidatePipelineTest(void)
@@ -73,6 +135,10 @@ TEST PDALValidatePipelineTest(void)
 
 GREATEST_SUITE(PipelineTest)
 {
-	RUN_TEST(PDALCreatePipelineTest);
-	RUN_TEST(PDALDisposePipelineTest);
+	RUN_TEST(PDALCreateAndDisposePipelineTest);
+	RUN_TEST(PDALExecutePipelineTest);
+	RUN_TEST(PDALGetSetPipelineLogTest);
+	RUN_TEST(PDALGetPipelineAsStringTest);
+	RUN_TEST(PDALGetPipelineSchemaTest);
+	RUN_TEST(PDALValidatePipelineTest);
 }
