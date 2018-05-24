@@ -1,6 +1,6 @@
 set(TARGET pdal_c)
 
-find_package(PDAL 1.6.0 REQUIRED CONFIG)
+find_package(PDAL REQUIRED CONFIG)
 message(STATUS "Found PDAL ${PDAL_VERSION}")
 
 set(SOURCES

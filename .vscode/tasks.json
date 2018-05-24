@@ -4,6 +4,32 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "vcpkg-release",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}\\make_vcpkg.bat"
+            },
+            "options": {
+                "env": {
+                    "BUILD_TYPE": "Release",
+                    "VCPKG_DEFAULT_TRIPLET": "x64-windows",
+                    "TRIPLET": "x64-windows",
+                    "TOOLCHAIN": "C:\\workspace\\thirdparty\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]            
+        },
+        {
             "label": "pdalc-vc15-release",
             "type": "shell",
             "windows": {
