@@ -6,9 +6,12 @@ set SCRIPT_DIR=%~dp0
 
 ::cmake .. "-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake" -G "Sublime Text 2 - Ninja" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_BUILD_TYPE=Debug
 
-if not defined TOOLCHAIN set TOOLCHAIN=C:\workspace\thirdparty\vcpkg\scripts\buildsystems\vcpkg.cmake
+if not defined TOOLCHAIN set TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
 if not defined BUILD_TYPE set BUILD_TYPE=Release
-if not defined TRIPLET=x64-windows
+if not defined ARCH set ARCH=x64
+if not defined TARGET_OS set TARGET_OS=windows
+
+set TRIPLET=%ARCH%-%TARGET_OS%
 
 set BUILD_DIR=%SCRIPT_DIR%\build\%TRIPLET%
 
@@ -18,14 +21,11 @@ if exist "%BUILD_DIR%\pdal-c.sln" (
 	mkdir "%BUILD_DIR%"
 	pushd "%BUILD_DIR%"
 
-	mkdir install
-
 	cmake ../.. ^
 		-DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
 		-DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN% ^
 		-DVCPKG_TARGET_TRIPLET=%TRIPLET% ^
-		-DCMAKE_GENERATOR_PLATFORM=x64
-
+		-DCMAKE_GENERATOR_PLATFORM=%ARCH%
 )
 
 :: Build and install solution

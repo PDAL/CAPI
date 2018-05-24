@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "vcpkg-release",
+            "label": "vcpkg-x64-windows-release",
             "type": "shell",
             "windows": {
                 "command": "${workspaceFolder}\\make_vcpkg.bat"
@@ -12,9 +12,9 @@
             "options": {
                 "env": {
                     "BUILD_TYPE": "Release",
-                    "VCPKG_DEFAULT_TRIPLET": "x64-windows",
-                    "TRIPLET": "x64-windows",
-                    "TOOLCHAIN": "C:\\workspace\\thirdparty\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
+                    "ARCH": "x64",
+                    "TARGET_OS": "windows",
+                    "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
                 }
             },
             "group": {
