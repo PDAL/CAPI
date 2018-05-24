@@ -34,6 +34,7 @@ namespace pdal
 #endif /* __cplusplus */
 
 typedef void* PDALPipelinePtr;
-typedef void* PDAPointViewCollectionPtr;
+typedef void* PDALPointViewPtr;
+typedef void* PDALPointViewCollectionPtr;
 
 #endif /* PDAL_CAPI_FORWARD_H */
