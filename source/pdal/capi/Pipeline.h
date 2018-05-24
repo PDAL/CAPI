@@ -15,7 +15,7 @@ namespace pdal
 		extern "C"
 		{
 #else
-#include <stdbool.h> // for for bool
+#include <stdbool.h> // for bool
 #include <stdint.h> // for int64_t
 #endif /* __cplusplus */
 
@@ -108,7 +108,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return A pointer to a point view collection or nullptr if no point views are available
 			 */
-			PDAL_C_API PDAPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline);
+			PDAL_C_API PDALPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 

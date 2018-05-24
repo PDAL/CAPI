@@ -102,7 +102,7 @@ namespace pdal
 				return ptr && ptr->get() && ptr->get()->validate();
 			}
 
-			PDAPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline)
+			PDALPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
 				pdal::capi::PointViewCollection *views = nullptr;
