@@ -3,8 +3,8 @@
 :: This script assumes that cmake is in PATH
 :: TODO Auto-detect latest platform
 set SCRIPT_DIR=%~dp0
-if not defined GENERATOR set GENERATOR=Visual Studio 14 2015 Win64
-if not defined COMPILER_ID set COMPILER_ID=vc.14
+if not defined GENERATOR set GENERATOR=Visual Studio 15 2017 Win64
+if not defined COMPILER_ID set COMPILER_ID=vc.15
 if not defined BUILD_TYPE set BUILD_TYPE=Release
 
 set BUILD_DIR=%SCRIPT_DIR%\build\windows.amd64.%COMPILER_ID%
