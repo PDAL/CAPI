@@ -16,11 +16,11 @@ SUITE(PointViewCollectionTest);
 static char *gPipelineJson =
 "{\n"
 "  \"pipeline\":[\n"
-"    \"C:/workspace/pdal/test/data/las/1.2-with-color.las\",\n"
+"    \"C:/workspace/thirdparty/pdal/test/data/las/1.2-with-color.las\",\n"
 "    {\n"
 "      \"type\":\"filters.stats\"\n"
 "    },\n"
-"    \"C:/workspace/pdal/test/temp/pdal-stats.las\"\n"
+"    \"C:/workspace/thirdparty/pdal/test/temp/pdal-stats.las\"\n"
 "  ]\n"
 "}\n";
 
