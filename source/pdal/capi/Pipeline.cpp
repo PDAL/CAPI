@@ -30,7 +30,7 @@ namespace pdal
 					}
 					catch (const std::exception &e)
 					{
-						printf("Could not create pipeline: %s\n", e.what());
+						printf("Could not create pipeline: %s\n%s\n", e.what(), json);
 						executor = nullptr;
 					}
 
@@ -40,8 +40,9 @@ namespace pdal
 						{
 							executor->validate();
 						}
-						catch (...)
+						catch (const std::exception &e)
 						{
+							printf("Could not validate pipeline: %s\n%s\n", e.what(), json);
 							delete executor;
 							executor = NULL;
 						}
