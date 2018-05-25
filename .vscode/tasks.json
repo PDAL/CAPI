@@ -30,6 +30,32 @@
             ]            
         },
         {
+            "label": "vcpkg-x64-windows-debug",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}\\make_vcpkg.bat"
+            },
+            "options": {
+                "env": {
+                    "BUILD_TYPE": "Debug",
+                    "ARCH": "x64",
+                    "TARGET_OS": "windows",
+                    "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]            
+        },
+        {
             "label": "pdalc-vc15-release",
             "type": "shell",
             "windows": {
