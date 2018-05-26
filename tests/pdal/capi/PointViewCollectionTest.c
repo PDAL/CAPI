@@ -30,7 +30,7 @@ static void PDALPointViewCollectionTestSetup(void *arg)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 
-	if (pipeline)
+	if (pipeline && PDALExecutePipeline(pipeline))
 	{
 		gPointViewCollection = PDALGetPointViews(pipeline);
 	}
@@ -43,26 +43,23 @@ static void PDALPointViewCollectionTestTeardown(void *arg)
 
 TEST PDALHasNextPointViewTest(void)
 {
-	ASSERT_FALSE(!PDALHasNextPointView(gPointViewCollection));
-	ASSERT_FALSE(PDALHasNextPointView(NULL));
+	bool hasNext = PDALHasNextPointView(NULL);
+	ASSERT_FALSE(hasNext);
+
+	ASSERT_FALSE(gPointViewCollection == NULL);
+	hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(!hasNext);
+
 	PASS();
-}
-
-TEST blah(void) {
-    PASS();
-}
-
-TEST todo(void) {
-    SKIPm("TODO");
 }
 
 GREATEST_SUITE(PointViewCollectionTest)
 {
 	SET_SETUP(PDALPointViewCollectionTestSetup, NULL);
-	SET_SETUP(PDALPointViewCollectionTestTeardown, NULL);
+	SET_TEARDOWN(PDALPointViewCollectionTestTeardown, NULL);
 
 	RUN_TEST(PDALHasNextPointViewTest);
 
 	SET_SETUP(NULL, NULL);
-	SET_SETUP(NULL, NULL);
+	SET_TEARDOWN(NULL, NULL);
 }
