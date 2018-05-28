@@ -156,6 +156,12 @@ TEST PDALValidatePipelineTest(void)
 {
 	bool valid = PDALValidatePipeline(NULL);
 	ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
+
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+	valid = PDALValidatePipeline(NULL);
+	ASSERT_FALSEm("Valid pipeline evaluated as invalid", !valid);
+
 	PASS();
 }
 
