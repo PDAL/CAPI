@@ -66,28 +66,76 @@ namespace pdal
 				}
 			}
 
-			const char* PDALGetPipelineAsString(PDALPipelinePtr pipeline)
+			size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return (ptr && ptr->get()) ? ptr->get()->getPipeline().c_str() : nullptr;
+				pdal::PipelineExecutor *executor = ptr->get();
+				size_t result = 0;
+				buffer[0] =  '\0';
+				buffer[size - 1] = '\0';
+
+				if (executor)
+				{
+					std::string s = executor->getPipeline();
+					std::strncpy(buffer, s.c_str(), size - 1);
+					result = std::min(s.length(), size);
+				}
+
+				return result;
 			}
 
-			const char* PDALGetPipelineMetadata(PDALPipelinePtr pipeline)
+			size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return (ptr && ptr->get()) ? ptr->get()->getMetadata().c_str() : nullptr;
+				pdal::PipelineExecutor *executor = ptr->get();
+				size_t result = 0;
+				metadata[0] =  '\0';
+				metadata[size - 1] = '\0';
+
+				if (executor)
+				{
+					std::string s = executor->getMetadata();
+					std::strncpy(metadata, s.c_str(), size);
+					result = std::min(s.length(), size);
+				}
+
+				return result;
 			}
 
-			const char* PDALGetPipelineSchema(PDALPipelinePtr pipeline)
+			size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return (ptr && ptr->get()) ? ptr->get()->getSchema().c_str() : nullptr;
+				pdal::PipelineExecutor *executor = ptr->get();
+				size_t result = 0;
+				schema[0] =  '\0';
+				schema[size - 1] = '\0';
+
+				if (executor)
+				{
+					std::string s = executor->getSchema();
+					std::strncpy(schema, s.c_str(), size);
+					result = std::min(s.length(), size);
+				}
+
+				return result;
 			}
 
-			const char* PDALGetPipelineLog(PDALPipelinePtr pipeline)
+			size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return (ptr && ptr->get()) ? ptr->get()->getLog().c_str() : nullptr;
+				pdal::PipelineExecutor *executor = ptr->get();
+				size_t result = 0;
+				log[0] =  '\0';
+				log[size - 1] = '\0';
+
+				if (executor)
+				{
+					std::string s = executor->getLog();
+					std::strncpy(log, s.c_str(), size);
+					result = std::min(s.length(), size);
+				}
+
+				return result;
 			}
 
 			void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level)

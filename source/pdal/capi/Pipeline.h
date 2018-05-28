@@ -37,38 +37,46 @@ namespace pdal
 			PDAL_C_API void PDALDisposePipeline(PDALPipelinePtr pipeline);
 
 			/**
-			 * Returns a string representation of a pipeline.
+			 * Retrieves a string representation of a pipeline.
 			 * 
 			 * @param pipeline The pipeline
-			 * @return The transliterated pipeline
+			 * @param[out] buffer The buffer used to store the retrieved pipeline string representation
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved pipeline string or 0 if it could not be retrieved
 			 */
-			PDAL_C_API const char* PDALGetPipelineAsString(PDALPipelinePtr pipeline);
+			PDAL_C_API size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size);
 
 			/**
-			 * Returns a pipeline's computed metadata.
+			 * Retrieves a pipeline's computed metadata.
 			 * 
 			 * @param pipeline The pipeline
-			 * @return The computed metadata for the pipeline and all stages
+			 * @param[out] schema The buffer used to store the computed metadata for the pipeline and all stages
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved metadata string or 0 if it could not be retrieved
 			 */
-			PDAL_C_API const char* PDALGetPipelineMetadata(PDALPipelinePtr pipeline);
+			PDAL_C_API size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size);
 
 			/**
-			 * Returns a pipeline's computed schema.
+			 * Retrieves a pipeline's computed schema.
 			 * 
 			 * @param pipeline The pipeline
-			 * @return The computed schema for the pipeline
+			 * @param[out] The buffer used to store the computed schema for the pipeline
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved schema or 0 if it could not be retrieved
 			 */
-			PDAL_C_API const char* PDALGetPipelineSchema(PDALPipelinePtr pipeline);
+			PDAL_C_API size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size);
 
 			/**
-			 * Returns a pipeline's execution log.
+			 * Retrieves a pipeline's execution log.
 			 * 
 			 * @see PDALSetPipelineLogLevel to adjust logging verbosity
 			 * 
 			 * @param pipeline The pipeline
-			 * @return The log output for the executed pipeline 
+			 * @param[out] The buffer used to store the log output for the executed pipeline
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved log or 0 if it could not be retrieved
 			 */
-			PDAL_C_API const char* PDALGetPipelineLog(PDALPipelinePtr pipeline);
+			PDAL_C_API size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size);
 
 			/**
 			 * Sets a pipeline's log level

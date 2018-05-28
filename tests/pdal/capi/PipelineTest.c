@@ -48,15 +48,15 @@ TEST PDALGetPipelineAsStringTest(void)
 	int64_t count = PDALExecutePipeline(pipeline);
 	ASSERT_FALSE(count < 1);
 
-	const char *json = PDALGetPipelineAsString(pipeline);
-	ASSERT_FALSE(json == NULL);
+	char json[1024];
+	size_t size = PDALGetPipelineAsString(pipeline, json, 1024);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(json[0] == '\0');
 
-	printf(json);
 	// Make sure that the JSON object's name is "pipeline"
 	char jsonName[16];
 	sscanf(json, "%*s\n\t%10s", &jsonName);
-	printf(jsonName);
-	//ASSERT_STR_EQ("\"pipeline\"", jsonName);
+	ASSERT_STR_EQ("\"pipeline\"", jsonName);
 
 	PDALDisposePipeline(pipeline);
 	PASS();
@@ -64,7 +64,24 @@ TEST PDALGetPipelineAsStringTest(void)
 
 TEST PDALGetPipelineMetadataTest(void)
 {
-	SKIPm("TODO");
+	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	ASSERT_FALSE(pipeline == NULL);
+
+	int64_t count = PDALExecutePipeline(pipeline);
+	ASSERT_FALSE(count < 1);
+
+	char json[1024];
+	size_t size = PDALGetPipelineMetadata(pipeline, json, 1024);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(json[0] == '\0');
+
+	// Make sure that the JSON object's name is "metadata"
+	char jsonName[16];
+	sscanf(json, "%*s\n\t%10s", &jsonName);
+	ASSERT_STR_EQ("\"metadata\"", jsonName);
+
+	PDALDisposePipeline(pipeline);
+	PASS();
 }
 
 TEST PDALGetPipelineSchemaTest(void)
@@ -75,14 +92,15 @@ TEST PDALGetPipelineSchemaTest(void)
 	int64_t count = PDALExecutePipeline(pipeline);
 	ASSERT_FALSE(count < 1);
 
-	const char *schema = PDALGetPipelineSchema(pipeline);
-	ASSERT_FALSE(schema == NULL);
+	char json[1024];
+	size_t size = PDALGetPipelineSchema(pipeline, json, 1024);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(json[0] == '\0');
 
-	printf(schema);
-	// Make sure that the schema's object's name is "schema"
-	char name[16];
-	sscanf(schema, "%*s\n\t%10s", &name);
-	//ASSERT_STR_EQ("\"schema\"", name);
+	// Make sure that the JSON object's name is "schema"
+	char jsonName[16];
+	sscanf(json, "%*s\n\t%10s", &jsonName);
+	ASSERT_STR_EQ("\"metadata\"", jsonName);
 
 	PDALDisposePipeline(pipeline);
 	PASS();
@@ -97,17 +115,25 @@ TEST PDALGetSetPipelineLogTest(void)
 	ASSERT_FALSE(count < 1);
 
 	// Test valid cases: 0 to 8
+	char log[1024];
+
 	for (int i = 0; i < 9; ++i)
 	{
 		PDALSetPipelineLogLevel(pipeline, i);
 		int j = PDALGetPipelineLogLevel(pipeline);
 		ASSERT_EQ(i, j);
+
+		//size_t n = PDALGetPipelineLog(pipeline, log, 1024);
+		//printf("---- Log Level %d: %d bytes ----\n%s\n", i, n, log);
 	}
 
-	const char *log = PDALGetPipelineLog(pipeline);
-	ASSERT_FALSE(log == NULL);
+	// TODO Determine why all levels yield empty logs
+	size_t size = PDALGetPipelineLog(pipeline, log, 1024);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(log[0] == '\0');
 
 	PDALDisposePipeline(pipeline);
+
 	PASS();
 }
 
