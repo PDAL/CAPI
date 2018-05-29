@@ -1,5 +1,8 @@
 set(TARGET test_pdal_c)
 
+configure_file(PipelineTest.c.in ${CMAKE_CURRENT_SOURCE_DIR}/PipelineTest.c)
+configure_file(PointViewCollectionTest.c.in ${CMAKE_CURRENT_SOURCE_DIR}/PointViewCollectionTest.c)
+
 set(SOURCES
 	main.c
 	PipelineTest.c

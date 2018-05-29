@@ -10,20 +10,40 @@
 
 #include "greatest.h"
 
-SUITE(PipelineTest);
+SUITE(Pipeline);
 
-char *gPipelineJson =
-	"{\n"
-	"  \"pipeline\":[\n"
-	"    \"C:/workspace/thirdparty/pdal/test/data/las/1.2-with-color.las\",\n"
-	"    {\n"
-	"      \"type\":\"filters.stats\"\n"
-	"    },\n"
-	"    \"C:/workspace/thirdparty/pdal/test/temp/pdal-stats.las\"\n"
-	"  ]\n"
-	"}\n";
+static char *gPipelineJson = NULL;
 
-TEST PDALCreateAndDisposePipelineTest(void)
+static void setupPipelineTest(void *arg)
+{
+	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
+
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		long length = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		gPipelineJson = malloc(length + 1);
+
+		if (gPipelineJson)
+		{
+			fread(gPipelineJson, 1, length, file);
+			gPipelineJson[length] = '\0';
+		}
+
+		fclose(file);
+	}
+}
+
+static void teardownPipelineTest(void *arg)
+{
+	if (gPipelineJson)
+	{
+		free(gPipelineJson);
+	}
+}
+
+TEST testPDALCreateAndDisposePipeline(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(NULL);
 	ASSERT_EQ(NULL, pipeline);
@@ -40,7 +60,7 @@ TEST PDALCreateAndDisposePipelineTest(void)
 	PASS();
 }
 
-TEST PDALGetPipelineAsStringTest(void)
+TEST testPDALGetPipelineAsString(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
@@ -62,7 +82,7 @@ TEST PDALGetPipelineAsStringTest(void)
 	PASS();
 }
 
-TEST PDALGetPipelineMetadataTest(void)
+TEST testPDALGetPipelineMetadata(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
@@ -84,7 +104,7 @@ TEST PDALGetPipelineMetadataTest(void)
 	PASS();
 }
 
-TEST PDALGetPipelineSchemaTest(void)
+TEST testPDALGetPipelineSchema(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
@@ -106,7 +126,7 @@ TEST PDALGetPipelineSchemaTest(void)
 	PASS();
 }
 
-TEST PDALGetSetPipelineLogTest(void)
+TEST testPDALGetSetPipelineLog(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
@@ -137,7 +157,7 @@ TEST PDALGetSetPipelineLogTest(void)
 	PASS();
 }
 
-TEST PDALExecutePipelineTest(void)
+TEST testPDALExecutePipeline(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT_FALSE(pipeline == NULL);
@@ -152,7 +172,7 @@ TEST PDALExecutePipelineTest(void)
 	PASS();
 }
 
-TEST PDALValidatePipelineTest(void)
+TEST testPDALValidatePipeline(void)
 {
 	bool valid = PDALValidatePipeline(NULL);
 	ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
@@ -167,10 +187,16 @@ TEST PDALValidatePipelineTest(void)
 
 GREATEST_SUITE(PipelineTest)
 {
-	RUN_TEST(PDALCreateAndDisposePipelineTest);
-	RUN_TEST(PDALExecutePipelineTest);
-	RUN_TEST(PDALGetSetPipelineLogTest);
-	RUN_TEST(PDALGetPipelineAsStringTest);
-	RUN_TEST(PDALGetPipelineSchemaTest);
-	RUN_TEST(PDALValidatePipelineTest);
+	SET_SETUP(setupPipelineTest, NULL);
+	SET_TEARDOWN(teardownPipelineTest, NULL);
+
+	RUN_TEST(testPDALCreateAndDisposePipeline);
+	RUN_TEST(testPDALExecutePipeline);
+	RUN_TEST(testPDALGetSetPipelineLog);
+	RUN_TEST(testPDALGetPipelineAsString);
+	RUN_TEST(testPDALGetPipelineSchema);
+	RUN_TEST(testPDALValidatePipeline);
+
+	SET_SETUP(NULL, NULL);
+	SET_TEARDOWN(NULL, NULL);
 }

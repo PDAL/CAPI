@@ -13,22 +13,30 @@
 
 SUITE(PointViewCollectionTest);
 
-static char *gPipelineJson =
-"{\n"
-"  \"pipeline\":[\n"
-"    \"C:/workspace/thirdparty/pdal/test/data/las/1.2-with-color.las\",\n"
-"    {\n"
-"      \"type\":\"filters.stats\"\n"
-"    },\n"
-"    \"C:/workspace/thirdparty/pdal/test/temp/pdal-stats.las\"\n"
-"  ]\n"
-"}\n";
-
 static PDALPointViewCollectionPtr gPointViewCollection = NULL;
 
-static void PDALPointViewCollectionTestSetup(void *arg)
+static void setupPointViewCollectionTest(void *arg)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
+	char *json = NULL;
+
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		long length = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		char *json = malloc(length + 1);
+
+		if (json)
+		{
+			fread(json, 1, length, file);
+			json[length] = '\0';
+		}
+
+		fclose(file);
+	}
+
+	PDALPipelinePtr pipeline = PDALCreatePipeline(json);
 
 	if (pipeline && PDALExecutePipeline(pipeline))
 	{
@@ -36,7 +44,7 @@ static void PDALPointViewCollectionTestSetup(void *arg)
 	}
 }
 
-static void PDALPointViewCollectionTestTeardown(void *arg)
+static void teardownPointViewCollectionTest(void *arg)
 {
 	PDALDisposePointViewCollection(gPointViewCollection);
 }
@@ -101,8 +109,8 @@ TEST testPDALResetPointViewCollection(void)
 
 GREATEST_SUITE(PointViewCollectionTest)
 {
-	SET_SETUP(PDALPointViewCollectionTestSetup, NULL);
-	SET_TEARDOWN(PDALPointViewCollectionTestTeardown, NULL);
+	SET_SETUP(setupPointViewCollectionTest, NULL);
+	SET_TEARDOWN(teardownPointViewCollectionTest, NULL);
 
 	RUN_TEST(testPDALHasNextPointView);
 	RUN_TEST(testPDALNextPointView);
