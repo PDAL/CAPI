@@ -7,7 +7,7 @@
             "label": "vcpkg-x64-windows-release",
             "type": "shell",
             "windows": {
-                "command": "${workspaceFolder}\\make_vcpkg.bat"
+                "command": "${workspaceFolder}\\make.bat"
             },
             "options": {
                 "env": {
@@ -15,84 +15,6 @@
                     "ARCH": "x64",
                     "TARGET_OS": "windows",
                     "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": [
-                "$msCompile"
-            ]            
-        },
-        {
-            "label": "vcpkg-x64-windows-debug",
-            "type": "shell",
-            "windows": {
-                "command": "${workspaceFolder}\\make_vcpkg.bat"
-            },
-            "options": {
-                "env": {
-                    "BUILD_TYPE": "Debug",
-                    "ARCH": "x64",
-                    "TARGET_OS": "windows",
-                    "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": [
-                "$msCompile"
-            ]            
-        },
-        {
-            "label": "pdalc-vc15-release",
-            "type": "shell",
-            "windows": {
-                "command": "${workspaceFolder}\\make.bat"
-            },
-            "options": {
-                "env": {
-                    "BUILD_TYPE": "Release",
-                    "COMPILER_ID": "vc.15",
-                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
-                    "GENERATOR": "Visual Studio 15 2017 Win64",
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": [
-                "$msCompile"
-            ]            
-        },
-        {
-            "label": "pdalc-vc15-debug",
-            "type": "shell",
-            "windows": {
-                "command": "${workspaceFolder}\\make.bat"
-            },
-            "options": {
-                "env": {
-                    "BUILD_TYPE": "Debug",
-                    "COMPILER_ID": "vc.15",
-                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
-                    "GENERATOR": "Visual Studio 15 2017 Win64",
                 }
             },
             "group": {
@@ -108,33 +30,7 @@
             ]
         },
         {
-            "label": "pdalc-vc14-release",
-            "type": "shell",
-            "windows": {
-                "command": "${workspaceFolder}\\make.bat"
-            },
-            "options": {
-                "env": {
-                    "BUILD_TYPE": "Release",
-                    "COMPILER_ID": "vc.14",
-                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
-                    "GENERATOR": "Visual Studio 14 2015 Win64",
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": [
-                "$msCompile"
-            ]            
-        },
-        {
-            "label": "pdalc-vc14-debug",
+            "label": "vcpkg-x64-windows-debug",
             "type": "shell",
             "windows": {
                 "command": "${workspaceFolder}\\make.bat"
@@ -142,9 +38,9 @@
             "options": {
                 "env": {
                     "BUILD_TYPE": "Debug",
-                    "COMPILER_ID": "vc.14",
-                    "OSGEO4W_ROOT": "C:\\OSGeo4W64",
-                    "GENERATOR": "Visual Studio 14 2015 Win64",
+                    "ARCH": "x64",
+                    "TARGET_OS": "windows",
+                    "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
                 }
             },
             "group": {

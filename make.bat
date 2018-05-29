@@ -3,11 +3,17 @@
 :: This script assumes that cmake is in PATH
 :: TODO Auto-detect latest platform
 set SCRIPT_DIR=%~dp0
-if not defined GENERATOR set GENERATOR=Visual Studio 15 2017 Win64
-if not defined COMPILER_ID set COMPILER_ID=vc.15
-if not defined BUILD_TYPE set BUILD_TYPE=Release
 
-set BUILD_DIR=%SCRIPT_DIR%\build\windows.amd64.%COMPILER_ID%
+::cmake .. "-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake" -G "Sublime Text 2 - Ninja" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_BUILD_TYPE=Debug
+
+if not defined TOOLCHAIN set TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
+if not defined BUILD_TYPE set BUILD_TYPE=Release
+if not defined ARCH set ARCH=x64
+if not defined TARGET_OS set TARGET_OS=windows
+
+set TRIPLET=%ARCH%-%TARGET_OS%
+
+set BUILD_DIR=%SCRIPT_DIR%\build\%TRIPLET%
 
 if exist "%BUILD_DIR%\pdal-c.sln" (
 	pushd "%BUILD_DIR%"
@@ -15,13 +21,11 @@ if exist "%BUILD_DIR%\pdal-c.sln" (
 	mkdir "%BUILD_DIR%"
 	pushd "%BUILD_DIR%"
 
-	mkdir install
-
-	cmake -G "%GENERATOR%" ^
+	cmake ../.. ^
 		-DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
-		-DCMAKE_PREFIX_PATH=%OSGEO4W_ROOT% ^
-		-DCMAKE_INSTALL_PREFIX=./install ^
-		../..
+		-DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN% ^
+		-DVCPKG_TARGET_TRIPLET=%TRIPLET% ^
+		-DCMAKE_GENERATOR_PLATFORM=%ARCH%
 )
 
 :: Build and install solution
