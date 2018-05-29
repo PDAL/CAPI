@@ -37,4 +37,5 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 include(CTest)
+add_subdirectory("tests/data")
 add_subdirectory("tests/pdal/capi")
