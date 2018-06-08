@@ -10,6 +10,7 @@
 
 SUITE_EXTERN(PipelineTest);
 SUITE_EXTERN(PointViewCollectionTest);
+SUITE_EXTERN(PointViewTest);
 
 GREATEST_MAIN_DEFS();
 
@@ -18,5 +19,6 @@ int main(int argc, char **argv)
 	GREATEST_MAIN_BEGIN();
 	RUN_SUITE(PipelineTest);
 	RUN_SUITE(PointViewCollectionTest);
+	RUN_SUITE(PointViewTest);
 	GREATEST_MAIN_END();
 }

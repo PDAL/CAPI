@@ -1,0 +1,166 @@
+/*
+ * Copyright (c) Simverge Software LLC - All Rights Reserved
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
+
+#include "greatest.h"
+
+#include <pdal/capi/Pipeline.h>
+#include <pdal/capi/PointView.h>
+#include <pdal/capi/PointViewCollection.h>
+
+/// A simple binary tree implementation for int values
+struct node
+{
+	int key;
+	struct node *left;
+	struct node *right;
+};
+
+void dispose(struct node *n)
+{
+	if (n == NULL)
+	{
+		dispose(n->left);
+		dispose(n->right);
+		free(n);
+	}
+}
+
+bool insert(int key, struct node **n)
+{
+	bool inserted = false;
+
+	if (*n == NULL)
+	{
+		*n = (struct node *) malloc(sizeof(struct node));
+		(*n)->key = key;
+		(*n)->left = NULL;
+		(*n)->right = NULL;
+		inserted = true;
+	}
+	else if (key < (*n)->key)
+	{
+		inserted = insert(key, &(*n)->left);
+	}
+	else if (key > (*n)->key)
+	{
+		inserted = insert(key, &(*n)->right);
+	}
+
+	return inserted;
+}
+
+SUITE(PointViewTest);
+
+static const int INVALID_POINT_VIEW_ID = 0;
+static PDALPipelinePtr gPipeline = NULL;
+static PDALPointViewCollectionPtr gPointViewCollection = NULL;
+
+static void setupPointViewTest(void *arg)
+{
+	FILE *file = fopen("@CMAKE_BINARY_DIR@//data/stats.json", "rb");
+	char *json = NULL;
+
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		long length = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		char *json = malloc(length + 1);
+
+		if (json)
+		{
+			fread(json, 1, length, file);
+			json[length] = '\0';
+
+			gPipeline = PDALCreatePipeline(json);
+
+			if (gPipeline && PDALExecutePipeline(gPipeline))
+			{
+				gPointViewCollection = PDALGetPointViews(gPipeline);
+			}
+
+			free(json);
+		}
+
+		fclose(file);
+	}
+}
+
+static void teardownPointViewTest(void *arg)
+{
+	PDALDisposePointViewCollection(gPointViewCollection);
+	PDALDisposePipeline(gPipeline);
+}
+
+TEST testPDALGetPointViewId(void)
+{
+	ASSERT_EQ(INVALID_POINT_VIEW_ID, PDALGetPointViewId(NULL));
+
+	PDALResetPointViewCollection(gPointViewCollection);
+	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(!hasNext);
+
+	struct node *tree = NULL;
+
+	while (hasNext)
+	{
+		PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+		ASSERT_FALSE(view == NULL);
+
+		// Make sure all IDs are valid
+		int id = PDALGetPointViewId(view);
+		ASSERT_FALSE(id == INVALID_POINT_VIEW_ID);
+
+		// Make sure that there are no duplicate IDs
+		bool inserted = insert(id, &tree);
+		ASSERT_FALSE(!inserted);
+
+		hasNext = PDALHasNextPointView(gPointViewCollection);
+	}
+
+	dispose(tree);
+
+	PASS();
+}
+
+TEST testPDALGetPointViewSize(void)
+{
+	ASSERT_EQ(0, PDALGetPointViewSize(NULL));
+
+	PASS();
+}
+
+TEST testPDALIsPointViewEmpty(void)
+{
+	ASSERT_FALSE(!PDALIsPointViewEmpty(NULL));
+
+	PASS();
+}
+
+TEST testPDALClonePointView(void)
+{
+	PDALResetPointViewCollection(gPointViewCollection);
+
+
+	PASS();
+}
+
+
+GREATEST_SUITE(PointViewTest)
+{
+	SET_SETUP(setupPointViewTest, NULL);
+	SET_TEARDOWN(teardownPointViewTest, NULL);
+
+	RUN_TEST(testPDALGetPointViewId);
+	RUN_TEST(testPDALGetPointViewSize);
+	RUN_TEST(testPDALIsPointViewEmpty);
+	RUN_TEST(testPDALClonePointView);
+
+	SET_SETUP(NULL, NULL);
+	SET_TEARDOWN(NULL, NULL);
+}
