@@ -18,9 +18,9 @@ namespace pdal
 			return (mItr != mViews.cend());
 		}
 
-		const pdal::PointView *PointViewCollection::next()
+		const pdal::PointViewPtr PointViewCollection::next()
 		{
-			return hasNext() ? (mItr++)->get() : nullptr;
+			return hasNext() ? *(mItr++) : nullptr;
 		}
 
 		void PointViewCollection::reset()
@@ -40,7 +40,19 @@ namespace pdal
 			PDALPointViewPtr PDALGetNextPointView(PDALPointViewCollectionPtr collection)
 			{
 				auto ptr = reinterpret_cast<pdal::capi::PointViewCollection *>(collection);
-				return ptr ? (PDALPointViewPtr) ptr->next() : nullptr;
+				PDALPointViewPtr view = nullptr;
+
+				if (ptr)
+				{
+					pdal::PointViewPtr v = ptr->next();
+
+					if (v)
+					{
+						view = new pdal::PointViewPtr(std::move(v));
+					}
+				}
+
+				return view;
 			}
 
 			void PDALResetPointViewCollection(PDALPointViewCollectionPtr collection)

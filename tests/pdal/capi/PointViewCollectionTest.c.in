@@ -13,6 +13,7 @@
 
 SUITE(PointViewCollectionTest);
 
+static PDALPipelinePtr gPipeline = NULL;
 static PDALPointViewCollectionPtr gPointViewCollection = NULL;
 
 static void setupPointViewCollectionTest(void *arg)
@@ -31,22 +32,25 @@ static void setupPointViewCollectionTest(void *arg)
 		{
 			fread(json, 1, length, file);
 			json[length] = '\0';
+
+			gPipeline = PDALCreatePipeline(json);
+
+			if (gPipeline && PDALExecutePipeline(gPipeline))
+			{
+				gPointViewCollection = PDALGetPointViews(gPipeline);
+			}
+
+			free(json);
 		}
 
 		fclose(file);
-	}
-
-	PDALPipelinePtr pipeline = PDALCreatePipeline(json);
-
-	if (pipeline && PDALExecutePipeline(pipeline))
-	{
-		gPointViewCollection = PDALGetPointViews(pipeline);
 	}
 }
 
 static void teardownPointViewCollectionTest(void *arg)
 {
 	PDALDisposePointViewCollection(gPointViewCollection);
+	PDALDisposePipeline(gPipeline);
 }
 
 TEST testPDALHasNextPointView(void)
@@ -61,13 +65,17 @@ TEST testPDALHasNextPointView(void)
 	PASS();
 }
 
-TEST testPDALNextPointView(void)
+TEST testPDALGetNextPointView(void)
 {
+	PDALPointViewPtr view = PDALGetNextPointView(NULL);
+	ASSERT_EQ(NULL, view);
+
 	ASSERT_FALSE(gPointViewCollection == NULL);
+	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
 	ASSERT_FALSE(!hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	view = PDALGetNextPointView(gPointViewCollection);
 	ASSERT_FALSE(view == NULL);
 
 	if (PDALHasNextPointView(gPointViewCollection))
@@ -75,14 +83,17 @@ TEST testPDALNextPointView(void)
 		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
 		ASSERT_FALSE(anotherView == NULL);
 		ASSERT_FALSE(anotherView == view);
+		PDALDisposePointView(anotherView);
 	}
 
+	PDALDisposePointView(view);
 	PASS();
 }
 
 TEST testPDALResetPointViewCollection(void)
 {
 	ASSERT_FALSE(gPointViewCollection == NULL);
+	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
 	ASSERT_FALSE(!hasNext);
 
@@ -94,15 +105,20 @@ TEST testPDALResetPointViewCollection(void)
 		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
 		ASSERT_FALSE(anotherView == NULL);
 		ASSERT_FALSE(anotherView == view);
+		PDALDisposePointView(anotherView);
 	}
+
+	PDALDisposePointView(view);
 
 	view = PDALGetNextPointView(gPointViewCollection);
 	ASSERT_EQ(NULL, view);
+	PDALDisposePointView(view);
 
 	PDALResetPointViewCollection(gPointViewCollection);
 
 	view = PDALGetNextPointView(gPointViewCollection);
 	ASSERT_FALSE(view == NULL);
+	PDALDisposePointView(view);
 
 	PASS();
 }
@@ -113,7 +129,7 @@ GREATEST_SUITE(PointViewCollectionTest)
 	SET_TEARDOWN(teardownPointViewCollectionTest, NULL);
 
 	RUN_TEST(testPDALHasNextPointView);
-	RUN_TEST(testPDALNextPointView);
+	RUN_TEST(testPDALGetNextPointView);
 	RUN_TEST(testPDALResetPointViewCollection);
 
 	SET_SETUP(NULL, NULL);

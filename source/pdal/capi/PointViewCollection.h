@@ -1,8 +1,8 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#ifndef PDAL_CAPI_POINTCLOUDVIEWCOLLECTION_H
-#define PDAL_CAPI_POINTCLOUDVIEWCOLLECTION_H
+#ifndef PDAL_CAPI_POINTVIEWCOLLECTION_H
+#define PDAL_CAPI_POINTVIEWCOLLECTION_H
 
 #include "Forward.h"
 
@@ -18,7 +18,7 @@ namespace pdal
 		public:
 			PointViewCollection(const pdal::PointViewSet& views);
 			bool hasNext() const;
-			const pdal::PointView *next();
+			const pdal::PointViewPtr next();
 			void reset();
 
 		private:
