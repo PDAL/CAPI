@@ -23,18 +23,26 @@ namespace pdal
 {
 	class PipelineExecutor;
 	class PointView;
-	
+
+	using PointViewPtr = std::shared_ptr<PointView>;
+
 	namespace capi
 	{
 		class PointViewCollection;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
+		using PointView = pdal::PointViewPtr;
 	}
 }
 
 #endif /* __cplusplus */
 
+/// A pointer to a C++ pdal::capi::Pipeline object
 typedef void* PDALPipelinePtr;
+
+/// A pointer to a C++ pdal::capi::PointView object
 typedef void* PDALPointViewPtr;
+
+/// A pointer to a C++ pdal::capi::PointViewCollection object
 typedef void* PDALPointViewCollectionPtr;
 
 #endif /* PDAL_CAPI_FORWARD_H */
