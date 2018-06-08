@@ -36,20 +36,26 @@ namespace pdal
 
 					if (executor)
 					{
+						bool valid = false;
+
 						try
 						{
-							executor->validate();
+							valid = executor->validate();
 						}
 						catch (const std::exception &e)
 						{
-							printf("Could not validate pipeline: %s\n%s\n", e.what(), json);
-							delete executor;
-							executor = NULL;
+							printf("Error while validating pipeline: %s\n%s\n", e.what(), json);
 						}
 
-						if (executor)
+						if (valid)
 						{
 							pipeline = new Pipeline(executor);
+						}
+						else
+						{
+							delete executor;
+							executor = NULL;
+							printf("The pipeline is invalid:\n%s\n", json);
 						}
 					}
 				}
