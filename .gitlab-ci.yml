@@ -47,3 +47,48 @@ build-x64-windows-debug:
     paths:
       - build/
 
+#--------------------------
+# Linux Builds (via Docker)
+#--------------------------
+#
+.job_template: &build-linux
+  stage: build
+  image: simverge/pdalc-build-deps
+  script:
+    - export TARGET_PLATFORM=$CI_JOB_NAME
+    - echo "Building $CI_PROJECT_NAME ($CI_COMMIT_REF_NAME branch) for $TARGET_PLATFORM"
+    - rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
+    - mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
+    - cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
+    - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE "$CI_PROJECT_DIR"
+    - make
+  variables:
+    GIT_STRATEGY: clone
+  cache:
+    untracked: true
+    key: "$CI_JOB_NAME"
+    policy: push
+    paths:
+      - build/$CI_JOB_NAME/
+  artifacts:
+    untracked: true
+    expire_in: 1 week
+
+build-x64-linux-release:
+  <<: *build-linux
+  tags:
+    - linux
+    - docker
+    - release
+  before_script:
+    - export BUILD_TYPE=Release
+
+build-x64-linux-debug:
+  <<: *build-linux
+  tags:
+    - linux
+    - docker
+    - debug
+  before_script:
+    - export BUILD_TYPE=Debug
+
