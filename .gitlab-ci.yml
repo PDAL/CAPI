@@ -1,0 +1,49 @@
+#---------------
+# Windows Builds
+#---------------
+.job_template: &build-windows
+  stage: build
+  script:
+    - set TARGET_PLATFORM=%CI_JOB_NAME%
+    - set TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
+    - rd /s /q "%CI_PROJECT_DIR%/build/%TARGET_PLATFORM%"
+    - mkdir "%CI_PROJECT_DIR%/build/%TARGET_PLATFORM%"
+    - cd "%CI_PROJECT_DIR%/build/%TARGET_PLATFORM%"
+    - cmake "%CI_PROJECT_DIR%" -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DCMAKE_TOOLCHAIN_FILE=%TOOLCHAIN% -DVCPKG_TARGET_TRIPLET=%TRIPLET% -DCMAKE_GENERATOR_PLATFORM=%ARCH%
+    - cmake --build . --target INSTALL --config %BUILD_TYPE%
+
+  cache:
+    untracked: true
+    policy: push
+  artifacts:
+    untracked: true
+    expire_in: 1 week
+
+build-x64-windows-release:
+  <<: *build-windows
+  tags:
+    - windows
+    - release
+  before_script:
+    - set ARCH=x64
+    - set BUILD_TYPE=Release
+    - set TRIPLET=x64-windows
+  cache:
+    key: build-x64-windows-release
+    paths:
+      - build/
+
+build-x64-windows-debug:
+  <<: *build-windows
+  tags:
+    - windows
+    - debug
+  before_script:
+    - set ARCH=x64
+    - set BUILD_TYPE=Debug
+    - set TRIPLET=x64-windows
+  cache:
+    key: build-x64-windows-debug
+    paths:
+      - build/
+
