@@ -22,7 +22,6 @@ set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 
 include_directories("${CMAKE_SOURCE_DIR}/source")
-add_subdirectory("source/pdal/capi")
 
 # Measure code coverage on gcc
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -35,6 +34,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 		'/usr/include/*'
 	)
 endif()
+
+add_subdirectory("source/pdal/capi")
 
 include(CTest)
 add_subdirectory("tests/data")
