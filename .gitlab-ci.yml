@@ -113,7 +113,7 @@ test-x64-windows-debug:
     untracked: true
     expire_in: 1 week
 
-build-x64-linux-release:
+.build-x64-linux-release:
   <<: *build-linux
   tags:
     - linux
@@ -122,7 +122,7 @@ build-x64-linux-release:
   before_script:
     - export BUILD_TYPE=Release
 
-build-x64-linux-debug:
+.build-x64-linux-debug:
   <<: *build-linux
   tags:
     - linux
