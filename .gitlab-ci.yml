@@ -47,6 +47,42 @@ build-x64-windows-debug:
     paths:
       - build/build-x64-windows-debug/bin/
       - build/build-x64-windows-debug/data/
+#---------------
+# Windows Tests
+#---------------
+.job_template: &test-windows
+  tags:
+    - windows
+  stage: test
+  cache:
+    policy: pull
+
+test-x64-windows-release:
+  <<: *test-windows
+  dependencies:
+    - build-x64-windows-release
+  before_script:
+    - cd %VCPKG_ROOT%/installed/x64-windows/bin
+  script:
+    - "%CI_PROJECT_DIR%/build/build-x64-windows-release/bin/test_pdal_c"
+  cache:
+    key: build-x64-windows-release
+    paths:
+      - build/build-x64-windows-release/bin/
+
+test-x64-windows-debug:
+  <<: *test-windows
+  dependencies:
+    - build-x64-windows-debug
+  before_script:
+    - cd %VCPKG_ROOT%/installed/x64-windows/debug/bin
+  script:
+   - "%CI_PROJECT_DIR%/build/build-x64-windows-release/bin/test_pdal_cd"
+  cache:
+    key: build-x64-windows-debug
+    policy: pull
+    paths:
+      - build/build-x64-windows-debug/bin/
 
 #--------------------------
 # Linux Builds (via Docker)
