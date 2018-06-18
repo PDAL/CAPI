@@ -77,7 +77,7 @@ test-x64-windows-debug:
   before_script:
     - cd %VCPKG_ROOT%/installed/x64-windows/debug/bin
   script:
-   - "%CI_PROJECT_DIR%/build/build-x64-windows-release/bin/test_pdal_cd"
+   - "%CI_PROJECT_DIR%/build/build-x64-windows-debug/bin/test_pdal_cd"
   cache:
     key: build-x64-windows-debug
     policy: pull
