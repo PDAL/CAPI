@@ -107,7 +107,7 @@ test-x64-windows-debug:
     - mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
     - cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
     - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE "$CI_PROJECT_DIR"
-    - make
+    - make -j1
     - make install
   variables:
     GIT_STRATEGY: clone
@@ -126,7 +126,7 @@ test-x64-windows-debug:
       - build/$CI_JOB_NAME/lib/
       - build/$CI_JOB_NAME/include/*.h
 
-.build-x64-linux-release:
+build-x64-linux-release:
   <<: *build-linux
   tags:
     - linux
