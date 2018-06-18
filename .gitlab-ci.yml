@@ -35,6 +35,7 @@ build-x64-windows-release:
   artifacts:
     paths:
       - build/build-x64-windows-release/bin/*.dll
+      - build/build-x64-windows-release/include/*.h
 
 build-x64-windows-debug:
   <<: *build-windows
@@ -53,6 +54,7 @@ build-x64-windows-debug:
   artifacts:
     paths:
       - build/build-x64-windows-debug/bin/*.dll
+      - build/build-x64-windows-debug/include/*.h
 
 #---------------
 # Windows Tests
