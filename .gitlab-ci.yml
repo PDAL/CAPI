@@ -106,7 +106,7 @@ test-x64-windows-debug:
     - rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
     - mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
     - cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
-    - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE "$CI_PROJECT_DIR"
+    - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPDALC_ENABLE_CODE_COVERAGE=OFF "$CI_PROJECT_DIR"
     - make -j1
     - make install
   variables:

@@ -21,10 +21,12 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING "CMake install prefi
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 
+set(PDALC_ENABLE_CODE_COVERAGE ON CACHE BOOL "Enable code coverage calculation")
+
 include_directories("${CMAKE_SOURCE_DIR}/source")
 
 # Measure code coverage on gcc
-if(CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_COMPILER_IS_GNUCXX AND PDALC_ENABLE_CODE_COVERAGE)
 	include(CodeCoverage)
 	APPEND_COVERAGE_COMPILER_FLAGS()
 	set(COVERAGE_EXCLUDES
