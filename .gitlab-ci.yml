@@ -99,7 +99,6 @@ test-x64-windows-debug:
 #
 .job_template: &build-linux
   stage: build
-  image: simverge/pdalc-build-deps
   script:
     - export TARGET_PLATFORM=$CI_JOB_NAME
     - echo "Building $CI_PROJECT_NAME ($CI_COMMIT_REF_NAME branch) for $TARGET_PLATFORM"
@@ -130,6 +129,7 @@ build-x64-linux-release:
   <<: *build-linux
   tags:
     - linux
+    - pdal
     - docker
     - release
   before_script:
@@ -139,6 +139,7 @@ build-x64-linux-release:
   <<: *build-linux
   tags:
     - linux
+    - pdal
     - docker
     - debug
   before_script:
