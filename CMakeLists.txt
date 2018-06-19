@@ -22,13 +22,12 @@ set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 
 set(PDALC_ENABLE_CODE_COVERAGE ON CACHE BOOL "Enable code coverage calculation")
+set(PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE "131072" CACHE STRING "GCC garbage collection minimum heap size")
 
 include_directories("${CMAKE_SOURCE_DIR}/source")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-	add_compile_options(-Wall)
-	add_compile_options(--param ggc-min-heapsize=8192)
-	add_definitions(-v)
+	add_compile_options(--param ggc-min-heapsize=${PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE})
 
 	if(PDALC_ENABLE_CODE_COVERAGE)
 		message(STATUS "Enabled code coverage analysis")

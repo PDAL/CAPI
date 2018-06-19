@@ -105,8 +105,8 @@ test-x64-windows-debug:
     - rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
     - mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
     - cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
-    - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPDALC_ENABLE_CODE_COVERAGE=OFF -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_RULE_MESSAGES:BOOL=OFF "$CI_PROJECT_DIR"
-    - make -j1 --no-print-directory
+    - cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPDALC_ENABLE_CODE_COVERAGE=OFF -DPDALC_GCC_PARAM_GGC_MIN_HEAPSIZE=8192 "$CI_PROJECT_DIR"
+    - make
     - make install
   variables:
     GIT_STRATEGY: clone
