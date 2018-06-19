@@ -25,16 +25,21 @@ set(PDALC_ENABLE_CODE_COVERAGE ON CACHE BOOL "Enable code coverage calculation")
 
 include_directories("${CMAKE_SOURCE_DIR}/source")
 
-# Measure code coverage on gcc
-if(CMAKE_COMPILER_IS_GNUCXX AND PDALC_ENABLE_CODE_COVERAGE)
-	include(CodeCoverage)
-	APPEND_COVERAGE_COMPILER_FLAGS()
-	set(COVERAGE_EXCLUDES
-		'build/*'
-		'cmake/*'
-		'tests/*'
-		'/usr/include/*'
-	)
+if(CMAKE_COMPILER_IS_GNUCXX)
+	add_compile_options(-Wall)
+	add_definitions(-v)
+
+	if(PDALC_ENABLE_CODE_COVERAGE)
+		message(STATUS "Enabled code coverage analysis")
+		include(CodeCoverage)
+		APPEND_COVERAGE_COMPILER_FLAGS()
+		set(COVERAGE_EXCLUDES
+			'build/*'
+			'cmake/*'
+			'tests/*'
+			'/usr/include/*'
+		)
+	endif()
 endif()
 
 add_subdirectory("source/pdal/capi")
