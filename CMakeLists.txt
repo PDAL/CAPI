@@ -27,6 +27,7 @@ include_directories("${CMAKE_SOURCE_DIR}/source")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
 	add_compile_options(-Wall)
+	add_compile_options(--param ggc-min-heapsize=8192)
 	add_definitions(-v)
 
 	if(PDALC_ENABLE_CODE_COVERAGE)
