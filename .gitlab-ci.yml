@@ -89,13 +89,12 @@ test-x64-windows-debug:
    - "%CI_PROJECT_DIR%/build/build-x64-windows-debug/bin/test_pdal_cd"
   cache:
     key: build-x64-windows-debug
-    policy: pull
     paths:
       - build/build-x64-windows-debug/bin/
 
-#--------------------------
-# Linux Builds (via Docker)
-#--------------------------
+#--------------
+# Linux Builds 
+#--------------
 #
 .job_template: &build-linux
   stage: build
