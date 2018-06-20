@@ -174,14 +174,11 @@ build-x64-linux-debug-alpine:
 .job_template: &test-linux
   stage: test
   script:
-    - make test
+    - make coverage_pdal_c
     - ls -l
   cache:
     key: "$CI_JOB_NAME"
     policy: pull
-  artifacts:
-    paths:
-      - build/$CI_JOB_NAME
 
 test-x64-linux-release-alpine:
   <<: *test-linux
@@ -194,6 +191,9 @@ test-x64-linux-release-alpine:
     - build-x64-linux-release-alpine
   before_script:
     - cd build/build-x64-linux-release-alpine
+  artifacts:
+    paths:
+      - build/build-x64-linux-release-alpine
 
 test-x64-linux-debug-alpine:
   <<: *test-linux
@@ -206,5 +206,7 @@ test-x64-linux-debug-alpine:
     - build-x64-linux-debug-alpine
   before_script:
     - cd build/build-x64-linux-debug-alpine
-
+  artifacts:
+    paths:
+      - build/build-x64-linux-debug-alpine
 
