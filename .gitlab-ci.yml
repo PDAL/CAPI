@@ -175,9 +175,13 @@ build-x64-linux-debug-alpine:
   stage: test
   script:
     - make test
+    - ls -l
   cache:
     key: "$CI_JOB_NAME"
     policy: pull
+  artifacts:
+    paths:
+      - build/$CI_JOB_NAME
 
 test-x64-linux-release-alpine:
   <<: *test-linux
