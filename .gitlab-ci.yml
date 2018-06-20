@@ -135,7 +135,7 @@ build-x64-linux-release-ubuntu:
   before_script:
     - export BUILD_TYPE=Release
 
-.build-x64-linux-debug-ubuntu:
+build-x64-linux-debug-ubuntu:
   <<: *build-linux
   tags:
     - linux
