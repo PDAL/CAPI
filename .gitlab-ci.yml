@@ -146,3 +146,25 @@ build-x64-linux-debug-ubuntu:
   before_script:
     - export BUILD_TYPE=Debug
 
+build-x64-linux-release-alpine:
+  <<: *build-linux
+  tags:
+    - linux
+    - pdal
+    - docker
+    - release
+    - alpine
+  before_script:
+    - export BUILD_TYPE=Release
+
+build-x64-linux-debug-alpine:
+  <<: *build-linux
+  tags:
+    - linux
+    - pdal
+    - docker
+    - debug
+    - alpine
+  before_script:
+    - export BUILD_TYPE=Debug
+
