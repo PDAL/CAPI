@@ -21,20 +21,28 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE STRING "CMake install prefi
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
 
-include_directories("${CMAKE_SOURCE_DIR}/source")
-add_subdirectory("source/pdal/capi")
+set(PDALC_ENABLE_CODE_COVERAGE ON CACHE BOOL "Enable code coverage calculation")
+set(PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE "131072" CACHE STRING "GCC garbage collection minimum heap size")
 
-# Measure code coverage on gcc
+include_directories("${CMAKE_SOURCE_DIR}/source")
+
 if(CMAKE_COMPILER_IS_GNUCXX)
-	include(CodeCoverage)
-	APPEND_COVERAGE_COMPILER_FLAGS()
-	set(COVERAGE_EXCLUDES
-		'build/*'
-		'cmake/*'
-		'tests/*'
-		'/usr/include/*'
-	)
+	add_compile_options(--param ggc-min-heapsize=${PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE})
+
+	if(PDALC_ENABLE_CODE_COVERAGE)
+		message(STATUS "Enabled code coverage analysis")
+		include(CodeCoverage)
+		APPEND_COVERAGE_COMPILER_FLAGS()
+		set(COVERAGE_EXCLUDES
+			'build/*'
+			'cmake/*'
+			'tests/*'
+			'/usr/include/*'
+		)
+	endif()
 endif()
+
+add_subdirectory("source/pdal/capi")
 
 include(CTest)
 add_subdirectory("tests/data")
