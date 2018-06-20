@@ -168,3 +168,39 @@ build-x64-linux-debug-alpine:
   before_script:
     - export BUILD_TYPE=Debug
 
+#---------------
+# Linux Tests
+#---------------
+.job_template: &test-linux
+  stage: test
+  script:
+    - make test
+  cache:
+    key: "$CI_JOB_NAME"
+    policy: pull
+
+test-x64-linux-release-alpine:
+  <<: *test-linux
+  tags:
+    - linux
+    - pdal
+    - release
+    - alpine
+  dependencies:
+    - build-x64-linux-release-alpine
+  before_script:
+    - cd build/build-x64-linux-release-alpine
+
+test-x64-linux-debug-alpine:
+  <<: *test-linux
+  tags:
+    - linux
+    - pdal
+    - debug
+    - alpine
+  dependencies:
+    - build-x64-linux-debug-alpine
+  before_script:
+    - cd build/build-x64-linux-debug-alpine
+
+
