@@ -193,7 +193,7 @@ test-x64-linux-release-alpine:
     - cd build/build-x64-linux-release-alpine
   artifacts:
     paths:
-      - build/build-x64-linux-release-alpine
+      - build/build-x64-linux-release-alpine/coverage_pdal_c
 
 test-x64-linux-debug-alpine:
   <<: *test-linux
@@ -208,5 +208,5 @@ test-x64-linux-debug-alpine:
     - cd build/build-x64-linux-debug-alpine
   artifacts:
     paths:
-      - build/build-x64-linux-debug-alpine
+      - build/build-x64-linux-debug-alpine/coverage_pdal_c
 
