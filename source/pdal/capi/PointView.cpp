@@ -52,6 +52,56 @@ namespace pdal
 
 				return ptr;
 			}
+
+			size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size)
+			{
+				pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+				size_t result = 0;
+
+				if (size > 0 && proj)
+				{
+					proj[0] = '\0';
+					proj[size-1] = '\0';
+
+					if (wrapper && *wrapper)
+					{
+						std::string s = (*wrapper)->spatialReference().getProj4();
+						std::strncpy(proj, s.c_str(), size - 1);
+						result = std::min(s.length(), size);
+					}
+				}
+
+				return result;
+			}
+
+			size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty)
+			{
+				pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+				size_t result = 0;
+
+				if (size > 0 && wkt)
+				{
+					wkt[0] = '\0';
+					wkt[size-1] = '\0';
+
+					if (wrapper && *wrapper)
+					{
+						std::string s = (*wrapper)->spatialReference().getWKT();
+
+						 if (pretty)
+						 {
+							 s = SpatialReference::prettyWkt(s);
+						 }
+
+						std::strncpy(wkt, s.c_str(), size - 1);
+						result = std::min(s.length(), size);
+					}
+				}
+
+				return result;
+			}
 		}
 	}
 }

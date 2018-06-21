@@ -30,7 +30,9 @@ namespace pdal
 			 */
 			PDAL_C_API PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view);
 
+			PDAL_C_API size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size);
 
+			PDAL_C_API size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty);
 
 
 			/**

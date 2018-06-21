@@ -150,6 +150,63 @@ TEST testPDALClonePointView(void)
 	PASS();
 }
 
+TEST testPDALGetPointViewProj4(void)
+{
+	PDALResetPointViewCollection(gPointViewCollection);
+	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(!hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	ASSERT_FALSE(view == NULL);
+
+	char proj[1024];
+	size_t size = PDALGetPointViewProj4(NULL, proj, 1024);
+	ASSERT_FALSE(size > 0);
+	ASSERT_FALSE(proj[0] != '\0');
+
+	size = PDALGetPointViewProj4(view, NULL, 1024);
+	ASSERT_FALSE(size > 0);
+
+	size = PDALGetPointViewProj4(view, proj, 0);
+	ASSERT_FALSE(size > 0);
+
+	// TODO Enable when test incorporates a pipeline with projection info
+	// size = PDALGetPointViewProj4(view, proj, 1024);
+	// ASSERT_FALSE(size == 0 || size > 1024);
+	// ASSERT_FALSE(proj[0] == '\0');
+	// printf("\n%s\n", proj);
+
+	PASS();
+}
+
+TEST testPDALGetPointViewWkt(void)
+{
+	PDALResetPointViewCollection(gPointViewCollection);
+	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(!hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	ASSERT_FALSE(view == NULL);
+
+	char wkt[1024];
+	size_t size = PDALGetPointViewWkt(NULL, wkt, 1024, false);
+	ASSERT_FALSE(size > 0);
+	ASSERT_FALSE(wkt[0] != '\0');
+
+	size = PDALGetPointViewWkt(view, NULL, 1024, false);
+	ASSERT_FALSE(size > 0);
+
+	size = PDALGetPointViewWkt(view, wkt, 0, false);
+	ASSERT_FALSE(size > 0);
+
+	// TODO Enable when test incorporates a pipeline with projection info
+	// size = PDALGetPointViewWkt(view, wkt, 1024, false);
+	// ASSERT_FALSE(size == 0 || size > 1024);
+	// ASSERT_FALSE(wkt[0] == '\0');
+	// printf("\n%s\n", wkt);
+
+	PASS();
+}
 
 GREATEST_SUITE(PointViewTest)
 {
@@ -160,6 +217,8 @@ GREATEST_SUITE(PointViewTest)
 	RUN_TEST(testPDALGetPointViewSize);
 	RUN_TEST(testPDALIsPointViewEmpty);
 	RUN_TEST(testPDALClonePointView);
+	RUN_TEST(testPDALGetPointViewProj4);
+	RUN_TEST(testPDALGetPointViewWkt);
 
 	SET_SETUP(NULL, NULL);
 	SET_TEARDOWN(NULL, NULL);
