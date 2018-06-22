@@ -12,7 +12,16 @@
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${env:VCPKG_ROOT}\\installed\\x64-windows\\debug\\bin",
-			"environment": [],
+			"environment": [
+				{
+					"name": "GDAL_DATA",
+					"value": "${env:VCPKG_ROOT}\\installed\\x64-windows\\share\\gdal"
+				},
+				{
+					"name": "PROJ_LIB",
+					"value": "${env:VCPKG_ROOT}\\installed\\x64-windows\\share\\proj4"
+				}
+			],
 			"externalConsole": true,
 			"internalConsoleOptions": "openOnSessionStart"
 		}

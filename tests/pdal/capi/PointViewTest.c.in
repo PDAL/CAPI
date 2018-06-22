@@ -62,7 +62,7 @@ static PDALPointViewCollectionPtr gPointViewCollection = NULL;
 
 static void setupPointViewTest(void *arg)
 {
-	FILE *file = fopen("@CMAKE_BINARY_DIR@//data/stats.json", "rb");
+	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
 	char *json = NULL;
 
 	if (file)
@@ -76,7 +76,6 @@ static void setupPointViewTest(void *arg)
 		{
 			fread(json, 1, length, file);
 			json[length] = '\0';
-
 			gPipeline = PDALCreatePipeline(json);
 
 			if (gPipeline && PDALExecutePipeline(gPipeline))
@@ -170,11 +169,10 @@ TEST testPDALGetPointViewProj4(void)
 	size = PDALGetPointViewProj4(view, proj, 0);
 	ASSERT_FALSE(size > 0);
 
-	// TODO Enable when test incorporates a pipeline with projection info
-	// size = PDALGetPointViewProj4(view, proj, 1024);
-	// ASSERT_FALSE(size == 0 || size > 1024);
-	// ASSERT_FALSE(proj[0] == '\0');
-	// printf("\n%s\n", proj);
+	size = PDALGetPointViewProj4(view, proj, 1024);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(proj[0] == '\0');
+	ASSERT_STR_EQ("+proj=longlat +datum=WGS84 +no_defs", proj);
 
 	PASS();
 }
@@ -199,11 +197,21 @@ TEST testPDALGetPointViewWkt(void)
 	size = PDALGetPointViewWkt(view, wkt, 0, false);
 	ASSERT_FALSE(size > 0);
 
-	// TODO Enable when test incorporates a pipeline with projection info
-	// size = PDALGetPointViewWkt(view, wkt, 1024, false);
-	// ASSERT_FALSE(size == 0 || size > 1024);
-	// ASSERT_FALSE(wkt[0] == '\0');
-	// printf("\n%s\n", wkt);
+	size = PDALGetPointViewWkt(view, wkt, 1024, false);
+	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT_FALSE(wkt[0] == '\0');
+	ASSERT_STR_EQ(
+		"GEOGCS[\"WGS 84\","
+			"DATUM[\"WGS_1984\","
+				"SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],"
+				"AUTHORITY[\"EPSG\",\"6326\"]"
+			"],"
+			"PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],"
+			"UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],"
+			"AUTHORITY[\"EPSG\",\"4326\"]"
+		"]",
+		wkt
+	);
 
 	PASS();
 }

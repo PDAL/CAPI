@@ -73,6 +73,8 @@ test-x64-windows-release:
   before_script:
     - cd %VCPKG_ROOT%/installed/x64-windows/bin
   script:
+    - set GDAL_DATA=%VCPKG_ROOT%\installed\x64-windows\share\gdal
+    - set PROJ_LIB=%VCPKG_ROOT%\installed\x64-windows\share\proj4
     - "%CI_PROJECT_DIR%/build/build-x64-windows-release/bin/test_pdal_c"
   cache:
     key: build-x64-windows-release
@@ -86,7 +88,9 @@ test-x64-windows-debug:
   before_script:
     - cd %VCPKG_ROOT%/installed/x64-windows/debug/bin
   script:
-   - "%CI_PROJECT_DIR%/build/build-x64-windows-debug/bin/test_pdal_cd"
+    - set GDAL_DATA=%VCPKG_ROOT%\installed\x64-windows\share\gdal
+    - set PROJ_LIB=%VCPKG_ROOT%\installed\x64-windows\share\proj4
+    - "%CI_PROJECT_DIR%/build/build-x64-windows-debug/bin/test_pdal_cd"
   cache:
     key: build-x64-windows-debug
     paths:
