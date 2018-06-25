@@ -36,8 +36,12 @@ namespace pdal
 
 #endif /* __cplusplus */
 
+
 /// A pointer to a C++ pdal::capi::Pipeline object
 typedef void* PDALPipelinePtr;
+
+/// A pointer to a C++ pdal::PointLayout
+typedef void* PDALPointLayoutPtr;
 
 /// A pointer to a C++ pdal::capi::PointView object
 typedef void* PDALPointViewPtr;

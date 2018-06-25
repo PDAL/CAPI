@@ -102,6 +102,20 @@ namespace pdal
 
 				return result;
 			}
+
+			PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view)
+			{
+				pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+				PDALPointLayoutPtr layout = nullptr;
+
+				if (wrapper && *wrapper)
+				{
+					layout = (*wrapper)->layout();
+				}
+
+				return layout;
+			}
 		}
 	}
 }

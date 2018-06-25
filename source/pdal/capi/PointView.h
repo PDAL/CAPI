@@ -89,7 +89,13 @@ namespace pdal
 			 */
 			PDAL_C_API size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty);
 
-			//! PDAL_C_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
+			/**
+			 * Returns the point layout for the provided point `view`.
+			 * 
+			 * @param view The point view
+			 * @return The point layout
+			 */
+			PDAL_C_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
 
 			/**
 			 * Fill a buffer with point data specified by the dimension list.

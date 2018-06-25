@@ -216,6 +216,25 @@ TEST testPDALGetPointViewWkt(void)
 	PASS();
 }
 
+
+TEST testPDALGetPointViewLayout(void)
+{
+	PDALPointLayoutPtr layout = PDALGetPointViewLayout(NULL);
+	ASSERT_FALSE(layout != NULL);
+
+	PDALResetPointViewCollection(gPointViewCollection);
+	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(!hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	ASSERT_FALSE(view == NULL);
+
+	layout = PDALGetPointViewLayout(view);
+	ASSERT_FALSE(layout == NULL);
+
+	PASS();
+}
+
 GREATEST_SUITE(PointViewTest)
 {
 	SET_SETUP(setupPointViewTest, NULL);
@@ -227,6 +246,7 @@ GREATEST_SUITE(PointViewTest)
 	RUN_TEST(testPDALClonePointView);
 	RUN_TEST(testPDALGetPointViewProj4);
 	RUN_TEST(testPDALGetPointViewWkt);
+	RUN_TEST(testPDALGetPointViewLayout);
 
 	SET_SETUP(NULL, NULL);
 	SET_TEARDOWN(NULL, NULL);
