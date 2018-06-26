@@ -9,6 +9,7 @@
 #include "greatest.h"
 
 #include <pdal/capi/Pipeline.h>
+#include <pdal/capi/PointView.h>
 #include <pdal/capi/PointViewCollection.h>
 
 SUITE(PointViewCollectionTest);
@@ -58,9 +59,9 @@ TEST testPDALHasNextPointView(void)
 	bool hasNext = PDALHasNextPointView(NULL);
 	ASSERT_FALSE(hasNext);
 
-	ASSERT_FALSE(gPointViewCollection == NULL);
+	ASSERT(gPointViewCollection);
 	hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	PASS();
 }
@@ -73,15 +74,15 @@ TEST testPDALGetNextPointView(void)
 	ASSERT_FALSE(gPointViewCollection == NULL);
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 
 	if (PDALHasNextPointView(gPointViewCollection))
 	{
 		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
-		ASSERT_FALSE(anotherView == NULL);
+		ASSERT(anotherView);
 		ASSERT_FALSE(anotherView == view);
 		PDALDisposePointView(anotherView);
 	}
@@ -92,18 +93,18 @@ TEST testPDALGetNextPointView(void)
 
 TEST testPDALResetPointViewCollection(void)
 {
-	ASSERT_FALSE(gPointViewCollection == NULL);
+	ASSERT(gPointViewCollection);
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 
 	while (PDALHasNextPointView(gPointViewCollection))
 	{
 		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
-		ASSERT_FALSE(anotherView == NULL);
+		ASSERT(anotherView);
 		ASSERT_FALSE(anotherView == view);
 		PDALDisposePointView(anotherView);
 	}
@@ -117,7 +118,7 @@ TEST testPDALResetPointViewCollection(void)
 	PDALResetPointViewCollection(gPointViewCollection);
 
 	view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 	PDALDisposePointView(view);
 
 	PASS();

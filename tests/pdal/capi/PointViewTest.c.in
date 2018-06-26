@@ -102,14 +102,14 @@ TEST testPDALGetPointViewId(void)
 
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	struct node *tree = NULL;
 
 	while (hasNext)
 	{
 		PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
-		ASSERT_FALSE(view == NULL);
+		ASSERT(view);
 
 		// Make sure all IDs are valid
 		int id = PDALGetPointViewId(view);
@@ -117,7 +117,7 @@ TEST testPDALGetPointViewId(void)
 
 		// Make sure that there are no duplicate IDs
 		bool inserted = insert(id, &tree);
-		ASSERT_FALSE(!inserted);
+		ASSERT(inserted);
 
 		hasNext = PDALHasNextPointView(gPointViewCollection);
 	}
@@ -136,7 +136,7 @@ TEST testPDALGetPointViewSize(void)
 
 TEST testPDALIsPointViewEmpty(void)
 {
-	ASSERT_FALSE(!PDALIsPointViewEmpty(NULL));
+	ASSERT(PDALIsPointViewEmpty(NULL));
 
 	PASS();
 }
@@ -153,24 +153,24 @@ TEST testPDALGetPointViewProj4(void)
 {
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 
 	char proj[1024];
 	size_t size = PDALGetPointViewProj4(NULL, proj, 1024);
-	ASSERT_FALSE(size > 0);
-	ASSERT_FALSE(proj[0] != '\0');
+	ASSERT_EQ(0, size);
+	ASSERT_EQ('\0', proj[0]);
 
 	size = PDALGetPointViewProj4(view, NULL, 1024);
-	ASSERT_FALSE(size > 0);
+	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewProj4(view, proj, 0);
-	ASSERT_FALSE(size > 0);
+	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewProj4(view, proj, 1024);
-	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT(size > 0 && size <= 1024);
 	ASSERT_FALSE(proj[0] == '\0');
 	ASSERT_STR_EQ("+proj=longlat +datum=WGS84 +no_defs", proj);
 
@@ -181,24 +181,24 @@ TEST testPDALGetPointViewWkt(void)
 {
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 
 	char wkt[1024];
 	size_t size = PDALGetPointViewWkt(NULL, wkt, 1024, false);
-	ASSERT_FALSE(size > 0);
-	ASSERT_FALSE(wkt[0] != '\0');
+	ASSERT_EQ(0, size);
+	ASSERT_EQ('\0', wkt[0]);
 
 	size = PDALGetPointViewWkt(view, NULL, 1024, false);
-	ASSERT_FALSE(size > 0);
+	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewWkt(view, wkt, 0, false);
-	ASSERT_FALSE(size > 0);
+	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewWkt(view, wkt, 1024, false);
-	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT(size > 0 && size <= 1024);
 	ASSERT_FALSE(wkt[0] == '\0');
 	ASSERT_STR_EQ(
 		"GEOGCS[\"WGS 84\","
@@ -220,17 +220,17 @@ TEST testPDALGetPointViewWkt(void)
 TEST testPDALGetPointViewLayout(void)
 {
 	PDALPointLayoutPtr layout = PDALGetPointViewLayout(NULL);
-	ASSERT_FALSE(layout != NULL);
+	ASSERT_EQ(NULL, layout);
 
 	PDALResetPointViewCollection(gPointViewCollection);
 	bool hasNext = PDALHasNextPointView(gPointViewCollection);
-	ASSERT_FALSE(!hasNext);
+	ASSERT(hasNext);
 
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
-	ASSERT_FALSE(view == NULL);
+	ASSERT(view);
 
 	layout = PDALGetPointViewLayout(view);
-	ASSERT_FALSE(layout == NULL);
+	ASSERT(layout);
 
 	PASS();
 }
