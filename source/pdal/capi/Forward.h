@@ -28,7 +28,7 @@ namespace pdal
 
 	namespace capi
 	{
-		class PointViewCollection;
+		class PointViewIterator;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 		using PointView = pdal::PointViewPtr;
 	}
@@ -46,7 +46,7 @@ typedef void* PDALPointLayoutPtr;
 /// A pointer to a C++ pdal::capi::PointView object
 typedef void* PDALPointViewPtr;
 
-/// A pointer to a C++ pdal::capi::PointViewCollection object
-typedef void* PDALPointViewCollectionPtr;
+/// A pointer to a C++ pdal::capi::PointViewIterator object
+typedef void* PDALPointViewIteratorPtr;
 
 #endif /* PDAL_CAPI_FORWARD_H */

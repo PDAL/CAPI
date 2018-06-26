@@ -11,7 +11,7 @@
 #include <pdal/capi/Pipeline.h>
 #include <pdal/capi/PointLayout.h>
 #include <pdal/capi/PointView.h>
-#include <pdal/capi/PointViewCollection.h>
+#include <pdal/capi/PointViewIterator.h>
 
 SUITE(PointLayoutTest);
 
@@ -38,7 +38,7 @@ static void setupPointLayoutTest(void *arg)
 
 			if (gPipeline && PDALExecutePipeline(gPipeline))
 			{
-				PDALPointViewCollectionPtr views = PDALGetPointViews(gPipeline);
+				PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
 
 				if (PDALHasNextPointView(views))
 				{

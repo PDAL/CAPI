@@ -10,14 +10,14 @@
 
 #include <pdal/capi/Pipeline.h>
 #include <pdal/capi/PointView.h>
-#include <pdal/capi/PointViewCollection.h>
+#include <pdal/capi/PointViewIterator.h>
 
-SUITE(PointViewCollectionTest);
+SUITE(PointViewIteratorTest);
 
 static PDALPipelinePtr gPipeline = NULL;
-static PDALPointViewCollectionPtr gPointViewCollection = NULL;
+static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
-static void setupPointViewCollectionTest(void *arg)
+static void setupPointViewIteratorTest(void *arg)
 {
 	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
 	char *json = NULL;
@@ -38,7 +38,7 @@ static void setupPointViewCollectionTest(void *arg)
 
 			if (gPipeline && PDALExecutePipeline(gPipeline))
 			{
-				gPointViewCollection = PDALGetPointViews(gPipeline);
+				gPointViewIterator = PDALGetPointViews(gPipeline);
 			}
 
 			free(json);
@@ -48,9 +48,9 @@ static void setupPointViewCollectionTest(void *arg)
 	}
 }
 
-static void teardownPointViewCollectionTest(void *arg)
+static void teardownPointViewIteratorTest(void *arg)
 {
-	PDALDisposePointViewCollection(gPointViewCollection);
+	PDALDisposePointViewIterator(gPointViewIterator);
 	PDALDisposePipeline(gPipeline);
 }
 
@@ -59,8 +59,8 @@ TEST testPDALHasNextPointView(void)
 	bool hasNext = PDALHasNextPointView(NULL);
 	ASSERT_FALSE(hasNext);
 
-	ASSERT(gPointViewCollection);
-	hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT(gPointViewIterator);
+	hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
 	PASS();
@@ -71,17 +71,17 @@ TEST testPDALGetNextPointView(void)
 	PDALPointViewPtr view = PDALGetNextPointView(NULL);
 	ASSERT_EQ(NULL, view);
 
-	ASSERT_FALSE(gPointViewCollection == NULL);
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT_FALSE(gPointViewIterator == NULL);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
-	view = PDALGetNextPointView(gPointViewCollection);
+	view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
-	if (PDALHasNextPointView(gPointViewCollection))
+	if (PDALHasNextPointView(gPointViewIterator))
 	{
-		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
+		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
 		ASSERT(anotherView);
 		ASSERT_FALSE(anotherView == view);
 		PDALDisposePointView(anotherView);
@@ -91,19 +91,19 @@ TEST testPDALGetNextPointView(void)
 	PASS();
 }
 
-TEST testPDALResetPointViewCollection(void)
+TEST testPDALResetPointViewIterator(void)
 {
-	ASSERT(gPointViewCollection);
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	ASSERT(gPointViewIterator);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
-	while (PDALHasNextPointView(gPointViewCollection))
+	while (PDALHasNextPointView(gPointViewIterator))
 	{
-		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewCollection);
+		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
 		ASSERT(anotherView);
 		ASSERT_FALSE(anotherView == view);
 		PDALDisposePointView(anotherView);
@@ -111,27 +111,27 @@ TEST testPDALResetPointViewCollection(void)
 
 	PDALDisposePointView(view);
 
-	view = PDALGetNextPointView(gPointViewCollection);
+	view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT_EQ(NULL, view);
 	PDALDisposePointView(view);
 
-	PDALResetPointViewCollection(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
 
-	view = PDALGetNextPointView(gPointViewCollection);
+	view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 	PDALDisposePointView(view);
 
 	PASS();
 }
 
-GREATEST_SUITE(PointViewCollectionTest)
+GREATEST_SUITE(PointViewIteratorTest)
 {
-	SET_SETUP(setupPointViewCollectionTest, NULL);
-	SET_TEARDOWN(teardownPointViewCollectionTest, NULL);
+	SET_SETUP(setupPointViewIteratorTest, NULL);
+	SET_TEARDOWN(teardownPointViewIteratorTest, NULL);
 
 	RUN_TEST(testPDALHasNextPointView);
 	RUN_TEST(testPDALGetNextPointView);
-	RUN_TEST(testPDALResetPointViewCollection);
+	RUN_TEST(testPDALResetPointViewIterator);
 
 	SET_SETUP(NULL, NULL);
 	SET_TEARDOWN(NULL, NULL);

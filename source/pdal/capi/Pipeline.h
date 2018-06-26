@@ -116,7 +116,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return A pointer to a point view collection or nullptr if no point views are available
 			 */
-			PDAL_C_API PDALPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline);
+			PDAL_C_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 

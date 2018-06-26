@@ -3,7 +3,7 @@
  */
 
 #include "Pipeline.h"
-#include "PointViewCollection.h"
+#include "PointViewIterator.h"
 
 #include <pdal/PipelineExecutor.hpp>
 
@@ -172,10 +172,10 @@ namespace pdal
 				return ptr && ptr->get() && ptr->get()->validate();
 			}
 
-			PDALPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline)
+			PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline)
 			{
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::capi::PointViewCollection *views = nullptr;
+				pdal::capi::PointViewIterator *views = nullptr;
 				
 				if (ptr && ptr->get())
 				{
@@ -183,7 +183,7 @@ namespace pdal
 
 					if (!v.empty())
 					{
-						views = new pdal::capi::PointViewCollection(v);
+						views = new pdal::capi::PointViewIterator(v);
 					}
 				}
 

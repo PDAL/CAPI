@@ -7,7 +7,7 @@ set(SOURCES
 	Pipeline.cpp
 	PointLayout.cpp
 	PointView.cpp
-	PointViewCollection.cpp
+	PointViewIterator.cpp
 )
 
 set(HEADERS
@@ -16,7 +16,7 @@ set(HEADERS
 	Pipeline.h
 	PointLayout.h
 	PointView.h
-	PointViewCollection.h
+	PointViewIterator.h
 )
 
 set(DEPENDENCIES

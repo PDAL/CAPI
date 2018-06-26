@@ -10,7 +10,7 @@
 
 #include <pdal/capi/Pipeline.h>
 #include <pdal/capi/PointView.h>
-#include <pdal/capi/PointViewCollection.h>
+#include <pdal/capi/PointViewIterator.h>
 
 /// A simple binary tree implementation for int values
 struct node
@@ -58,7 +58,7 @@ SUITE(PointViewTest);
 
 static const int INVALID_POINT_VIEW_ID = 0;
 static PDALPipelinePtr gPipeline = NULL;
-static PDALPointViewCollectionPtr gPointViewCollection = NULL;
+static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
 static void setupPointViewTest(void *arg)
 {
@@ -80,7 +80,7 @@ static void setupPointViewTest(void *arg)
 
 			if (gPipeline && PDALExecutePipeline(gPipeline))
 			{
-				gPointViewCollection = PDALGetPointViews(gPipeline);
+				gPointViewIterator = PDALGetPointViews(gPipeline);
 			}
 
 			free(json);
@@ -92,7 +92,7 @@ static void setupPointViewTest(void *arg)
 
 static void teardownPointViewTest(void *arg)
 {
-	PDALDisposePointViewCollection(gPointViewCollection);
+	PDALDisposePointViewIterator(gPointViewIterator);
 	PDALDisposePipeline(gPipeline);
 }
 
@@ -100,15 +100,15 @@ TEST testPDALGetPointViewId(void)
 {
 	ASSERT_EQ(INVALID_POINT_VIEW_ID, PDALGetPointViewId(NULL));
 
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
 	struct node *tree = NULL;
 
 	while (hasNext)
 	{
-		PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+		PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 		ASSERT(view);
 
 		// Make sure all IDs are valid
@@ -119,7 +119,7 @@ TEST testPDALGetPointViewId(void)
 		bool inserted = insert(id, &tree);
 		ASSERT(inserted);
 
-		hasNext = PDALHasNextPointView(gPointViewCollection);
+		hasNext = PDALHasNextPointView(gPointViewIterator);
 	}
 
 	dispose(tree);
@@ -143,7 +143,7 @@ TEST testPDALIsPointViewEmpty(void)
 
 TEST testPDALClonePointView(void)
 {
-	PDALResetPointViewCollection(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
 
 
 	PASS();
@@ -151,11 +151,11 @@ TEST testPDALClonePointView(void)
 
 TEST testPDALGetPointViewProj4(void)
 {
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
 	char proj[1024];
@@ -179,11 +179,11 @@ TEST testPDALGetPointViewProj4(void)
 
 TEST testPDALGetPointViewWkt(void)
 {
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
 	char wkt[1024];
@@ -222,11 +222,11 @@ TEST testPDALGetPointViewLayout(void)
 	PDALPointLayoutPtr layout = PDALGetPointViewLayout(NULL);
 	ASSERT_EQ(NULL, layout);
 
-	PDALResetPointViewCollection(gPointViewCollection);
-	bool hasNext = PDALHasNextPointView(gPointViewCollection);
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewCollection);
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
 	layout = PDALGetPointViewLayout(view);
