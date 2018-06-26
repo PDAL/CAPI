@@ -7,6 +7,7 @@ set(DEPENDENCIES pdal_c)
 
 set(TESTS
 	PipelineTest
+	PointLayoutTest
 	PointViewCollectionTest
 	PointViewTest
 )

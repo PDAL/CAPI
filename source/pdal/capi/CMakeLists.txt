@@ -5,6 +5,7 @@ message(STATUS "Found PDAL ${PDAL_VERSION}")
 
 set(SOURCES
 	Pipeline.cpp
+	PointLayout.cpp
 	PointView.cpp
 	PointViewCollection.cpp
 )
@@ -13,6 +14,7 @@ set(HEADERS
 	Defines.h
 	Forward.h
 	Pipeline.h
+	PointLayout.h
 	PointView.h
 	PointViewCollection.h
 )

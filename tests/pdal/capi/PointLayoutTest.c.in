@@ -1,0 +1,100 @@
+/*
+ * Copyright (c) Simverge Software LLC - All Rights Reserved
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
+
+#include "greatest.h"
+
+#include <pdal/capi/Pipeline.h>
+#include <pdal/capi/PointLayout.h>
+#include <pdal/capi/PointView.h>
+#include <pdal/capi/PointViewCollection.h>
+
+SUITE(PointLayoutTest);
+
+static PDALPipelinePtr gPipeline = NULL;
+static PDALPointViewPtr gPointView = NULL;
+
+static void setupPointLayoutTest(void *arg)
+{
+	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
+	char *json = NULL;
+
+	if (file)
+	{
+		fseek(file, 0, SEEK_END);
+		long length = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		char *json = malloc(length + 1);
+
+		if (json)
+		{
+			fread(json, 1, length, file);
+			json[length] = '\0';
+			gPipeline = PDALCreatePipeline(json);
+
+			if (gPipeline && PDALExecutePipeline(gPipeline))
+			{
+				PDALPointViewCollectionPtr views = PDALGetPointViews(gPipeline);
+
+				if (PDALHasNextPointView(views))
+				{
+					gPointView = PDALGetNextPointView(views);
+				}
+			}
+
+			free(json);
+		}
+
+		fclose(file);
+	}
+}
+
+static void teardownPointLayoutTest(void *arg)
+{
+	PDALDisposePointView(gPointView);
+	PDALDisposePipeline(gPipeline);
+}
+
+TEST testPDALGetDimSize(void)
+{
+	size_t size = PDALGetDimSize(NULL, NULL);
+	ASSERT_EQ(0, size);
+
+	int numTypes = 3;
+	const char *types[] = {"X", "Y", "Z"};
+
+	for (int i = 0; i < numTypes; ++i)
+	{
+		size = PDALGetDimSize(NULL, types[i]);
+		ASSERT_EQ(0, size);
+	}
+
+	PASS();
+}
+
+TEST testPDALGetDimPackedOffset(void)
+{
+	PASS();
+}
+
+TEST testPDALGetPointSize(void)
+{
+	PASS();
+}
+
+GREATEST_SUITE(PointLayoutTest)
+{
+	SET_SETUP(setupPointLayoutTest, NULL);
+	SET_TEARDOWN(teardownPointLayoutTest, NULL);
+
+	RUN_TEST(testPDALGetDimSize);
+	RUN_TEST(testPDALGetDimPackedOffset);
+	RUN_TEST(testPDALGetPointSize);
+
+	SET_SETUP(NULL, NULL);
+	SET_TEARDOWN(NULL, NULL);
+}
