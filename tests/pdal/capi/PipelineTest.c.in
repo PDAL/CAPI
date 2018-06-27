@@ -51,6 +51,9 @@ TEST testPDALCreateAndDisposePipeline(void)
 	pipeline = PDALCreatePipeline("");
 	ASSERT_EQ(NULL, pipeline);
 
+	pipeline = PDALCreatePipeline("This is not a valid pipeline, it's not even JSON");
+	ASSERT_EQ(NULL, pipeline);
+
 	pipeline = PDALCreatePipeline(gPipelineJson);
 	ASSERT(pipeline);
 

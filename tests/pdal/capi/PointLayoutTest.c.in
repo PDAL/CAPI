@@ -77,9 +77,7 @@ TEST testPDALGetPointLayoutDimTypes(void)
 	size_t size = PDALGetDimTypeListSize(types);
 	ASSERTm("PDALGetDimTypeListSize should return more than zero for a valid list", size > 0);
 
-	printf("\nDisposing...\n");
 	PDALDisposeDimTypeList(types);
-	printf("\nDisposed!\n");
 	PASS();
 }
 
