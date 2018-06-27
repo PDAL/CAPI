@@ -9,6 +9,7 @@
 #include "greatest.h"
 
 #include <pdal/capi/Pipeline.h>
+#include <pdal/capi/PointLayout.h>
 #include <pdal/capi/PointView.h>
 #include <pdal/capi/PointViewIterator.h>
 
@@ -131,6 +132,17 @@ TEST testPDALGetPointViewSize(void)
 {
 	ASSERT_EQ(0, PDALGetPointViewSize(NULL));
 
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
+	ASSERT(hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+	ASSERT(view);
+
+	size_t size = PDALGetPointViewSize(view);
+	ASSERT(size > 0);
+
+	PDALDisposePointView(view);
 	PASS();
 }
 
@@ -138,13 +150,64 @@ TEST testPDALIsPointViewEmpty(void)
 {
 	ASSERT(PDALIsPointViewEmpty(NULL));
 
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
+	ASSERT(hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+	ASSERT(view);
+
+	ASSERT_FALSE(PDALIsPointViewEmpty(view));
+	PDALDisposePointView(view);
+
 	PASS();
 }
 
 TEST testPDALClonePointView(void)
 {
 	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
+	ASSERT(hasNext);
 
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+	ASSERT(view);
+
+	PDALPointLayoutPtr anotherView = PDALClonePointView(view);
+
+	ASSERT(anotherView);
+	ASSERT(view != anotherView);
+	ASSERT(PDALGetPointViewId(view) != PDALGetPointViewId(anotherView));
+
+	size_t capacity = 1024;
+	char expected[1024];
+	char actual[1024];
+
+	size_t expectedLength = PDALGetPointViewProj4(view, expected, capacity);
+	ASSERT(expectedLength > 0 && expectedLength <= capacity);
+	ASSERT(expected[0] != '\0');
+
+	size_t actualLength = PDALGetPointViewProj4(view, actual, capacity);
+	ASSERT_EQ(expectedLength, actualLength);
+	ASSERT_STR_EQ(expected, actual);
+
+	expectedLength = PDALGetPointViewWkt(view, expected, capacity, false);
+	ASSERT(expectedLength > 0 && expectedLength <= capacity);
+	ASSERT(expected[0] != '\0');
+
+	actualLength = PDALGetPointViewWkt(view, actual, capacity, false);
+	ASSERT_EQ(expectedLength, actualLength);
+	ASSERT_STR_EQ(expected, actual);
+
+	expectedLength = PDALGetPointViewWkt(view, expected, capacity, true);
+	ASSERT(expectedLength > 0 && expectedLength <= capacity);
+	ASSERT(expected[0] != '\0');
+
+	actualLength = PDALGetPointViewWkt(view, actual, capacity, true);
+	ASSERT_EQ(expectedLength, actualLength);
+	ASSERT_STR_EQ(expected, actual);
+
+	PDALDisposePointView(anotherView);
+	PDALDisposePointView(view);
 
 	PASS();
 }
@@ -158,21 +221,25 @@ TEST testPDALGetPointViewProj4(void)
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
+	size_t capacity = 1024;
 	char proj[1024];
-	size_t size = PDALGetPointViewProj4(NULL, proj, 1024);
+
+	size_t size = PDALGetPointViewProj4(NULL, proj, capacity);
 	ASSERT_EQ(0, size);
 	ASSERT_EQ('\0', proj[0]);
 
-	size = PDALGetPointViewProj4(view, NULL, 1024);
+	size = PDALGetPointViewProj4(view, NULL, capacity);
 	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewProj4(view, proj, 0);
 	ASSERT_EQ(0, size);
 
-	size = PDALGetPointViewProj4(view, proj, 1024);
-	ASSERT(size > 0 && size <= 1024);
+	size = PDALGetPointViewProj4(view, proj, capacity);
+	ASSERT(size > 0 && size <= capacity);
 	ASSERT_FALSE(proj[0] == '\0');
 	ASSERT_STR_EQ("+proj=longlat +datum=WGS84 +no_defs", proj);
+
+	PDALDisposePointView(view);
 
 	PASS();
 }
@@ -186,19 +253,21 @@ TEST testPDALGetPointViewWkt(void)
 	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
 	ASSERT(view);
 
+	size_t capacity = 1024;
 	char wkt[1024];
-	size_t size = PDALGetPointViewWkt(NULL, wkt, 1024, false);
+
+	size_t size = PDALGetPointViewWkt(NULL, wkt, capacity, false);
 	ASSERT_EQ(0, size);
 	ASSERT_EQ('\0', wkt[0]);
 
-	size = PDALGetPointViewWkt(view, NULL, 1024, false);
+	size = PDALGetPointViewWkt(view, NULL, capacity, false);
 	ASSERT_EQ(0, size);
 
 	size = PDALGetPointViewWkt(view, wkt, 0, false);
 	ASSERT_EQ(0, size);
 
-	size = PDALGetPointViewWkt(view, wkt, 1024, false);
-	ASSERT(size > 0 && size <= 1024);
+	size = PDALGetPointViewWkt(view, wkt, capacity, false);
+	ASSERT(size > 0 && size <= capacity);
 	ASSERT_FALSE(wkt[0] == '\0');
 	ASSERT_STR_EQ(
 		"GEOGCS[\"WGS 84\","
@@ -212,6 +281,15 @@ TEST testPDALGetPointViewWkt(void)
 		"]",
 		wkt
 	);
+
+
+	char prettyWkt[1024];
+	size_t prettySize = PDALGetPointViewWkt(view, prettyWkt, capacity, true);
+	ASSERT(prettySize > 0 && prettySize <= capacity);
+	ASSERT(size < prettySize);
+	ASSERT(strcmp(wkt, prettyWkt) != 0);
+
+	PDALDisposePointView(view);
 
 	PASS();
 }
@@ -231,6 +309,8 @@ TEST testPDALGetPointViewLayout(void)
 
 	layout = PDALGetPointViewLayout(view);
 	ASSERT(layout);
+
+	PDALDisposePointView(view);
 
 	PASS();
 }
