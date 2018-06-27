@@ -18,24 +18,30 @@
 #ifdef __cplusplus
 #include <memory>
 #include <set>
+#include <vector>
 
 namespace pdal
 {
+	struct DimType;
 	class PipelineExecutor;
 	class PointView;
 
 	using PointViewPtr = std::shared_ptr<PointView>;
+	using DimTypeList = std::vector<DimType>;
 
 	namespace capi
 	{
 		class PointViewIterator;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 		using PointView = pdal::PointViewPtr;
+		using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
 	}
 }
 
 #endif /* __cplusplus */
 
+/// A pointer to a C++ pdal::capi::PDALDimTypeList
+typedef void* PDALDimTypeListPtr;
 
 /// A pointer to a C++ pdal::capi::Pipeline object
 typedef void* PDALPipelinePtr;

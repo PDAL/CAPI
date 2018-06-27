@@ -12,7 +12,28 @@ namespace pdal
 {
 	namespace capi
 	{
-	
+		PDALDimTypeListPtr PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout)
+		{
+			PDALDimTypeListPtr types = NULL;
+			pdal::PointLayoutPtr nativeLayout = reinterpret_cast<pdal::PointLayoutPtr>(layout);
+
+			if (nativeLayout)
+			{
+				types = new pdal::capi::DimTypeList(new pdal::DimTypeList(nativeLayout->dimTypes()));
+			}
+
+			return types;
+		}
+
+		void PDALDisposeDimTypeList(PDALDimTypeListPtr types)
+		{
+			if (types)
+			{
+				pdal::capi::DimTypeList *ptr = reinterpret_cast<pdal::capi::DimTypeList *>(types);
+				delete ptr;
+			}
+		}
+
 		size_t PDALGetDimSize(PDALPointLayoutPtr layout, const char *name)
 		{
 			pdal::PointLayoutPtr nativeLayout = reinterpret_cast<pdal::PointLayoutPtr>(layout);
@@ -29,11 +50,11 @@ namespace pdal
 			{
 				pdal::DimType type = nativeLayout->findDimType(name);
 				pdal::DimTypeList dims = nativeLayout->dimTypes();
-				std::string name = pdal::Dimension::name(type.m_id);
+				std::string nameString = pdal::Dimension::name(type.m_id);
 
 				for (auto dim : dims)
 				{
-					if (name == pdal::Dimension::name(dim.m_id))
+					if (nameString == pdal::Dimension::name(dim.m_id))
 					{
 						break;
 					}

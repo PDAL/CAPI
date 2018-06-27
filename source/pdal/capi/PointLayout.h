@@ -16,7 +16,9 @@ namespace pdal
 		extern "C"
 		{
 #endif
-			//! PDAL_C_API PDALDimTypeList PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout);
+			PDAL_C_API PDALDimTypeListPtr PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout);
+
+			PDAL_C_API void PDALDisposeDimTypeList(PDALDimTypeListPtr types);
 
 			//! PDAL_C_API PDALDimType PDALFindDimType(PDALPointLayoutPtr layout, const char *name);
 
