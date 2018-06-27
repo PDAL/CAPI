@@ -135,20 +135,17 @@ TEST testPDALGetSetPipelineLog(void)
 	ASSERT(count > 0);
 
 	// Test valid cases: 0 to 8
-	//char log[1024];
+	char log[1024];
 
 	for (int i = 0; i < 9; ++i)
 	{
 		PDALSetPipelineLogLevel(pipeline, i);
 		int j = PDALGetPipelineLogLevel(pipeline);
 		ASSERT_EQ(i, j);
-
-		//size_t n = PDALGetPipelineLog(pipeline, log, 1024);
-		//printf("---- Log Level %d: %d bytes ----\n%s\n", i, n, log);
 	}
 
 	// TODO Determine why all levels yield empty logs
-	//size_t size = PDALGetPipelineLog(pipeline, log, 1024);
+	size_t size = PDALGetPipelineLog(pipeline, log, 1024);
 	//ASSERT(size > 0 && size <= 1024);
 	//ASSERT_FALSE(log[0] == '\0');
 
@@ -194,6 +191,7 @@ GREATEST_SUITE(PipelineTest)
 	RUN_TEST(testPDALExecutePipeline);
 	RUN_TEST(testPDALGetSetPipelineLog);
 	RUN_TEST(testPDALGetPipelineAsString);
+	RUN_TEST(testPDALGetPipelineMetadata);
 	RUN_TEST(testPDALGetPipelineSchema);
 	RUN_TEST(testPDALValidatePipeline);
 
