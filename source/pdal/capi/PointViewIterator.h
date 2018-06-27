@@ -13,7 +13,7 @@ namespace pdal
 {
 	namespace capi
 	{
-		class PDAL_C_API PointViewIterator
+		class PointViewIterator
 		{
 		public:
 			PointViewIterator(const pdal::PointViewSet& views);
@@ -32,13 +32,39 @@ namespace pdal
 #include <stdbool.h> // for bool
 #endif /* __cplusplus */
 
-			PDAL_C_API bool PDALHasNextPointView(PDALPointViewIteratorPtr collection);
+			/**
+			 * Returns whether another point view is available in the provided iterator.
+			 * 
+			 * @param itr A pointer to the point view iterator
+			 * @return Whether another point view is available
+			 */
+			PDAL_C_API bool PDALHasNextPointView(PDALPointViewIteratorPtr itr);
 
-			PDAL_C_API PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr collection);
+			/**
+			 * Returns the next available point view in the provided iterator.
+			 *
+			 * @note The caller obtains ownership of the data structure pointed by the returned value.
+			 * Use PDALDisposePointView to free the point view data structure.
+			 * 
+			 * @param itr A pointer to the point view iterator
+			 * @return The next point view in the iterator or NULL if none available
+			 */
+			PDAL_C_API PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr);
 
-			PDAL_C_API void PDALResetPointViewIterator(PDALPointViewIteratorPtr collection);
+			/**
+			 * Resets the provided point view iterator to its starting position.
+			 * 
+			 * @param itr A pointer to the point view iterator
+			 */
+			PDAL_C_API void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr);
 
-			PDAL_C_API void PDALDisposePointViewIterator(PDALPointViewIteratorPtr collection);
+			/**
+			 * Disposes the provided point view iterator.
+			 * 
+			 * @param itr A pointer to the point view iterator
+			 */
+			PDAL_C_API void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr);
+
 #ifdef __cplusplus
 		}
 	}

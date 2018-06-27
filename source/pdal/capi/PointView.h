@@ -91,6 +91,9 @@ namespace pdal
 
 			/**
 			 * Returns the point layout for the provided point `view`.
+			 *
+			 * @note This point view retains ownership of the
+			 * layout pointed by the return value. Do not free the returned pointer.
 			 * 
 			 * @param view The point view
 			 * @return The point layout

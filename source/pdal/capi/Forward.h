@@ -40,19 +40,19 @@ namespace pdal
 
 #endif /* __cplusplus */
 
-/// A pointer to a C++ pdal::capi::PDALDimTypeList
+/// A pointer to a dimension type list
 typedef void* PDALDimTypeListPtr;
 
-/// A pointer to a C++ pdal::capi::Pipeline object
+/// A pointer to a pipeline
 typedef void* PDALPipelinePtr;
 
-/// A pointer to a C++ pdal::PointLayout
+/// A pointer to a point layout
 typedef void* PDALPointLayoutPtr;
 
-/// A pointer to a C++ pdal::capi::PointView object
+/// A pointer to point view
 typedef void* PDALPointViewPtr;
 
-/// A pointer to a C++ pdal::capi::PointViewIterator object
+/// A pointer to a point view iterator
 typedef void* PDALPointViewIteratorPtr;
 
 #endif /* PDAL_CAPI_FORWARD_H */
