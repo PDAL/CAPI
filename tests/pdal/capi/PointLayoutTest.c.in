@@ -69,18 +69,17 @@ TEST testPDALGetPointLayoutDimTypes(void)
 {
 	ASSERT(gLayout);
 	PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(NULL);
-	ASSERT_EQ(NULL, types);
+	ASSERT_EQm("PDALGetPointLayoutDimTypes(NULL) should return NULL", NULL, types);
 
 	types = PDALGetPointLayoutDimTypes(gLayout);
-	ASSERT(types);
+	ASSERTm("PDALGetPointLayoutDimTypes should return non-NULL for a valid layout", types);
 
 	size_t size = PDALGetDimTypeListSize(types);
-	ASSERT(size > 0);
+	ASSERTm("PDALGetDimTypeListSize should return more than zero for a valid list", size > 0);
 
+	printf("\nDisposing...\n");
 	PDALDisposeDimTypeList(types);
-	size = PDALGetDimTypeListSize(types);
-	ASSERT_EQ(0, size);
-
+	printf("\nDisposed!\n");
 	PASS();
 }
 
