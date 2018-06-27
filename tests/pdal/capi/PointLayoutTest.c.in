@@ -65,6 +65,25 @@ static void teardownPointLayoutTest(void *arg)
 	PDALDisposePipeline(gPipeline);
 }
 
+TEST testPDALGetPointLayoutDimTypes(void)
+{
+	ASSERT(gLayout);
+	PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(NULL);
+	ASSERT_EQ(NULL, types);
+
+	types = PDALGetPointLayoutDimTypes(gLayout);
+	ASSERT(types);
+
+	size_t size = PDALGetDimTypeListSize(types);
+	ASSERT(size > 0);
+
+	PDALDisposeDimTypeList(types);
+	size = PDALGetDimTypeListSize(types);
+	ASSERT_EQ(0, size);
+
+	PASS();
+}
+
 TEST testPDALGetDimSize(void)
 {
 	ASSERT(gLayout);
@@ -131,6 +150,7 @@ GREATEST_SUITE(PointLayoutTest)
 	SET_SETUP(setupPointLayoutTest, NULL);
 	SET_TEARDOWN(teardownPointLayoutTest, NULL);
 
+	RUN_TEST(testPDALGetPointLayoutDimTypes);
 	RUN_TEST(testPDALGetDimSize);
 	RUN_TEST(testPDALGetDimPackedOffset);
 	RUN_TEST(testPDALGetPointSize);
