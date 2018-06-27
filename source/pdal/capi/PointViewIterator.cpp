@@ -31,15 +31,15 @@ namespace pdal
 
 		extern "C"
 		{
-			bool PDALHasNextPointView(PDALPointViewIteratorPtr collection)
+			bool PDALHasNextPointView(PDALPointViewIteratorPtr itr)
 			{
-				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(collection);
+				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
 				return ptr && ptr->hasNext();
 			}
 
-			PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr collection)
+			PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr)
 			{
-				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(collection);
+				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
 				PDALPointViewPtr view = nullptr;
 
 				if (ptr)
@@ -55,9 +55,9 @@ namespace pdal
 				return view;
 			}
 
-			void PDALResetPointViewIterator(PDALPointViewIteratorPtr collection)
+			void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr)
 			{
-				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(collection);
+				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
 
 				if (ptr)
 				{
@@ -65,15 +65,15 @@ namespace pdal
 				}
 			}
 
-			void PDALDisposePointViewIterator(PDALPointViewIteratorPtr collection)
+			void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr)
 			{
-				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(collection);
+				auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
 
 				if (ptr)
 				{
 					delete ptr;
 					ptr = nullptr;
-					collection = nullptr;
+					itr = nullptr;
 				}
 			}
 
