@@ -38,6 +38,8 @@ namespace pdal
 	}
 }
 
+#else
+#include <stdint.h> // for uint64_t
 #endif /* __cplusplus */
 
 /// A pointer to a dimension type list
@@ -45,6 +47,9 @@ typedef void* PDALDimTypeListPtr;
 
 /// A pointer to a pipeline
 typedef void* PDALPipelinePtr;
+
+/// An index to a point in a list
+typedef uint64_t PDALPointId;
 
 /// A pointer to a point layout
 typedef void* PDALPointLayoutPtr;

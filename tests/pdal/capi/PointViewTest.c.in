@@ -235,6 +235,54 @@ TEST testPDALGetPointViewLayout(void)
 	PASS();
 }
 
+TEST testPDALGetPackedPoint(void)
+{
+	//  PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf)
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
+	ASSERT(hasNext);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+	ASSERT(view);
+
+	PDALPointLayoutPtr layout = PDALGetPointViewLayout(view);
+	ASSERT(layout);
+	PDALDimTypeListPtr dims = PDALGetPointLayoutDimTypes(layout);
+	ASSERT(dims);
+
+	uint64_t numPoints = PDALGetPointViewSize(view);
+	size_t expected = PDALGetPointSize(layout);
+
+	size_t capacity = 512;
+	char buffer[512];
+	ASSERT(expected > 0 && expected <= capacity);
+
+	for (uint64_t i = 0; i < numPoints; ++i)
+	{
+		size_t actual = PDALGetPackedPoint(NULL, NULL, i, NULL);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(NULL, NULL, i, buffer);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(NULL, dims, i, NULL);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(NULL, dims, i, buffer);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(view, NULL, i, NULL);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(view, NULL, i, buffer);
+		ASSERT_EQ(0, actual);
+		actual = PDALGetPackedPoint(view, dims, i, NULL);
+		ASSERT_EQ(0, actual);
+
+		actual = PDALGetPackedPoint(view, dims, i, buffer);
+		ASSERT_EQ(expected, actual);
+	}
+
+	PDALDisposePointView(view);
+
+	PASS();
+}
+
 GREATEST_SUITE(PointViewTest)
 {
 	SET_SETUP(setupPointViewTest, NULL);
@@ -247,6 +295,7 @@ GREATEST_SUITE(PointViewTest)
 	RUN_TEST(testPDALGetPointViewProj4);
 	RUN_TEST(testPDALGetPointViewWkt);
 	RUN_TEST(testPDALGetPointViewLayout);
+	RUN_TEST(testPDALGetPackedPoint);
 
 	SET_SETUP(NULL, NULL);
 	SET_TEARDOWN(NULL, NULL);

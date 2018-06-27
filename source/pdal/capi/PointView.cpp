@@ -116,6 +116,33 @@ namespace pdal
 
 				return layout;
 			}
+
+			size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf)
+			{
+				size_t size = 0;
+
+				if (view && dims && buf)
+				{
+					pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
+
+					pdal::capi::DimTypeList *capiDims = reinterpret_cast<pdal::capi::DimTypeList *>(dims);
+
+
+					if (*capiView && *capiDims)
+					{
+						pdal::DimTypeList *list = capiDims->get();
+
+						(*capiView)->getPackedPoint(*list, idx, buf);
+
+						for (const auto &dim : *list)
+						{
+							size += pdal::Dimension::size(dim.m_type);
+						}
+					}
+				}
+
+				return size;
+			}
 		}
 	}
 }
