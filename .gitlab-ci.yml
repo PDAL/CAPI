@@ -181,7 +181,6 @@ build-x64-linux-debug-alpine:
   stage: test
   script:
     - make coverage_pdal_c
-    - ls -l
   cache:
     key: "$CI_JOB_NAME"
     policy: pull
