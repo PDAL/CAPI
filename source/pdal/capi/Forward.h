@@ -42,6 +42,16 @@ namespace pdal
 #include <stdint.h> // for uint64_t
 #endif /* __cplusplus */
 
+typedef struct PDALDimType PDALDimType;
+
+struct PDALDimType
+{
+	uint32_t id;
+	uint32_t type;
+	double scale;
+	double offset;
+};
+
 /// A pointer to a dimension type list
 typedef void* PDALDimTypeListPtr;
 

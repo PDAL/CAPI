@@ -81,6 +81,57 @@ TEST testPDALGetPointLayoutDimTypes(void)
 	PASS();
 }
 
+TEST testPDALFindDimType(void)
+{
+	uint32_t idUnknown = 0;
+	uint32_t typeNone = 0;
+	double tolerance = 1.0e-4;
+
+	ASSERT(gLayout);
+
+	PDALDimType actual = PDALFindDimType(NULL, NULL);
+	ASSERT_EQ(idUnknown, actual.id);
+	ASSERT_EQ(typeNone, actual.type);
+	ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+	ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+
+	actual = PDALFindDimType(gLayout, NULL);
+	ASSERT_EQ(idUnknown, actual.id);
+	ASSERT_EQ(typeNone, actual.type);
+	ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+	ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+
+	PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(gLayout);
+	size_t size = PDALGetDimTypeListSize(types);
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		PDALDimType expected = PDALGetDimType(types, i);
+		ASSERT(idUnknown != expected.id);
+		ASSERT(typeNone != expected.type);
+
+		char name[64];
+		ASSERT(PDALGetDimTypeIdName(expected, name, 64) > 0);
+
+		actual = PDALFindDimType(NULL, name);
+		ASSERT_EQ(idUnknown, actual.id);
+		ASSERT_EQ(typeNone, actual.type);
+		ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+		ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+
+		actual = PDALFindDimType(gLayout, name);
+		ASSERT_EQ(expected.id, actual.id);
+		ASSERT_EQ(expected.type, actual.type);
+		ASSERT_IN_RANGE(expected.scale, actual.scale, tolerance);
+		ASSERT_IN_RANGE(expected.offset, actual.offset, tolerance);
+	}
+
+	PDALDisposeDimTypeList(types);
+
+	PASS();
+}
+
+
 TEST testPDALGetDimSize(void)
 {
 	ASSERT(gLayout);
@@ -148,6 +199,7 @@ GREATEST_SUITE(PointLayoutTest)
 	SET_TEARDOWN(teardownPointLayoutTest, NULL);
 
 	RUN_TEST(testPDALGetPointLayoutDimTypes);
+	RUN_TEST(testPDALFindDimType);
 	RUN_TEST(testPDALGetDimSize);
 	RUN_TEST(testPDALGetDimPackedOffset);
 	RUN_TEST(testPDALGetPointSize);
