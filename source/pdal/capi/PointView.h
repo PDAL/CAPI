@@ -101,19 +101,30 @@ namespace pdal
 			PDAL_C_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
 
 			/**
-			 * Fill a buffer with point data specified by the dimension list.
+			 * Retrieves data for a point based on the provided dimension list.
 			 *
 			 * @see pdal::PointView::getPackedPoint
 			 *
 			 * @param view The view that contains the point
-			 * @param dims List of dimensions/types to retrieve.
-			 * @param idx Index of point to get.
-			 * @param[out] buf Pointer to buffer to fill.
+			 * @param dims List of dimensions to retrieve
+			 * @param idx Index of point to get
+			 * @param[out] buf Pointer to buffer to fill
 			 * @return The size of the point stored in `buf`
 			 */
 			PDAL_C_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf);
 
-			//! PDAL_C_API void getPackedPoints(const DimTypeList& dims, PointId idx, char *buf);
+			/**
+			 * Retrieves data for all points based on the provided dimension list.
+			 *
+			 * @see pdal::PointView::getPackedPoint
+			 *
+			 * @param view The view that contains the points
+			 * @param dims List of dimensions to retrieve
+			 * @param idx Index of point to get
+			 * @param[out] buf Pointer to buffer to fill
+			 * @return The size of the points stored in `buf`
+			 */
+			PDAL_C_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
 
 			/**
 			 * Fill a buffer with point data specified by the dimension list, accounts index

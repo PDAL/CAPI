@@ -317,7 +317,6 @@ TEST testPDALGetPointViewLayout(void)
 
 TEST testPDALGetPackedPoint(void)
 {
-	//  PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf)
 	PDALResetPointViewIterator(gPointViewIterator);
 	bool hasNext = PDALHasNextPointView(gPointViewIterator);
 	ASSERT(hasNext);
@@ -363,6 +362,64 @@ TEST testPDALGetPackedPoint(void)
 	PASS();
 }
 
+TEST testPDALGetAllPackedPoints(void)
+{
+	PDALResetPointViewIterator(gPointViewIterator);
+	bool hasNext = PDALHasNextPointView(gPointViewIterator);
+	ASSERT(hasNext);
+
+	uint64_t actualSize = PDALGetAllPackedPoints(NULL, NULL, NULL);
+	ASSERT_EQ(0, actualSize);
+
+	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+	ASSERT(view);
+
+	actualSize = PDALGetAllPackedPoints(view, NULL, NULL);
+	ASSERT_EQ(0, actualSize);
+
+	PDALPointLayoutPtr layout = PDALGetPointViewLayout(view);
+	ASSERT(layout);
+	PDALDimTypeListPtr dims = PDALGetPointLayoutDimTypes(layout);
+	ASSERT(dims);
+
+	actualSize = PDALGetAllPackedPoints(NULL, dims, NULL);
+	ASSERT_EQ(0, actualSize);
+	actualSize = PDALGetAllPackedPoints(view, dims, NULL);
+	ASSERT_EQ(0, actualSize);
+
+	uint64_t numPoints = PDALGetPointViewSize(view);
+	size_t pointSize = PDALGetPointSize(layout);
+	ASSERT(numPoints > 0);
+	ASSERT(pointSize > 0);
+
+	char *actualPoints = calloc(numPoints, pointSize);
+	ASSERT(actualPoints);
+
+	actualSize = PDALGetAllPackedPoints(NULL, NULL, actualPoints);
+	ASSERT_EQ(0, actualSize);
+	actualSize = PDALGetAllPackedPoints(view, NULL, actualPoints);
+	ASSERT_EQ(0, actualSize);
+	actualSize = PDALGetAllPackedPoints(NULL, dims, actualPoints);
+	ASSERT_EQ(0, actualSize);
+	actualSize = PDALGetAllPackedPoints(view, dims, actualPoints);
+	ASSERT_EQ(numPoints * pointSize, actualSize);
+
+	char *expectedPoint = calloc(1, pointSize);
+	ASSERT(expectedPoint);
+
+	for (uint64_t i = 0; i < numPoints; ++i)
+	{
+		ASSERT_EQ(pointSize, PDALGetPackedPoint(view, dims, i, expectedPoint));
+		ASSERT_MEM_EQ(expectedPoint, actualPoints + i * pointSize, pointSize);
+	}
+
+	free(expectedPoint);
+	free(actualPoints);
+	PDALDisposePointView(view);
+
+	PASS();
+}
+
 GREATEST_SUITE(PointViewTest)
 {
 	SET_SETUP(setupPointViewTest, NULL);
@@ -376,6 +433,7 @@ GREATEST_SUITE(PointViewTest)
 	RUN_TEST(testPDALGetPointViewWkt);
 	RUN_TEST(testPDALGetPointViewLayout);
 	RUN_TEST(testPDALGetPackedPoint);
+	RUN_TEST(testPDALGetAllPackedPoints);
 
 	SET_SETUP(NULL, NULL);
 	SET_TEARDOWN(NULL, NULL);
