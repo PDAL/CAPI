@@ -180,6 +180,7 @@ build-x64-linux-debug-alpine:
 .job_template: &test-linux
   stage: test
   script:
+    - rm -rf coverage_pdal_c
     - make coverage_pdal_c
   cache:
     key: "$CI_JOB_NAME"
