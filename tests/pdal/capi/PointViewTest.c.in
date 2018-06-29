@@ -23,7 +23,7 @@ struct node
 
 void dispose(struct node *n)
 {
-	if (n == NULL)
+	if (n != NULL)
 	{
 		dispose(n->left);
 		dispose(n->right);
