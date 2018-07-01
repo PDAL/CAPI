@@ -4,8 +4,6 @@
 :: TODO Auto-detect latest platform
 set SCRIPT_DIR=%~dp0
 
-::cmake .. "-DCMAKE_TOOLCHAIN_FILE=D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake" -G "Sublime Text 2 - Ninja" -DVCPKG_TARGET_TRIPLET=x86-windows-static -DCMAKE_BUILD_TYPE=Debug
-
 if not defined TOOLCHAIN set TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
 if not defined BUILD_TYPE set BUILD_TYPE=Release
 if not defined ARCH set ARCH=x64
