@@ -8,6 +8,7 @@
 
 #include "greatest.h"
 
+#include <pdal/capi/DimType.h>
 #include <pdal/capi/Pipeline.h>
 #include <pdal/capi/PointLayout.h>
 #include <pdal/capi/PointView.h>

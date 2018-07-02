@@ -16,14 +16,6 @@ namespace pdal
 		extern "C"
 		{
 #endif
-			PDAL_C_API size_t PDALGetDimTypeListSize(PDALDimTypeListPtr types);
-
-			PDAL_C_API PDALDimType PDALGetDimType(PDALDimTypeListPtr types, size_t index);
-
-			PDAL_C_API size_t PDALGetDimTypeIdName(PDALDimType dim, char *name, size_t size);
-
-			PDAL_C_API size_t PDALGetDimTypeInterpretationName(PDALDimType dim, char *name, size_t size);
-
 			/**
 			 * Returns the list of dimension types used by the provided `layout`.
 			 * 
@@ -34,8 +26,6 @@ namespace pdal
 			 * @return A pointer to the dimension type list or NULL if the `layout` is NULL
 			 */
 			PDAL_C_API PDALDimTypeListPtr PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout);
-
-			PDAL_C_API void PDALDisposeDimTypeList(PDALDimTypeListPtr types);
 
 			/**
 			 * Finds the dimension type identified by the provided `name` in a `layout`.

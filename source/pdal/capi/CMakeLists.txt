@@ -4,6 +4,7 @@ find_package(PDAL REQUIRED CONFIG)
 message(STATUS "Found PDAL ${PDAL_VERSION}")
 
 set(SOURCES
+	DimType.cpp
 	Pipeline.cpp
 	PointLayout.cpp
 	PointView.cpp
@@ -12,6 +13,7 @@ set(SOURCES
 
 set(HEADERS
 	Defines.h
+	DimType.h
 	Forward.h
 	Pipeline.h
 	PointLayout.h
