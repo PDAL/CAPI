@@ -130,16 +130,6 @@ namespace pdal
 			 */
 			PDAL_C_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
 
-			/**
-			 * Fill a buffer with point data specified by the dimension list, accounts index
-			 * Using this functions it is possible to pack all points into one buffer
-			* @param pv    PointView pointer.
-			* @param dims  List of dimensions/types to retrieve.
-			* @param idx   Index of point to get.
-			* @param buf   Pointer to buffer to fill
-			*/
-			//! PDAL_C_API void appendPackedPoint(PointViewPtr pv, const DimTypeList& dims, PointId idx, std::size_t pointSize, char *buf)
-
 #ifdef __cplusplus
 		}
 	}
