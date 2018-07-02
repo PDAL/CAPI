@@ -18,31 +18,56 @@
 #ifdef __cplusplus
 #include <memory>
 #include <set>
+#include <vector>
 
 namespace pdal
 {
+	struct DimType;
 	class PipelineExecutor;
 	class PointView;
 
 	using PointViewPtr = std::shared_ptr<PointView>;
+	using DimTypeList = std::vector<DimType>;
 
 	namespace capi
 	{
-		class PointViewCollection;
+		class PointViewIterator;
 		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 		using PointView = pdal::PointViewPtr;
+		using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
 	}
 }
 
+#else
+#include <stdint.h> // for uint64_t
 #endif /* __cplusplus */
 
-/// A pointer to a C++ pdal::capi::Pipeline object
+typedef struct PDALDimType PDALDimType;
+
+struct PDALDimType
+{
+	uint32_t id;
+	uint32_t type;
+	double scale;
+	double offset;
+};
+
+/// A pointer to a dimension type list
+typedef void* PDALDimTypeListPtr;
+
+/// A pointer to a pipeline
 typedef void* PDALPipelinePtr;
 
-/// A pointer to a C++ pdal::capi::PointView object
+/// An index to a point in a list
+typedef uint64_t PDALPointId;
+
+/// A pointer to a point layout
+typedef void* PDALPointLayoutPtr;
+
+/// A pointer to point view
 typedef void* PDALPointViewPtr;
 
-/// A pointer to a C++ pdal::capi::PointViewCollection object
-typedef void* PDALPointViewCollectionPtr;
+/// A pointer to a point view iterator
+typedef void* PDALPointViewIteratorPtr;
 
 #endif /* PDAL_CAPI_FORWARD_H */

@@ -51,8 +51,11 @@ TEST testPDALCreateAndDisposePipeline(void)
 	pipeline = PDALCreatePipeline("");
 	ASSERT_EQ(NULL, pipeline);
 
+	pipeline = PDALCreatePipeline("This is not a valid pipeline, it's not even JSON");
+	ASSERT_EQ(NULL, pipeline);
+
 	pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 
 	PDALDisposePipeline(pipeline);
 	PDALDisposePipeline(NULL);
@@ -66,11 +69,11 @@ TEST testPDALGetPipelineAsString(void)
 	ASSERT_FALSE(pipeline == NULL);
 
 	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT_FALSE(count < 1);
+	ASSERT(count > 0);
 
 	char json[1024];
 	size_t size = PDALGetPipelineAsString(pipeline, json, 1024);
-	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT(size > 0 && size <= 1024);
 	ASSERT_FALSE(json[0] == '\0');
 
 	// Make sure that the JSON object's name is "pipeline"
@@ -85,14 +88,14 @@ TEST testPDALGetPipelineAsString(void)
 TEST testPDALGetPipelineMetadata(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 
 	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT_FALSE(count < 1);
+	ASSERT(count > 0);
 
 	char json[1024];
 	size_t size = PDALGetPipelineMetadata(pipeline, json, 1024);
-	ASSERT_FALSE(size == 0 || size > 1024);
+	ASSERT(size > 0 && size <= 1024);
 	ASSERT_FALSE(json[0] == '\0');
 
 	// Make sure that the JSON object's name is "metadata"
@@ -107,14 +110,14 @@ TEST testPDALGetPipelineMetadata(void)
 TEST testPDALGetPipelineSchema(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 
 	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT_FALSE(count < 1);
+	ASSERT(count > 0);
 
-	char json[1024];
-	size_t size = PDALGetPipelineSchema(pipeline, json, 1024);
-	ASSERT_FALSE(size == 0 || size > 1024);
+	char json[2048];
+	size_t size = PDALGetPipelineSchema(pipeline, json, 2048);
+	ASSERT(size > 0 && size <= 2048);
 	ASSERT_FALSE(json[0] == '\0');
 
 	// Make sure that the JSON object's name is "schema"
@@ -129,27 +132,24 @@ TEST testPDALGetPipelineSchema(void)
 TEST testPDALGetSetPipelineLog(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 
 	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT_FALSE(count < 1);
+	ASSERT(count > 0);
 
 	// Test valid cases: 0 to 8
-	//char log[1024];
+	char log[1024];
 
 	for (int i = 0; i < 9; ++i)
 	{
 		PDALSetPipelineLogLevel(pipeline, i);
 		int j = PDALGetPipelineLogLevel(pipeline);
 		ASSERT_EQ(i, j);
-
-		//size_t n = PDALGetPipelineLog(pipeline, log, 1024);
-		//printf("---- Log Level %d: %d bytes ----\n%s\n", i, n, log);
 	}
 
 	// TODO Determine why all levels yield empty logs
-	//size_t size = PDALGetPipelineLog(pipeline, log, 1024);
-	//ASSERT_FALSE(size == 0 || size > 1024);
+	size_t size = PDALGetPipelineLog(pipeline, log, 1024);
+	//ASSERT(size > 0 && size <= 1024);
 	//ASSERT_FALSE(log[0] == '\0');
 
 	PDALDisposePipeline(pipeline);
@@ -160,13 +160,13 @@ TEST testPDALGetSetPipelineLog(void)
 TEST testPDALExecutePipeline(void)
 {
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 
-	int64_t count = PDALExecutePipeline(pipeline); // 1065
-	ASSERT_FALSE(count < 1);
+	int64_t count = PDALExecutePipeline(pipeline);
+	ASSERT(count > 0);
 
 	count = PDALExecutePipeline(NULL);
-	ASSERT_FALSE(count > 0);
+	ASSERT_EQ(0, count);
 
 	PDALDisposePipeline(pipeline);
 	PASS();
@@ -178,9 +178,9 @@ TEST testPDALValidatePipeline(void)
 	ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
 
 	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+	ASSERT(pipeline);
 	valid = PDALValidatePipeline(pipeline);
-	ASSERT_FALSEm("Valid pipeline evaluated as invalid", !valid);
+	ASSERTm("Valid pipeline evaluated as invalid", valid);
 
 	PASS();
 }
@@ -194,6 +194,7 @@ GREATEST_SUITE(PipelineTest)
 	RUN_TEST(testPDALExecutePipeline);
 	RUN_TEST(testPDALGetSetPipelineLog);
 	RUN_TEST(testPDALGetPipelineAsString);
+	RUN_TEST(testPDALGetPipelineMetadata);
 	RUN_TEST(testPDALGetPipelineSchema);
 	RUN_TEST(testPDALValidatePipeline);
 

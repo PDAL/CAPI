@@ -113,10 +113,14 @@ namespace pdal
 			/**
 			 * Gets the resulting point views from a pipeline execution.
 			 * 
+			 * @note The caller obtains ownership of the point view iterator pointed by the
+			 * returned value and its associated point view collection. Use PDALDisposePointViewIterator
+			 * to free these data structures.
+			 * 
 			 * @param pipeline The pipeline
-			 * @return A pointer to a point view collection or nullptr if no point views are available
+			 * @return A pointer to a point view collection or NULL if no point views are available
 			 */
-			PDAL_C_API PDALPointViewCollectionPtr PDALGetPointViews(PDALPipelinePtr pipeline);
+			PDAL_C_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 

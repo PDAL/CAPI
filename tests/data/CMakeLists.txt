@@ -1,4 +1,6 @@
 set(PIPELINES
+	simple-reproject.json
+	sort.json
 	stats.json
 )
 

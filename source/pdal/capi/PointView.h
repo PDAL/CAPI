@@ -18,125 +18,117 @@ namespace pdal
 #include <stdbool.h> // for bool
 #include <stdint.h> // for uint64_t
 #endif
-
+			/**
+			 * Disposes the provided point `view`.
+			 * 
+			 * @param view The point view to dispose
+			 */
 			PDAL_C_API void PDALDisposePointView(PDALPointViewPtr view);
 
-			//PointViewIter begin();
-			//PointViewIter end();
-
+			/**
+			 * Returns the ID of the provided point `view`.
+			 * 
+			 * @see pdal::PointView::id
+			 * 
+			 * @param view The point view
+			 * @return The view's ID
+			 */
 			PDAL_C_API int PDALGetPointViewId(PDALPointViewPtr view);
 
+			/**
+			 * Returns the number of points in the provided `view`.
+			 * 
+			 * @see pdal::PointView::size
+			 * 
+			 * @param view The point view
+			 * @return The number of points or zero if `view` is NULL
+			 */
 			PDAL_C_API uint64_t PDALGetPointViewSize(PDALPointViewPtr view);
 
+			/**
+			 * Returns whether the provided point `view` is empty, i.e., has no points.
+			 * 
+			 * @see pdal::PointView::empty
+			 * 
+			 * @param view The point view
+			 * @return Whether the point view is empty or `false` if `view` is NULL
+			 */
 			PDAL_C_API bool PDALIsPointViewEmpty(PDALPointViewPtr view);
 
-			//PDAL_C_API void PDALAppendPointToView(PDALPointViewPtr view);
-
-			//PDAL_C_API void PDALAppendAllPointsToView(PDALPointViewPtr to, PDALPointViewPtr from);
-
 			/**
+			 * Clones the provided point `view`.
+			 * 
 			 * @see pdal::PointView::makeNew
+			 * 
+			 * @param view The original point view
+			 * @return A pointer to the new point view or NULL if `view` is NULL
 			 */
 			PDAL_C_API PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view);
 
-			// PointRef point(PointId)
-
-			// template<class T>
-			// T getFieldAs(Dimension::Id dim, PointId pointIndex) const;
-
-			// inline void getField(char *pos, Dimension::Id d,
-			// 	Dimension::Type type, PointId id) const;
-
-			// template<typename T>
-			// void setField(Dimension::Id dim, PointId idx, T val);
-
-			// inline void setField(Dimension::Id dim, Dimension::Type type,
-			// 	PointId idx, const void *val);
-
-			// template <typename T>
-			// bool compare(Dimension::Id dim, PointId id1, PointId id2);
-
-			// bool compare(Dimension::Id dim, PointId id1, PointId id2)
-
-			//    void getRawField(Dimension::Id dim, PointId idx, void *buf) const
-
-			// void calculateBounds(BOX2D& box) const;
-			// static void calculateBounds(const PointViewSet&, BOX2D& box);
-			// void calculateBounds(BOX3D& box) const;
-			// static void calculateBounds(const PointViewSet&, BOX3D& box);
-
-			// void dump(std::ostream& ostr) const;
-
-			// bool hasDim(Dimension::Id id) const;
-			
-			// std::string dimName(Dimension::Id id) const;
-
-			// Dimension::IdList dims() const;
-
-			// std::size_t pointSize() const;
-
-			// std::size_t dimSize(Dimension::Id id) const;
-
-			// Dimension::Type dimType(Dimension::Id id) const;
-
-			// DimTypeList dimTypes() const;
-
-			// inline PointLayoutPtr layout() const;
-
-			// SpatialReference spatialReference() const;
-
 			/**
-			 * Fill a buffer with point data specified by the dimension list.
+			 * Returns the proj4 projection string for the provided point `view`.
+			 *
+			 * @see pdal::PointView::spatialReference
 			 * 
-			 * @param dims List of dimensions/types to retrieve.
-			 * @param idx Index of point to get.
-			 * @param[out] buf Pointer to buffer to fill.
+			 * @param view The point view
+			 * @param[out] proj The buffer used to hold the resulting proj4 projection string
+			 * @param size The size of the proj4 projection string buffer
+			 * @return The size of the resulting proj4 projection string
+			 *         or zero if the `proj` buffer is NULL or the buffer `size` is zero
 			 */
-			//void getPackedPoint(const DimTypeList& dims, PointId idx, char *buf) const
-
-			/// Load the point buffer from memory whose arrangement is specified
-			/// by the dimension list.
-			/// \param[in] dims  Dimension/types of data in packed order
-			/// \param[in] idx   Index of point to write.
-			/// \param[in] buf   Packed data buffer.
-			//void setPackedPoint(const DimTypeList& dims, PointId idx, const char *buf)
-
-			/// Provides access to the memory storing the point data.  Though this
-			/// function is public, other access methods are safer and preferred.
-			//char *getPoint(PointId id)
-
-			/// Provides access to the memory storing the point data.  Though this
-			/// function is public, other access methods are safer and preferred.
-			//char *getOrAddPoint(PointId id)
-
-			// The standard idiom is swapping with a stack-created empty queue, but
-			// that invokes the ctor and probably allocates.  We've probably only got
-			// one or two things in our queue, so just pop until we're empty.
-			//void clearTemps()
-
-			//MetadataNode toMetadata() const;
-
-			//void invalidateProducts();
+			PDAL_C_API size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size);
 
 			/**
-			 Creates a mesh with the specified name.
-
-			\param name  Name of the mesh.
-			\return  Pointer to the new mesh.  Null is returned if the mesh
-				already exists.
-			*/
-			// TriangularMesh *createMesh(const std::string& name);
+			 * Returns the Well-Known Text (WKT) projection string for the provided point `view`.
+			 * @see pdal::PointView::spatialReference
+			 * 
+			 * @param view The point view
+			 * @param[out] wkt The buffer used to hold the resulting WKT projection string
+			 * @param size The size of the wkt projection string buffer
+			 * @param pretty Whether to enhance the formatting of the resulting WKT string
+			 * @return The size of the resulting WKT projection string
+			 *         or zero if the `wkt` buffer is NULL or the buffer `size` is zero
+			 */
+			PDAL_C_API size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty);
 
 			/**
-			 Get a pointer to a mesh.
+			 * Returns the point layout for the provided point `view`.
+			 *
+			 * @note This point view retains ownership of the
+			 * layout pointed by the return value. Do not free the returned pointer.
+			 * 
+			 * @param view The point view
+			 * @return The point layout or NULL if `view` is NULL
+			 */
+			PDAL_C_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
 
-			\param name  Name of the mesh.
-			\return  New mesh.  Null is returned if the mesh already exists.
-			*/
-			// TriangularMesh *mesh(const std::string& name = "");
+			/**
+			 * Retrieves data for a point based on the provided dimension list.
+			 *
+			 * @see pdal::PointView::getPackedPoint
+			 *
+			 * @param view The view that contains the point
+			 * @param dims List of dimensions to retrieve
+			 * @param idx Index of point to get
+			 * @param[out] buf Pointer to buffer to fill
+			 * @return The size of the retrieved point
+			 *         or zero if view` is NULL, `dims` is NULL, `buf` is NULL, or `idx` is out of bounds
+			 */
+			PDAL_C_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf);
 
-			// KD3Index& build3dIndex();
-			// KD2Index& build2dIndex();
+			/**
+			 * Retrieves data for all points based on the provided dimension list.
+			 *
+			 * @see pdal::PointView::getPackedPoint
+			 *
+			 * @param view The view that contains the points
+			 * @param dims List of dimensions to retrieve
+			 * @param idx Index of point to get
+			 * @param[out] buf Pointer to buffer to fill
+			 * @return The size of the points stored in `buf`
+			 *         or zero if `view` is NULL, `dims` is NULL, or `buf` is NULL
+			 */
+			PDAL_C_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
 
 #ifdef __cplusplus
 		}

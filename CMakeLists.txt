@@ -37,6 +37,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 			'build/*'
 			'cmake/*'
 			'tests/*'
+			'tests/pdal/capi/*'
 			'/usr/include/*'
 		)
 	endif()

@@ -1,28 +1,25 @@
 set(TARGET test_pdal_c)
 
-configure_file(PipelineTest.c.in ${CMAKE_CURRENT_SOURCE_DIR}/PipelineTest.c)
-configure_file(PointViewTest.c.in ${CMAKE_CURRENT_SOURCE_DIR}/PointViewTest.c)
-configure_file(PointViewCollectionTest.c.in ${CMAKE_CURRENT_SOURCE_DIR}/PointViewCollectionTest.c)
-
-set(CONFIG
-	PipelineTest.c.in
-	PointViewCollectionTest.c.in
-	PointViewTest.c.in
-)
-
-source_group("Config Files" FILES ${CONFIG})
-
-set(SOURCES
-	main.c
-	PipelineTest.c
-	PointViewCollectionTest.c
-	PointViewTest.c
-)
-
+set(CONFIGS )
+set(SOURCES main.c)
 set(HEADERS )
-
 set(DEPENDENCIES pdal_c)
 
+set(TESTS
+	PipelineTest
+	PointLayoutTest
+	PointViewIteratorTest
+	PointViewTest
+)
+
+foreach(TEST ${TESTS})
+	configure_file(${TEST}.c.in ${CMAKE_CURRENT_SOURCE_DIR}/${TEST}.c)
+
+	list(APPEND CONFIGS ${TEST}.c.in)
+	list(APPEND SOURCES ${TEST}.c)
+endforeach()
+
+source_group("Config Files" FILES ${CONFIGS})
 include_directories(${CMAKE_SOURCE_DIR}/source)
 
 add_executable(${TARGET} ${SOURCES} ${HEADERS} ${CONFIG})
