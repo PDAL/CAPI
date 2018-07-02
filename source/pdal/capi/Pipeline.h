@@ -118,7 +118,7 @@ namespace pdal
 			 * to free these data structures.
 			 * 
 			 * @param pipeline The pipeline
-			 * @return A pointer to a point view collection or nullptr if no point views are available
+			 * @return A pointer to a point view collection or NULL if no point views are available
 			 */
 			PDAL_C_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 

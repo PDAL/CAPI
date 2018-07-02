@@ -36,7 +36,7 @@ namespace pdal
 			 * Returns whether another point view is available in the provided iterator.
 			 * 
 			 * @param itr A pointer to the point view iterator
-			 * @return Whether another point view is available
+			 * @return Whether another point view is available or `false` if `itr` is NULL
 			 */
 			PDAL_C_API bool PDALHasNextPointView(PDALPointViewIteratorPtr itr);
 
