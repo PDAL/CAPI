@@ -1,8 +1,8 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#ifndef PDAL_CAPI_PointViewIterator_H
-#define PDAL_CAPI_PointViewIterator_H
+#ifndef PDAL_CAPI_POINTVIEWITERATOR_H
+#define PDAL_CAPI_POINTVIEWITERATOR_H
 
 #include "Forward.h"
 
