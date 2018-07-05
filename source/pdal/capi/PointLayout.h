@@ -7,6 +7,12 @@
 
 #include "Forward.h"
 
+/**
+ * @file PointLayout.h
+ * Functions to inspect the contents of a point layout.
+ */
+
+
 #ifdef __cplusplus
 namespace pdal
 {

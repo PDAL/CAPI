@@ -6,6 +6,11 @@
 
 #include "Forward.h"
 
+/**
+ * @file Pipeline.h
+ * Functions to launch and inspect the results of a pipeline.
+ */
+
 #ifdef __cplusplus
 
 namespace pdal

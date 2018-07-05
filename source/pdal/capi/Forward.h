@@ -15,6 +15,11 @@
 #define PDAL_C_API PDAL_C_IMPORT_API
 #endif
 
+/**
+ * @file Forward.h
+ * Forward declarations for the PDAL C API.
+ */
+
 #ifdef __cplusplus
 #include <memory>
 #include <set>

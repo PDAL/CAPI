@@ -6,6 +6,11 @@
 
 #include "Forward.h"
 
+/**
+ * @file PointViewIterator.h
+ * Functions to inspect the contents of a point view iterator.
+ */
+
 #ifdef __cplusplus
 #include <pdal/PointView.hpp>
 

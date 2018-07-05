@@ -6,6 +6,11 @@
 
 #include "Forward.h"
 
+/**
+ * @file PointView.h
+ * Functions to inspect the contents of a point view.
+ */
+
 #ifdef __cplusplus /* __cplusplus */
 
 namespace pdal
