@@ -15,6 +15,11 @@
 #define PDAL_C_API PDAL_C_IMPORT_API
 #endif
 
+/**
+ * @file Forward.h
+ * Forward declarations for the PDAL C API.
+ */
+
 #ifdef __cplusplus
 #include <memory>
 #include <set>
@@ -44,11 +49,19 @@ namespace pdal
 
 typedef struct PDALDimType PDALDimType;
 
+/// A dimension type
 struct PDALDimType
 {
+	/// The dimension's identifier
 	uint32_t id;
+
+	/// The dimension's interpretation type
 	uint32_t type;
+
+	/// The dimension's scaling factor
 	double scale;
+
+	/// The dimension's offset value
 	double offset;
 };
 

@@ -7,6 +7,11 @@
 
 #include "Forward.h"
 
+/**
+ * @file DimType.h
+ * Functions to inspect dimension types.
+ */
+
 #ifdef __cplusplus
 
 namespace pdal

@@ -3,6 +3,10 @@ tests/pdal-stats.las
 tests/data/*.json
 tests/pdal/capi/*Test.c
 
+# Ignore doxygen docs
+/doc/doxygen
+/doc/Doxyfile
+
 # Select VS Code configurations
 .vscode/settings.json
 .vscode/c_cpp_properties.json
