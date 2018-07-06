@@ -10,7 +10,7 @@
 
 #include "greatest.h"
 
-SUITE(Pipeline);
+SUITE(PipelineTest);
 
 static char *gPipelineJson = NULL;
 

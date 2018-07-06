@@ -1,11 +1,17 @@
 set(TARGET test_pdal_c)
 
+find_package(PDAL REQUIRED CONFIG)
+
 set(CONFIGS )
 set(SOURCES main.c)
 set(HEADERS )
-set(DEPENDENCIES pdal_c)
+set(DEPENDENCIES 
+	${PDAL_LIBRARIES}
+	pdal_c
+)
 
 set(TESTS
+	ConfigTest
 	PipelineTest
 	PointLayoutTest
 	PointViewIteratorTest
@@ -20,7 +26,11 @@ foreach(TEST ${TESTS})
 endforeach()
 
 source_group("Config Files" FILES ${CONFIGS})
-include_directories(${CMAKE_SOURCE_DIR}/source)
+
+include_directories(
+	${CMAKE_SOURCE_DIR}/source
+	${PDAL_INCLUDE_DIRS}
+)
 
 add_executable(${TARGET} ${SOURCES} ${HEADERS} ${CONFIG})
 set_target_properties(${TARGET} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
