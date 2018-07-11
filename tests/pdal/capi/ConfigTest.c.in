@@ -75,7 +75,11 @@ TEST testPDALPluginInstallPath(void)
 	size_t size = PDALPluginInstallPath(path, 1024);
 	ASSERT(size > 0 && size <= 1024);
 	ASSERT(path[0]);
+
+#if !defined USING_VCPKG_DEBUG
 	ASSERT_STR_EQ(PDAL_PLUGIN_INSTALL_PATH, path);
+#endif
+
 	PASS();
 }
 
