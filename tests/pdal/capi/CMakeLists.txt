@@ -1,11 +1,17 @@
 set(TARGET test_pdal_c)
 
+find_package(PDAL REQUIRED CONFIG)
+
 set(CONFIGS )
 set(SOURCES main.c)
 set(HEADERS )
-set(DEPENDENCIES pdal_c)
+set(DEPENDENCIES 
+	${PDAL_LIBRARIES}
+	pdal_c
+)
 
 set(TESTS
+	ConfigTest
 	PipelineTest
 	PointLayoutTest
 	PointViewIteratorTest
@@ -20,7 +26,17 @@ foreach(TEST ${TESTS})
 endforeach()
 
 source_group("Config Files" FILES ${CONFIGS})
-include_directories(${CMAKE_SOURCE_DIR}/source)
+
+include_directories(
+	${CMAKE_SOURCE_DIR}/source
+	${PDAL_INCLUDE_DIRS}
+)
+
+# Add definition if building debug with vcpkg - PDAL_PLUGIN_INSTALL_PATH points to release binaries
+string(TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_UPPERCASE)
+if (BUILD_TYPE_UPPERCASE STREQUAL "DEBUG" AND VCPKG_TARGET_TRIPLET)
+	add_definitions(-DUSING_VCPKG_DEBUG)
+endif()
 
 add_executable(${TARGET} ${SOURCES} ${HEADERS} ${CONFIG})
 set_target_properties(${TARGET} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})

@@ -8,6 +8,7 @@
 
 #include "greatest.h"
 
+SUITE_EXTERN(ConfigTest);
 SUITE_EXTERN(PipelineTest);
 SUITE_EXTERN(PointLayoutTest);
 SUITE_EXTERN(PointViewIteratorTest);
@@ -18,6 +19,7 @@ GREATEST_MAIN_DEFS();
 int main(int argc, char **argv)
 {
 	GREATEST_MAIN_BEGIN();
+	RUN_SUITE(ConfigTest);
 	RUN_SUITE(PipelineTest);
 	RUN_SUITE(PointLayoutTest);
 	RUN_SUITE(PointViewIteratorTest);
