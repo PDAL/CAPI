@@ -2,7 +2,7 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#include "DimType.h"
+#include "pdal/pdalc_dimtype.h"
 #include <pdal/DimType.hpp>
 
 namespace pdal

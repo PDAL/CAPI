@@ -6,13 +6,13 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <pdal/capi/Config.h>
+#include <pdal/pdalc_config.h>
 #include <pdal/gitsha.h>
 #include <pdal/pdal_features.hpp>
 
 #include "greatest.h"
 
-SUITE(ConfigTest);
+SUITE(test_pdalc_config);
 
 TEST testPDALVersionInfo(void)
 {
@@ -84,7 +84,7 @@ TEST testPDALPluginInstallPath(void)
 }
 
 
-GREATEST_SUITE(ConfigTest)
+GREATEST_SUITE(test_pdalc_config)
 {
 	RUN_TEST(testPDALVersionInfo);
 	RUN_TEST(testPDALDebugInformation);

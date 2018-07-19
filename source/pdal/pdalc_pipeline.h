@@ -1,14 +1,14 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#ifndef PDAL_CAPI_PIPELINE_H
-#define PDAL_CAPI_PIPELINE_H
+#ifndef PDALC_PIPELINE_H
+#define PDALC_PIPELINE_H
 
-#include "Forward.h"
+#include "pdalc_forward.h"
 
 /**
- * @file Pipeline.h
- * Functions to launch and inspect the results of a pipeline.
+ * @file pdalc_pipeline.h
+ * Functions to launch and inspect the results of a PDAL pipeline.
  */
 
 #ifdef __cplusplus
@@ -32,14 +32,14 @@ namespace pdal
 			 * @param json The JSON text string
 			 * @return A pointer to a PDAL pipeline
 			 */
-			PDAL_C_API PDALPipelinePtr PDALCreatePipeline(const char* json);
+			PDALC_API PDALPipelinePtr PDALCreatePipeline(const char* json);
 
 			/**
 			 * Disposes a PDAL pipeline.
 			 * 
 			 * @param The pipeline to dispose
 			 */
-			PDAL_C_API void PDALDisposePipeline(PDALPipelinePtr pipeline);
+			PDALC_API void PDALDisposePipeline(PDALPipelinePtr pipeline);
 
 			/**
 			 * Retrieves a string representation of a pipeline.
@@ -49,7 +49,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved pipeline string or 0 if it could not be retrieved
 			 */
-			PDAL_C_API size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size);
+			PDALC_API size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size);
 
 			/**
 			 * Retrieves a pipeline's computed metadata.
@@ -59,7 +59,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved metadata string or 0 if it could not be retrieved
 			 */
-			PDAL_C_API size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size);
+			PDALC_API size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size);
 
 			/**
 			 * Retrieves a pipeline's computed schema.
@@ -69,7 +69,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved schema or 0 if it could not be retrieved
 			 */
-			PDAL_C_API size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size);
+			PDALC_API size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size);
 
 			/**
 			 * Retrieves a pipeline's execution log.
@@ -81,7 +81,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved log or 0 if it could not be retrieved
 			 */
-			PDAL_C_API size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size);
+			PDALC_API size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size);
 
 			/**
 			 * Sets a pipeline's log level
@@ -89,7 +89,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @param level The log level ranging from 0 for ? to 8 for ?
 			 */
-			PDAL_C_API void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level);
+			PDALC_API void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level);
 
 			/**
 			 * Returns a pipeline's log level
@@ -97,7 +97,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The log verbosity as an integer, ranging from 0 for ? to 8 for ?
 			 */
-			PDAL_C_API int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline);
+			PDALC_API int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline);
 
 			/**
 			 * Executes a pipeline.
@@ -105,7 +105,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return The total number of points produced by the pipeline
 			 */
-			PDAL_C_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
+			PDALC_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
 
 			/**
 			 * Validates a pipeline.
@@ -113,7 +113,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return Whether the pipeline is valid
 			 */
-			PDAL_C_API bool PDALValidatePipeline(PDALPipelinePtr pipeline);
+			PDALC_API bool PDALValidatePipeline(PDALPipelinePtr pipeline);
 
 			/**
 			 * Gets the resulting point views from a pipeline execution.
@@ -125,7 +125,7 @@ namespace pdal
 			 * @param pipeline The pipeline
 			 * @return A pointer to a point view collection or NULL if no point views are available
 			 */
-			PDAL_C_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
+			PDALC_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 
@@ -133,4 +133,4 @@ namespace pdal
 	}
 }
 #endif /* _cplusplus */
-#endif /* PDAL_CAPI_PIPELINE_H */
+#endif /* PDALC_PIPELINE_H */

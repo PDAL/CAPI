@@ -2,7 +2,7 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#include "Config.h"
+#include "pdalc_config.h"
 
 #include <pdal/pdal_config.hpp>
 

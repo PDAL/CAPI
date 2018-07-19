@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#include "PointViewIterator.h"
+#include "pdalc_pointviewiterator.h"
 
 namespace pdal
 {

@@ -2,8 +2,8 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#include "Pipeline.h"
-#include "PointViewIterator.h"
+#include "pdalc_pipeline.h"
+#include "pdalc_pointviewiterator.h"
 
 #include <pdal/PipelineExecutor.hpp>
 

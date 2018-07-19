@@ -2,14 +2,14 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#ifndef PDAL_CAPI_CONFIG_H
-#define PDAL_CAPI_CONFIG_H
+#ifndef PDALC_CONFIG_H
+#define PDALC_CONFIG_H
 
-#include "Forward.h"
+#include "pdalc_forward.h"
 
 /**
- * @file Config.h
- * Functions to PDAL version and configuration information.
+ * @file pdalc_config.h
+ * Functions to retrieve PDAL version and configuration information.
  */
 
 #ifdef __cplusplus
@@ -34,7 +34,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved version string
 			 */
-			PDAL_C_API size_t PDALFullVersionString(char *version, size_t size);
+			PDALC_API size_t PDALFullVersionString(char *version, size_t size);
 
 			/**
 			 * Retrieves the PDAL version string.
@@ -47,7 +47,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved version string
 			 */
-			PDAL_C_API size_t PDALVersionString(char *version, size_t size);
+			PDALC_API size_t PDALVersionString(char *version, size_t size);
 
 			/**
 			 * Returns an integer representation of the PDAL version.
@@ -59,7 +59,7 @@ namespace pdal
 			 * 
 			 * @return An integer representation of the PDAL version
 			 */
-			PDAL_C_API int PDALVersionInteger();
+			PDALC_API int PDALVersionInteger();
 
 			/**
 			 * Retrieves PDAL's Git commit SHA1 as a string.
@@ -70,7 +70,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved SHA1 string
 			 */
-			PDAL_C_API size_t PDALSha1(char *sha1, size_t size);
+			PDALC_API size_t PDALSha1(char *sha1, size_t size);
 
 			/**
 			 * Returns the PDAL major version number.
@@ -79,7 +79,7 @@ namespace pdal
 			 * 
 			 * @return The major version
 			 */
-			PDAL_C_API int PDALVersionMajor();
+			PDALC_API int PDALVersionMajor();
 
 			/**
 			 * Returns the PDAL minor version number.
@@ -88,7 +88,7 @@ namespace pdal
 			 * 
 			 * @return The minor version
 			 */
-			PDAL_C_API int PDALVersionMinor();
+			PDALC_API int PDALVersionMinor();
 
 			/**
 			 * Returns the PDAL patch version number.
@@ -97,7 +97,7 @@ namespace pdal
 			 * 
 			 * @return The patch version
 			 */
-			PDAL_C_API int PDALVersionPatch();
+			PDALC_API int PDALVersionPatch();
 
 			/**
 			 * Retrieves PDAL debugging information.
@@ -108,7 +108,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved debugging information
 			 */
-			PDAL_C_API size_t PDALDebugInformation(char *info, size_t size);
+			PDALC_API size_t PDALDebugInformation(char *info, size_t size);
 
 			/**
 			 * Retrieves the path to the PDAL installation.
@@ -119,7 +119,7 @@ namespace pdal
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved installation path
 			 */
-			PDAL_C_API size_t PDALPluginInstallPath(char *path, size_t size);
+			PDALC_API size_t PDALPluginInstallPath(char *path, size_t size);
 
 #ifdef __cplusplus
 		}

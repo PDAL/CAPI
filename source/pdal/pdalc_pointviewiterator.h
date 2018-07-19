@@ -1,14 +1,14 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#ifndef PDAL_CAPI_POINTVIEWITERATOR_H
-#define PDAL_CAPI_POINTVIEWITERATOR_H
+#ifndef PDALC_POINTVIEWITERATOR_H
+#define PDALC_POINTVIEWITERATOR_H
 
-#include "Forward.h"
+#include "pdalc_forward.h"
 
 /**
- * @file PointViewIterator.h
- * Functions to inspect the contents of a point view iterator.
+ * @file pdalc_pointviewiterator.h
+ * Functions to inspect the contents of a PDAL point view iterator.
  */
 
 #ifdef __cplusplus
@@ -43,7 +43,7 @@ namespace pdal
 			 * @param itr A pointer to the point view iterator
 			 * @return Whether another point view is available or `false` if `itr` is NULL
 			 */
-			PDAL_C_API bool PDALHasNextPointView(PDALPointViewIteratorPtr itr);
+			PDALC_API bool PDALHasNextPointView(PDALPointViewIteratorPtr itr);
 
 			/**
 			 * Returns the next available point view in the provided iterator.
@@ -54,21 +54,21 @@ namespace pdal
 			 * @param itr A pointer to the point view iterator
 			 * @return The next point view in the iterator or NULL if none available
 			 */
-			PDAL_C_API PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr);
+			PDALC_API PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr);
 
 			/**
 			 * Resets the provided point view iterator to its starting position.
 			 * 
 			 * @param itr A pointer to the point view iterator
 			 */
-			PDAL_C_API void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr);
+			PDALC_API void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr);
 
 			/**
 			 * Disposes the provided point view iterator.
 			 * 
 			 * @param itr A pointer to the point view iterator
 			 */
-			PDAL_C_API void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr);
+			PDALC_API void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr);
 
 #ifdef __cplusplus
 		}

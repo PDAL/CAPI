@@ -1,21 +1,25 @@
-set(TARGET test_pdal_c)
+set(TARGET test_pdalc)
 
 find_package(PDAL REQUIRED CONFIG)
 
 set(CONFIGS )
-set(SOURCES main.c)
+
+set(SOURCES
+	main.c
+	test_pdalc_config.c
+)
+
 set(HEADERS )
 set(DEPENDENCIES 
 	${PDAL_LIBRARIES}
-	pdal_c
+	pdalc
 )
 
 set(TESTS
-	ConfigTest
-	PipelineTest
-	PointLayoutTest
-	PointViewIteratorTest
-	PointViewTest
+	test_pdalc_pipeline
+	test_pdalc_pointlayout
+	test_pdalc_pointview
+	test_pdalc_pointviewiterator
 )
 
 foreach(TEST ${TESTS})

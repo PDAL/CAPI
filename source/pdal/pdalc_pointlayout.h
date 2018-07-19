@@ -2,14 +2,14 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#ifndef PDAL_CAPI_POINTLAYOUT_H
-#define PDAL_CAPI_POINTLAYOUT_H
+#ifndef PDALC_POINTLAYOUT_H
+#define PDALC_POINTLAYOUT_H
 
-#include "Forward.h"
+#include "pdalc_forward.h"
 
 /**
- * @file PointLayout.h
- * Functions to inspect the contents of a point layout.
+ * @file pdalc_pointlayout.h
+ * Functions to inspect the contents of a PDAL point layout.
  */
 
 
@@ -31,7 +31,7 @@ namespace pdal
 			 * @param layout A pointer to the layout
 			 * @return A pointer to the dimension type list or NULL if the `layout` is NULL
 			 */
-			PDAL_C_API PDALDimTypeListPtr PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout);
+			PDALC_API PDALDimTypeListPtr PDALGetPointLayoutDimTypes(PDALPointLayoutPtr layout);
 
 			/**
 			 * Finds the dimension type identified by the provided `name` in a `layout`.
@@ -41,7 +41,7 @@ namespace pdal
 			 * @return The matching dimension type,
 			 *         or the value returned by PDALGetInvalidDimType from DimTypes.h if none found
 			 */
-			PDAL_C_API PDALDimType PDALFindDimType(PDALPointLayoutPtr layout, const char *name);
+			PDALC_API PDALDimType PDALFindDimType(PDALPointLayoutPtr layout, const char *name);
 
 			/**
 			 * Returns the byte size of a dimension type value within a `layout`.
@@ -51,7 +51,7 @@ namespace pdal
 			 * @return The dimension type byte size,
 			 *         or zero if the layout is NULL, the name is NULL, or the dimension type is not found
 			 */
-			PDAL_C_API size_t PDALGetDimSize(PDALPointLayoutPtr layout, const char *name);
+			PDALC_API size_t PDALGetDimSize(PDALPointLayoutPtr layout, const char *name);
 
 			/**
 			 * Returns the byte offset of a dimension type within a `layout`.
@@ -61,7 +61,7 @@ namespace pdal
 			 * @return The dimension type offset,
 			 *         or zero if the layout is NULL, the name is NULL, or the dimension type is not found
 			 */
-			PDAL_C_API size_t PDALGetDimPackedOffset(PDALPointLayoutPtr layout, const char *name);
+			PDALC_API size_t PDALGetDimPackedOffset(PDALPointLayoutPtr layout, const char *name);
 
 			/**
 			 * Returns the byte size of a point in the provided `layout`.
@@ -69,7 +69,7 @@ namespace pdal
 			 * @param layout A pointer to the layout
 			 * @return The byte size of a point in the layout or zero if the layout is NULL
 			 */
-			PDAL_C_API size_t PDALGetPointSize(PDALPointLayoutPtr layout);
+			PDALC_API size_t PDALGetPointSize(PDALPointLayoutPtr layout);
 
 #ifdef __cplusplus
 		} // extern "C"

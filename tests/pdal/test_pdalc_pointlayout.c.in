@@ -8,19 +8,15 @@
 
 #include "greatest.h"
 
-#include <pdal/capi/DimType.h>
-#include <pdal/capi/Pipeline.h>
-#include <pdal/capi/PointLayout.h>
-#include <pdal/capi/PointView.h>
-#include <pdal/capi/PointViewIterator.h>
+#include <pdal/pdalc.h>
 
-SUITE(PointLayoutTest);
+SUITE(test_pdalc_pointlayout);
 
 static PDALPipelinePtr gPipeline = NULL;
 static PDALPointViewPtr gPointView = NULL;
 static PDALPointLayoutPtr gLayout = NULL;
 
-static void setupPointLayoutTest(void *arg)
+static void setup_test_pdalc_pointlayout(void *arg)
 {
 	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
 	char *json = NULL;
@@ -60,7 +56,7 @@ static void setupPointLayoutTest(void *arg)
 	}
 }
 
-static void teardownPointLayoutTest(void *arg)
+static void teardown_test_pdalc_pointlayout(void *arg)
 {
 	PDALDisposePointView(gPointView);
 	PDALDisposePipeline(gPipeline);
@@ -194,10 +190,10 @@ TEST testPDALGetPointSize(void)
 	PASS();
 }
 
-GREATEST_SUITE(PointLayoutTest)
+GREATEST_SUITE(test_pdalc_pointlayout)
 {
-	SET_SETUP(setupPointLayoutTest, NULL);
-	SET_TEARDOWN(teardownPointLayoutTest, NULL);
+	SET_SETUP(setup_test_pdalc_pointlayout, NULL);
+	SET_TEARDOWN(teardown_test_pdalc_pointlayout, NULL);
 
 	RUN_TEST(testPDALGetPointLayoutDimTypes);
 	RUN_TEST(testPDALFindDimType);

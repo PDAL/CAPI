@@ -1,14 +1,14 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#ifndef PDAL_CAPI_POINTVIEW_H
-#define PDAL_CAPI_POINTVIEW_H
+#ifndef PDALC_POINTVIEW_H
+#define PDALC_POINTVIEW_H
 
-#include "Forward.h"
+#include "pdalc_forward.h"
 
 /**
- * @file PointView.h
- * Functions to inspect the contents of a point view.
+ * @file pdalc_pointview.h
+ * Functions to inspect the contents of a PDAL point view.
  */
 
 #ifdef __cplusplus /* __cplusplus */
@@ -28,7 +28,7 @@ namespace pdal
 			 * 
 			 * @param view The point view to dispose
 			 */
-			PDAL_C_API void PDALDisposePointView(PDALPointViewPtr view);
+			PDALC_API void PDALDisposePointView(PDALPointViewPtr view);
 
 			/**
 			 * Returns the ID of the provided point `view`.
@@ -38,7 +38,7 @@ namespace pdal
 			 * @param view The point view
 			 * @return The view's ID
 			 */
-			PDAL_C_API int PDALGetPointViewId(PDALPointViewPtr view);
+			PDALC_API int PDALGetPointViewId(PDALPointViewPtr view);
 
 			/**
 			 * Returns the number of points in the provided `view`.
@@ -48,7 +48,7 @@ namespace pdal
 			 * @param view The point view
 			 * @return The number of points or zero if `view` is NULL
 			 */
-			PDAL_C_API uint64_t PDALGetPointViewSize(PDALPointViewPtr view);
+			PDALC_API uint64_t PDALGetPointViewSize(PDALPointViewPtr view);
 
 			/**
 			 * Returns whether the provided point `view` is empty, i.e., has no points.
@@ -58,7 +58,7 @@ namespace pdal
 			 * @param view The point view
 			 * @return Whether the point view is empty or `false` if `view` is NULL
 			 */
-			PDAL_C_API bool PDALIsPointViewEmpty(PDALPointViewPtr view);
+			PDALC_API bool PDALIsPointViewEmpty(PDALPointViewPtr view);
 
 			/**
 			 * Clones the provided point `view`.
@@ -68,7 +68,7 @@ namespace pdal
 			 * @param view The original point view
 			 * @return A pointer to the new point view or NULL if `view` is NULL
 			 */
-			PDAL_C_API PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view);
+			PDALC_API PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view);
 
 			/**
 			 * Returns the proj4 projection string for the provided point `view`.
@@ -81,7 +81,7 @@ namespace pdal
 			 * @return The size of the resulting proj4 projection string
 			 *         or zero if the `proj` buffer is NULL or the buffer `size` is zero
 			 */
-			PDAL_C_API size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size);
+			PDALC_API size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size);
 
 			/**
 			 * Returns the Well-Known Text (WKT) projection string for the provided point `view`.
@@ -94,7 +94,7 @@ namespace pdal
 			 * @return The size of the resulting WKT projection string
 			 *         or zero if the `wkt` buffer is NULL or the buffer `size` is zero
 			 */
-			PDAL_C_API size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty);
+			PDALC_API size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty);
 
 			/**
 			 * Returns the point layout for the provided point `view`.
@@ -105,7 +105,7 @@ namespace pdal
 			 * @param view The point view
 			 * @return The point layout or NULL if `view` is NULL
 			 */
-			PDAL_C_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
+			PDALC_API PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view);
 
 			/**
 			 * Retrieves data for a point based on the provided dimension list.
@@ -119,7 +119,7 @@ namespace pdal
 			 * @return The size of the retrieved point
 			 *         or zero if view` is NULL, `dims` is NULL, `buf` is NULL, or `idx` is out of bounds
 			 */
-			PDAL_C_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf);
+			PDALC_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf);
 
 			/**
 			 * Retrieves data for all points based on the provided dimension list.
@@ -133,7 +133,7 @@ namespace pdal
 			 * @return The size of the points stored in `buf`
 			 *         or zero if `view` is NULL, `dims` is NULL, or `buf` is NULL
 			 */
-			PDAL_C_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
+			PDALC_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
 
 #ifdef __cplusplus
 		}
