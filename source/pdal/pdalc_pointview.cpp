@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
-#include "PointView.h"
+#include "pdalc_pointview.h"
 #include <pdal/PointView.hpp>
 
 namespace pdal

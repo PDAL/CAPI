@@ -8,7 +8,7 @@
 			"name": "test_pdal_c x64-windows",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}\\build\\x64-windows\\bin\\test_pdal_cd.exe",
+			"program": "${workspaceFolder}\\build\\x64-windows\\bin\\test_pdalcd.exe",
 			"args": [],
 			"stopAtEntry": false,
 			"cwd": "${env:VCPKG_ROOT}\\installed\\x64-windows\\debug\\bin",

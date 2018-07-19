@@ -1,26 +1,27 @@
-set(TARGET pdal_c)
+set(TARGET pdalc)
 
 find_package(PDAL REQUIRED CONFIG)
 message(STATUS "Found PDAL ${PDAL_VERSION}")
 
 set(SOURCES
-	Config.cpp
-	DimType.cpp
-	Pipeline.cpp
-	PointLayout.cpp
-	PointView.cpp
-	PointViewIterator.cpp
+	pdalc_config.cpp
+	pdalc_dimtype.cpp
+	pdalc_pipeline.cpp
+	pdalc_pointlayout.cpp
+	pdalc_pointview.cpp
+	pdalc_pointviewiterator.cpp
 )
 
 set(HEADERS
-	Config.h
-	Defines.h
-	DimType.h
-	Forward.h
-	Pipeline.h
-	PointLayout.h
-	PointView.h
-	PointViewIterator.h
+	pdalc.h
+	pdalc_config.h
+	pdalc_defines.h
+	pdalc_dimtype.h
+	pdalc_forward.h
+	pdalc_pipeline.h
+	pdalc_pointlayout.h
+	pdalc_pointview.h
+	pdalc_pointviewiterator.h
 )
 
 set(DEPENDENCIES

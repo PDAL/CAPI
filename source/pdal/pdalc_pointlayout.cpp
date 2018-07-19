@@ -2,8 +2,8 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#include "PointLayout.h"
-#include "DimType.h"
+#include "pdalc_pointlayout.h"
+#include "pdalc_dimtype.h"
 
 #include <pdal/DimType.hpp>
 #include <pdal/PointLayout.hpp>

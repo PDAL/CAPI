@@ -2,21 +2,21 @@
  * Copyright (c) Simverge Software LLC - All Rights Reserved
  */
 
-#ifndef PDAL_CAPI_FORWARD_H
-#define PDAL_CAPI_FORWARD_H
+#ifndef PDALC_FORWARD_H
+#define PDALC_FORWARD_H
 
-#include "Defines.h"
+#include "pdalc_defines.h"
 
-#ifdef PDAL_C_BUILD_DLL
-#define PDAL_C_API PDAL_C_EXPORT_API
-#elif defined(PDAL_C_BUILD_STATIC)
-#define PDAL_C_API PDAL_C_STATIC_API
+#ifdef PDALC_BUILD_DLL
+#define PDALC_API PDALC_EXPORT_API
+#elif defined(PDALC_BUILD_STATIC)
+#define PDALC_API PDALC_STATIC_API
 #else
-#define PDAL_C_API PDAL_C_IMPORT_API
+#define PDALC_API PDALC_IMPORT_API
 #endif
 
 /**
- * @file Forward.h
+ * @file pdalc_forward.h
  * Forward declarations for the PDAL C API.
  */
 
@@ -83,4 +83,4 @@ typedef void* PDALPointViewPtr;
 /// A pointer to a point view iterator
 typedef void* PDALPointViewIteratorPtr;
 
-#endif /* PDAL_CAPI_FORWARD_H */
+#endif /* PDALC_FORWARD_H */

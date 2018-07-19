@@ -8,11 +8,7 @@
 
 #include "greatest.h"
 
-#include <pdal/capi/DimType.h>
-#include <pdal/capi/Pipeline.h>
-#include <pdal/capi/PointLayout.h>
-#include <pdal/capi/PointView.h>
-#include <pdal/capi/PointViewIterator.h>
+#include <pdal/pdalc.h>
 
 /// A simple binary tree implementation for int values
 struct node
@@ -56,13 +52,13 @@ bool insert(int key, struct node **n)
 	return inserted;
 }
 
-SUITE(PointViewTest);
+SUITE(test_pdalc_pointview);
 
 static const int INVALID_POINT_VIEW_ID = 0;
 static PDALPipelinePtr gPipeline = NULL;
 static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
-static void setupPointViewTest(void *arg)
+static void setup_test_pdalc_pointview(void *arg)
 {
 	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
 	char *json = NULL;
@@ -92,7 +88,7 @@ static void setupPointViewTest(void *arg)
 	}
 }
 
-static void teardownPointViewTest(void *arg)
+static void teardown_test_pdalc_pointview(void *arg)
 {
 	PDALDisposePointViewIterator(gPointViewIterator);
 	PDALDisposePipeline(gPipeline);
@@ -421,10 +417,10 @@ TEST testPDALGetAllPackedPoints(void)
 	PASS();
 }
 
-GREATEST_SUITE(PointViewTest)
+GREATEST_SUITE(test_pdalc_pointview)
 {
-	SET_SETUP(setupPointViewTest, NULL);
-	SET_TEARDOWN(teardownPointViewTest, NULL);
+	SET_SETUP(setup_test_pdalc_pointview, NULL);
+	SET_TEARDOWN(teardown_test_pdalc_pointview, NULL);
 
 	RUN_TEST(testPDALGetPointViewId);
 	RUN_TEST(testPDALGetPointViewSize);
