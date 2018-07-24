@@ -74,17 +74,22 @@ namespace pdal
 
 			size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				buffer[0] =  '\0';
-				buffer[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && buffer && size > 0)
 				{
-					std::string s = executor->getPipeline();
-					std::strncpy(buffer, s.c_str(), size - 1);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					buffer[0] =  '\0';
+					buffer[size - 1] = '\0';
+
+					if (executor)
+					{
+						std::string s = executor->getPipeline();
+						std::strncpy(buffer, s.c_str(), size - 1);
+						result = std::min(s.length(), size);
+					}
+
 				}
 
 				return result;
@@ -92,17 +97,21 @@ namespace pdal
 
 			size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				metadata[0] =  '\0';
-				metadata[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && metadata && size > 0)
 				{
-					std::string s = executor->getMetadata();
-					std::strncpy(metadata, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					metadata[0] =  '\0';
+					metadata[size - 1] = '\0';
+
+					if (executor)
+					{
+						std::string s = executor->getMetadata();
+						std::strncpy(metadata, s.c_str(), size);
+						result = std::min(s.length(), size);
+					}
 				}
 
 				return result;
@@ -110,17 +119,21 @@ namespace pdal
 
 			size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				schema[0] =  '\0';
-				schema[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && schema && size > 0)
 				{
-					std::string s = executor->getSchema();
-					std::strncpy(schema, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					schema[0] =  '\0';
+					schema[size - 1] = '\0';
+
+					if (executor)
+					{
+						std::string s = executor->getSchema();
+						std::strncpy(schema, s.c_str(), size);
+						result = std::min(s.length(), size);
+					}
 				}
 
 				return result;
@@ -128,17 +141,21 @@ namespace pdal
 
 			size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				log[0] =  '\0';
-				log[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && log && size > 0)
 				{
-					std::string s = executor->getLog();
-					std::strncpy(log, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					log[0] =  '\0';
+					log[size - 1] = '\0';
+
+					if (executor)
+					{
+						std::string s = executor->getLog();
+						std::strncpy(log, s.c_str(), size);
+						result = std::min(s.length(), size);
+					}
 				}
 
 				return result;
