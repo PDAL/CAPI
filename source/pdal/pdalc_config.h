@@ -24,6 +24,38 @@ namespace pdal
 #include <stdbool.h>
 #endif
 			/**
+			 * Retrieves the path to the GDAL data directory.
+			 * 
+			 * @param[out] path The buffer used to retrieve the path
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved path
+			 */
+			PDALC_API size_t PDALGetGdalDataPath(char *path, size_t size);
+
+			/**
+			 * Retrieves the path to the proj4 data directory.
+			 * 
+			 * @param[out] path The buffer used to retrieve the path
+			 * @param size The size of the provided buffer
+			 * @return The size of the retrieved path
+			 */
+			PDALC_API size_t PDALGetProj4DataPath(char *path, size_t size);
+
+			/**
+			 * Sets the path to the GDAL data directory.
+			 * 
+			 * @oaram path The path to set
+			 */
+			PDALC_API void PDALSetGdalDataPath(const char *path);
+
+			/**
+			 * Sets the path to the proj4 data directory.
+			 * 
+			 * @oaram path The path to set
+			 */
+			PDALC_API void PDALSetProj4DataPath(const char *path);
+
+			/**
 			 * Retrieves the full PDAL version string.
 			 * The full version string includes the major version number, the minor version
 			 * number, the patch version number, and the shortened Git commit SHA1.

@@ -13,6 +13,67 @@ namespace pdal
 {
 	namespace capi
 	{
+		std::ofstream pdalcConfigLog("pdalc_config.log");
+
+		void setenv(const char *name, const char *value)
+		{
+#if defined(_MSC_VER)
+			_putenv_s(name, value);
+#else
+			std::setenv(std::string(name + "=" + value).c_str());
+#endif
+		}
+
+		size_t PDALGetGdalDataPath(char *path, size_t size)
+		{
+			size_t length = 0;
+
+			if (path && size > 0)
+			{
+				path[0] = '\0';
+				path[size-1] = '\0';
+
+				std::string s = std::getenv("GDAL_DATA");
+				std::strncpy(path, s.c_str(), size - 1);
+				length = std::min(s.length(), size - 1);
+			}
+
+			return length;
+		}
+
+		size_t PDALGetProj4DataPath(char *path, size_t size)
+		{
+			size_t length = 0;
+
+			if (path && size > 0)
+			{
+				path[0] = '\0';
+				path[size-1] = '\0';
+
+				std::string s = std::getenv("PROJ_LIB");
+				std::strncpy(path, s.c_str(), size - 1);
+				length = std::min(s.length(), size - 1);
+			}
+
+			return length;
+		}
+
+		void PDALSetGdalDataPath(const char *path)
+		{
+			if (path)
+			{
+				setenv("GDAL_DATA", path);
+			}
+		}
+
+		void PDALSetProj4DataPath(const char *path)
+		{
+			if (path)
+			{
+				setenv("PROJ_LIB", path);
+			}
+		}
+
 		size_t PDALFullVersionString(char *version, size_t size)
 		{
 			size_t length = 0;
