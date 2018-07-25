@@ -5,6 +5,7 @@
 #include "pdalc_config.h"
 
 #include <pdal/pdal_config.hpp>
+#include <pdal/util/Utils.hpp>
 
 #include <cstring>
 #include <string>
@@ -14,15 +15,6 @@ namespace pdal
 	namespace capi
 	{
 		std::ofstream pdalcConfigLog("pdalc_config.log");
-
-		void setenv(const char *name, const char *value)
-		{
-#if defined(_MSC_VER)
-			_putenv_s(name, value);
-#else
-			std::setenv(std::string(name + "=" + value).c_str());
-#endif
-		}
 
 		size_t PDALGetGdalDataPath(char *path, size_t size)
 		{
@@ -62,7 +54,7 @@ namespace pdal
 		{
 			if (path)
 			{
-				setenv("GDAL_DATA", path);
+				pdal::Utils::setenv("GDAL_DATA", path);
 			}
 		}
 
@@ -70,7 +62,7 @@ namespace pdal
 		{
 			if (path)
 			{
-				setenv("PROJ_LIB", path);
+				pdal::Utils::setenv("PROJ_LIB", path);
 			}
 		}
 
