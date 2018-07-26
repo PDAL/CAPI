@@ -7,6 +7,7 @@
 #include <pdal/pdal_config.hpp>
 #include <pdal/util/Utils.hpp>
 
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -14,8 +15,6 @@ namespace pdal
 {
 	namespace capi
 	{
-		std::ofstream pdalcConfigLog("pdalc_config.log");
-
 		size_t PDALGetGdalDataPath(char *path, size_t size)
 		{
 			size_t length = 0;
@@ -25,9 +24,22 @@ namespace pdal
 				path[0] = '\0';
 				path[size-1] = '\0';
 
-				std::string s = std::getenv("GDAL_DATA");
-				std::strncpy(path, s.c_str(), size - 1);
-				length = std::min(s.length(), size - 1);
+				char *env = nullptr;
+
+				try
+				{
+					env = std::getenv("GDAL_DATA");
+				}
+				catch (const std::exception &e)
+				{
+					env = nullptr;
+				}
+
+				if (env)
+				{
+					std::strncpy(path, env, size - 1);
+					length = std::min(std::strlen(env), size - 1);
+				}
 			}
 
 			return length;
@@ -42,9 +54,22 @@ namespace pdal
 				path[0] = '\0';
 				path[size-1] = '\0';
 
-				std::string s = std::getenv("PROJ_LIB");
-				std::strncpy(path, s.c_str(), size - 1);
-				length = std::min(s.length(), size - 1);
+				char *env = nullptr;
+
+				try
+				{
+					env = std::getenv("PROJ_LIB");
+				}
+				catch (const std::exception &e)
+				{
+					env = nullptr;
+				}
+
+				if (env)
+				{
+					std::strncpy(path, env, size - 1);
+					length = std::min(std::strlen(env), size - 1);
+				}
 			}
 
 			return length;
