@@ -134,7 +134,6 @@ namespace pdal
 			 *
 			 * @param view The view that contains the points
 			 * @param dims List of dimensions to retrieve
-			 * @param idx Index of point to get
 			 * @param[out] buffer Pointer to buffer to fill
 			 * @return The size of the points stored in `buf`
 			 *         or zero if `view` is NULL, `dims` is NULL, or `buf` is NULL

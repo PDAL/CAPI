@@ -44,14 +44,14 @@ namespace pdal
 			/**
 			 * Sets the path to the GDAL data directory.
 			 * 
-			 * @oaram path The path to set
+			 * @param path The path to set
 			 */
 			PDALC_API void PDALSetGdalDataPath(const char *path);
 
 			/**
 			 * Sets the path to the proj4 data directory.
 			 * 
-			 * @oaram path The path to set
+			 * @param path The path to set
 			 */
 			PDALC_API void PDALSetProj4DataPath(const char *path);
 
@@ -98,7 +98,7 @@ namespace pdal
 			 * 
 			 * @see pdal::config::sha1
 			 * 
-			 * @param[out] version The buffer used to retrieve the SHA1 string
+			 * @param[out] sha1 The buffer used to retrieve the SHA1 string
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved SHA1 string
 			 */
@@ -136,7 +136,7 @@ namespace pdal
 			 * 
 			 * @see pdal::config::debugInformation
 			 * 
-			 * @param[out] version The buffer used to retrieve the debugging information
+			 * @param[out] info The buffer used to retrieve the debugging information
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved debugging information
 			 */
@@ -147,7 +147,7 @@ namespace pdal
 			 * 
 			 * @see pdal::config::pluginInstallPath
 			 * 
-			 * @param[out] version The buffer used to retrieve the installation path
+			 * @param[out] path The buffer used to retrieve the installation path
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved installation path
 			 */

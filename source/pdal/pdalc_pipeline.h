@@ -37,7 +37,7 @@ namespace pdal
 			/**
 			 * Disposes a PDAL pipeline.
 			 * 
-			 * @param The pipeline to dispose
+			 * @param pipeline The pipeline to dispose
 			 */
 			PDALC_API void PDALDisposePipeline(PDALPipelinePtr pipeline);
 
@@ -55,7 +55,7 @@ namespace pdal
 			 * Retrieves a pipeline's computed metadata.
 			 * 
 			 * @param pipeline The pipeline
-			 * @param[out] schema The buffer used to store the computed metadata for the pipeline and all stages
+			 * @param[out] metadata The buffer used to store the computed metadata for the pipeline and all stages
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved metadata string or 0 if it could not be retrieved
 			 */
@@ -65,7 +65,7 @@ namespace pdal
 			 * Retrieves a pipeline's computed schema.
 			 * 
 			 * @param pipeline The pipeline
-			 * @param[out] The buffer used to store the computed schema for the pipeline
+			 * @param[out] schema The buffer used to store the computed schema for the pipeline
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved schema or 0 if it could not be retrieved
 			 */
@@ -77,7 +77,7 @@ namespace pdal
 			 * @see PDALSetPipelineLogLevel to adjust logging verbosity
 			 * 
 			 * @param pipeline The pipeline
-			 * @param[out] The buffer used to store the log output for the executed pipeline
+			 * @param[out] log The buffer used to store the log output for the executed pipeline
 			 * @param size The size of the provided buffer
 			 * @return The size of the retrieved log or 0 if it could not be retrieved
 			 */
