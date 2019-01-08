@@ -30,7 +30,7 @@ namespace pdal
 				{
 					env = std::getenv("GDAL_DATA");
 				}
-				catch (const std::exception &e)
+				catch (const std::exception &)
 				{
 					env = nullptr;
 				}
@@ -60,7 +60,7 @@ namespace pdal
 				{
 					env = std::getenv("PROJ_LIB");
 				}
-				catch (const std::exception &e)
+				catch (const std::exception &)
 				{
 					env = nullptr;
 				}
