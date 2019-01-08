@@ -108,6 +108,7 @@ TEST testPDALFindDimType(void)
 		ASSERT(typeNone != expected.type);
 
 		char name[64];
+		ASSERT(PDALGetDimTypeInterpretationName(expected, name, 64) > 0);
 		ASSERT(PDALGetDimTypeIdName(expected, name, 64) > 0);
 
 		actual = PDALFindDimType(NULL, name);
