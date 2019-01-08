@@ -388,6 +388,8 @@ TEST testPDALGetAllPackedPoints(void)
 	size_t pointSize = PDALGetPointSize(layout);
 	ASSERT(numPoints > 0);
 	ASSERT(pointSize > 0);
+	ASSERT_EQ(pointSize, PDALGetDimTypeListByteCount(dims));
+
 
 	char *actualPoints = calloc(numPoints, pointSize);
 	ASSERT(actualPoints);

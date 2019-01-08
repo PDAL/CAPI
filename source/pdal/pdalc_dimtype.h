@@ -30,6 +30,15 @@ namespace pdal
 			PDALC_API size_t PDALGetDimTypeListSize(PDALDimTypeListPtr types);
 
 			/**
+			 * Returns the number of bytes required to store data referenced
+			 * by a dimension type list.
+			 * 
+			 * @param types A pointer to the dimension type list
+			 * @return The number of bytes required to store the referenced data
+			 */
+			PDALC_API uint64_t PDALGetDimTypeListByteCount(PDALDimTypeListPtr types);
+
+			/**
 			 * Returns the invalid dimension type. This dimension type has:
 			 * - An ID value of 0 that corresponds to pdal::Dimension::Id::Unknown
 			 * - An interpretation (data type) value of 0 that corresponds to pdal::Dimension::Type::None
@@ -71,6 +80,14 @@ namespace pdal
 			 *         or zero if the `name` buffer is NULL or  buffer`size` is zero
 			 */
 			PDALC_API size_t PDALGetDimTypeInterpretationName(PDALDimType dim, char *name, size_t size);
+
+			/**
+			 * Retrieves the byte count of a dimension type's interpretation, i.e., its data size.
+			 * 
+			 * @param dim The dimension type
+			 * @return The byte count of the retrieved interpretation
+			 */
+			PDALC_API size_t PDALGetDimTypeInterpretationByteCount(PDALDimType dim);
 
 			/**
 			 * Disposes the provided dimension type list.
