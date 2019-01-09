@@ -14,6 +14,74 @@
 
 SUITE(test_pdalc_config);
 
+TEST testPDALGetSetGdalDataPath(void)
+{
+	size_t size = PDALGetGdalDataPath(NULL, 1024);
+	ASSERT_EQ(0, size);
+
+	char *original = getenv("GDAL_DATA");
+	char path[1024];
+
+	size = PDALGetGdalDataPath(path, 0);
+	ASSERT_EQ(0, size);
+
+	size = PDALGetGdalDataPath(path, 1024);
+
+	if (original)
+	{
+		ASSERT_STR_EQ(original, path);
+		ASSERT_EQ(strlen(path), size);
+	}
+	else
+	{
+		ASSERT_EQ(0, path[0]);
+	}
+
+	const char *expected = "An arbitrary string set as the GDAL data path";
+	PDALSetGdalDataPath(expected);
+	size = PDALGetGdalDataPath(path, 1024);
+	ASSERT_STR_EQ(expected, path);
+	ASSERT_EQ(size, strlen(path));
+
+	PDALSetGdalDataPath(original);
+
+	PASS();
+}
+
+TEST testPDALGetSetProj4DataPath(void)
+{
+	size_t size = PDALGetProj4DataPath(NULL, 1024);
+	ASSERT_EQ(0, size);
+
+	char *original = getenv("PROJ_LIB");
+	char path[1024];
+
+	size = PDALGetProj4DataPath(path, 0);
+	ASSERT_EQ(0, size);
+
+	size = PDALGetProj4DataPath(path, 1024);
+
+	if (original)
+	{
+		ASSERT_STR_EQ(original, path);
+		ASSERT_EQ(size, strlen(path));
+	}
+	else
+	{
+		ASSERT_EQ(0, path[0]);
+	}
+
+	const char *expected = "An arbitrary string set as the proj4 data path";
+	PDALSetProj4DataPath(expected);
+	size = PDALGetProj4DataPath(path, 1024);
+	ASSERT_STR_EQ(expected, path);
+	ASSERT_EQ(size, strlen(path));
+
+	PDALSetProj4DataPath(original);
+
+	PASS();
+}
+
 TEST testPDALVersionInfo(void)
 {
 	int versionInteger = PDALVersionInteger();
@@ -86,6 +154,8 @@ TEST testPDALPluginInstallPath(void)
 
 GREATEST_SUITE(test_pdalc_config)
 {
+	RUN_TEST(testPDALGetSetGdalDataPath);
+	RUN_TEST(testPDALGetSetProj4DataPath);
 	RUN_TEST(testPDALVersionInfo);
 	RUN_TEST(testPDALDebugInformation);
 	RUN_TEST(testPDALPluginInstallPath);

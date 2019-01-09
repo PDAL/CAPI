@@ -115,25 +115,30 @@ namespace pdal
 			 * @param view The view that contains the point
 			 * @param dims List of dimensions to retrieve
 			 * @param idx Index of point to get
-			 * @param[out] buf Pointer to buffer to fill
+			 * @param[out] buffer Pointer to buffer to fill
 			 * @return The size of the retrieved point
 			 *         or zero if view` is NULL, `dims` is NULL, `buf` is NULL, or `idx` is out of bounds
 			 */
-			PDALC_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf);
+			PDALC_API size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buffer);
 
 			/**
 			 * Retrieves data for all points based on the provided dimension list.
 			 *
+			 * @note Behavior will be undefined if `buffer` is not large enough
+			 * to contain all the packed point data
+			 * 
+			 * @see Use the product of the values returned by PDALGetPointViewSize
+			 * and PDALGetPointSize to obtain the minimum byte size for `buffer`
+			 * 
 			 * @see pdal::PointView::getPackedPoint
 			 *
 			 * @param view The view that contains the points
 			 * @param dims List of dimensions to retrieve
-			 * @param idx Index of point to get
-			 * @param[out] buf Pointer to buffer to fill
+			 * @param[out] buffer Pointer to buffer to fill
 			 * @return The size of the points stored in `buf`
 			 *         or zero if `view` is NULL, `dims` is NULL, or `buf` is NULL
 			 */
-			PDALC_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf);
+			PDALC_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buffer);
 
 #ifdef __cplusplus
 		}

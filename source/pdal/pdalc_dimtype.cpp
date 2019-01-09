@@ -31,6 +31,19 @@ namespace pdal
 			return size;
 		}
 
+		uint64_t PDALGetDimTypeListByteCount(PDALDimTypeListPtr types)
+		{
+			uint64_t byteCount = 0;
+			size_t pointCount = PDALGetDimTypeListSize(types);
+
+			for (size_t i = 0; i < pointCount; ++i)
+			{
+				byteCount += PDALGetDimTypeInterpretationByteCount(PDALGetDimType(types, i));
+			}
+
+			return byteCount;
+		}
+
 		PDALDimType PDALGetInvalidDimType()
 		{
 			PDALDimType dim ={
@@ -71,15 +84,16 @@ namespace pdal
 			return result;
 		}
 
+		size_t PDALGetDimTypeInterpretationByteCount(PDALDimType dim)
+		{
+			return pdal::Dimension::size(static_cast<pdal::Dimension::Type>(dim.type));
+		}
+
 		PDALDimType PDALGetDimType(PDALDimTypeListPtr types, size_t index)
 		{
 			pdal::capi::DimTypeList *wrapper = reinterpret_cast<pdal::capi::DimTypeList *>(types);
 
 			PDALDimType dim = PDALGetInvalidDimType();
-			// PDALDimType dim = {
-			// 	static_cast<uint32_t>(pdal::Dimension::id("")), static_cast<uint32_t>(pdal::Dimension::type("")),
-			// 	1.0, 0.0
-			// };
 
 			if (wrapper && wrapper->get())
 			{

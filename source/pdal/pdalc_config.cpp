@@ -5,7 +5,9 @@
 #include "pdalc_config.h"
 
 #include <pdal/pdal_config.hpp>
+#include <pdal/util/Utils.hpp>
 
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -13,6 +15,82 @@ namespace pdal
 {
 	namespace capi
 	{
+		size_t PDALGetGdalDataPath(char *path, size_t size)
+		{
+			size_t length = 0;
+
+			if (path && size > 0)
+			{
+				path[0] = '\0';
+				path[size-1] = '\0';
+
+				char *env = nullptr;
+
+				try
+				{
+					env = std::getenv("GDAL_DATA");
+				}
+				catch (const std::exception &)
+				{
+					env = nullptr;
+				}
+
+				if (env)
+				{
+					std::strncpy(path, env, size - 1);
+					length = std::min(std::strlen(env), size - 1);
+				}
+			}
+
+			return length;
+		}
+
+		size_t PDALGetProj4DataPath(char *path, size_t size)
+		{
+			size_t length = 0;
+
+			if (path && size > 0)
+			{
+				path[0] = '\0';
+				path[size-1] = '\0';
+
+				char *env = nullptr;
+
+				try
+				{
+					env = std::getenv("PROJ_LIB");
+				}
+				catch (const std::exception &)
+				{
+					env = nullptr;
+				}
+
+				if (env)
+				{
+					std::strncpy(path, env, size - 1);
+					length = std::min(std::strlen(env), size - 1);
+				}
+			}
+
+			return length;
+		}
+
+		void PDALSetGdalDataPath(const char *path)
+		{
+			if (path)
+			{
+				pdal::Utils::setenv("GDAL_DATA", path);
+			}
+		}
+
+		void PDALSetProj4DataPath(const char *path)
+		{
+			if (path)
+			{
+				pdal::Utils::setenv("PROJ_LIB", path);
+			}
+		}
+
 		size_t PDALFullVersionString(char *version, size_t size)
 		{
 			size_t length = 0;

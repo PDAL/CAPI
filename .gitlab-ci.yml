@@ -62,6 +62,9 @@ build-x64-windows-debug:
 .job_template: &test-windows
   tags:
     - windows
+  before_script:
+    - set GDAL_DATA=%VCPKG_ROOT%\installed\x64-windows\share\gdal
+    - set PROJ_LIB=%VCPKG_ROOT%\installed\x64-windows\share\proj4
   stage: test
   cache:
     policy: pull
@@ -70,11 +73,8 @@ test-x64-windows-release:
   <<: *test-windows
   dependencies:
     - build-x64-windows-release
-  before_script:
-    - cd %VCPKG_ROOT%/installed/x64-windows/bin
   script:
-    - set GDAL_DATA=%VCPKG_ROOT%\installed\x64-windows\share\gdal
-    - set PROJ_LIB=%VCPKG_ROOT%\installed\x64-windows\share\proj4
+    - cd %VCPKG_ROOT%/installed/x64-windows/bin
     - copy proj_4_9.dll proj.dll
     - "%CI_PROJECT_DIR%/build/build-x64-windows-release/bin/test_pdalc"
   cache:
@@ -86,11 +86,8 @@ test-x64-windows-debug:
   <<: *test-windows
   dependencies:
     - build-x64-windows-debug
-  before_script:
-    - cd %VCPKG_ROOT%/installed/x64-windows/debug/bin
   script:
-    - set GDAL_DATA=%VCPKG_ROOT%\installed\x64-windows\share\gdal
-    - set PROJ_LIB=%VCPKG_ROOT%\installed\x64-windows\share\proj4
+    - cd %VCPKG_ROOT%/installed/x64-windows/debug/bin
     - copy proj_4_9_d.dll proj.dll
     - "%CI_PROJECT_DIR%/build/build-x64-windows-debug/bin/test_pdalcd"
   cache:

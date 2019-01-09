@@ -36,8 +36,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 		set(COVERAGE_EXCLUDES
 			'build/*'
 			'cmake/*'
-			'tests/*'
-			'tests/pdal/capi/*'
+			'tests/pdal/*'
 			'/usr/include/*'
 		)
 	endif()

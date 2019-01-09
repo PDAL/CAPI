@@ -74,17 +74,29 @@ namespace pdal
 
 			size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				buffer[0] =  '\0';
-				buffer[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && buffer && size > 0)
 				{
-					std::string s = executor->getPipeline();
-					std::strncpy(buffer, s.c_str(), size - 1);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					buffer[0] =  '\0';
+					buffer[size - 1] = '\0';
+
+					if (executor)
+					{
+						try
+						{
+							std::string s = executor->getPipeline();
+							std::strncpy(buffer, s.c_str(), size - 1);
+							result = std::min(s.length(), size);
+						}
+						catch (const std::exception &e)
+						{
+							printf("Found error while retrieving pipeline's string representation: %s\n", e.what());
+						}
+					}
+
 				}
 
 				return result;
@@ -92,17 +104,28 @@ namespace pdal
 
 			size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				metadata[0] =  '\0';
-				metadata[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && metadata && size > 0)
 				{
-					std::string s = executor->getMetadata();
-					std::strncpy(metadata, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					metadata[0] =  '\0';
+					metadata[size - 1] = '\0';
+
+					if (executor)
+					{
+						try
+						{
+							std::string s = executor->getMetadata();
+							std::strncpy(metadata, s.c_str(), size);
+							result = std::min(s.length(), size);
+						}
+						catch (const std::exception &e)
+						{
+							printf("Found error while retrieving pipeline's metadata: %s\n", e.what());
+						}
+				}
 				}
 
 				return result;
@@ -110,17 +133,28 @@ namespace pdal
 
 			size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				schema[0] =  '\0';
-				schema[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && schema && size > 0)
 				{
-					std::string s = executor->getSchema();
-					std::strncpy(schema, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					schema[0] =  '\0';
+					schema[size - 1] = '\0';
+
+					if (executor)
+					{
+						try
+						{
+							std::string s = executor->getSchema();
+							std::strncpy(schema, s.c_str(), size);
+							result = std::min(s.length(), size);
+						}
+						catch (const std::exception &e)
+						{
+							printf("Found error while retrieving pipeline's schema: %s\n", e.what());
+						}
+					}
 				}
 
 				return result;
@@ -128,17 +162,28 @@ namespace pdal
 
 			size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size)
 			{
-				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				pdal::PipelineExecutor *executor = ptr->get();
 				size_t result = 0;
-				log[0] =  '\0';
-				log[size - 1] = '\0';
 
-				if (executor)
+				if (pipeline && log && size > 0)
 				{
-					std::string s = executor->getLog();
-					std::strncpy(log, s.c_str(), size);
-					result = std::min(s.length(), size);
+					Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+					pdal::PipelineExecutor *executor = ptr->get();
+					log[0] =  '\0';
+					log[size - 1] = '\0';
+
+					if (executor)
+					{
+						try
+						{
+						std::string s = executor->getLog();
+						std::strncpy(log, s.c_str(), size);
+						result = std::min(s.length(), size);
+					}
+						catch (const std::exception &e)
+						{
+							printf("Found error while retrieving pipeline's log: %s\n", e.what());
+						}
+					}
 				}
 
 				return result;
@@ -150,7 +195,14 @@ namespace pdal
 
 				if (ptr && ptr->get())
 				{
+					try
+					{
 					ptr->get()->setLogLevel(level);
+				}
+					catch (const std::exception &e)
+					{
+						printf("Found error while setting log level: %s\n", e.what());
+					}
 				}
 			}
 
@@ -162,14 +214,42 @@ namespace pdal
 
 			int64_t PDALExecutePipeline(PDALPipelinePtr pipeline)
 			{
+				int64_t result = 0;
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return (ptr && ptr->get()) ? ptr->get()->execute() : 0;
+
+				if (ptr && ptr->get())
+				{
+					try
+					{
+						result = ptr->get()->execute();
+			}
+					catch (const std::exception &e)
+					{
+						printf("Found error while executing pipeline: %s", e.what());
+					}
+				}
+
+				return result;
 			}
 
 			bool PDALValidatePipeline(PDALPipelinePtr pipeline)
 			{
+				int64_t result = 0;
 				Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-				return ptr && ptr->get() && ptr->get()->validate();
+
+				if (ptr && ptr->get())
+				{
+					try
+					{
+						result = ptr->get()->validate();
+					}
+					catch (const std::exception &e)
+					{
+						printf("Found error while validating pipeline: %s", e.what());
+					}
+				}
+
+				return result;
 			}
 
 			PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline)
@@ -179,11 +259,18 @@ namespace pdal
 				
 				if (ptr && ptr->get())
 				{
-					auto &v = ptr->get()->getManagerConst().views();
-
-					if (!v.empty())
+					try
 					{
-						views = new pdal::capi::PointViewIterator(v);
+						auto &v = ptr->get()->getManagerConst().views();
+
+						if (!v.empty())
+						{
+							views = new pdal::capi::PointViewIterator(v);
+						}
+					}
+					catch (const std::exception &e)
+					{
+						printf("Found error while retrieving point views: %s\n", e.what());
 					}
 				}
 
