@@ -1,4 +1,4 @@
-FROM pdal/ubuntu
+FROM pdal/pdal:1.8
 MAINTAINER Jaime Soto <docker@simverge.com>
 
 RUN \

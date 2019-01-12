@@ -1,4 +1,4 @@
-FROM pdal/pdal:1.7
+FROM pdal/alpine:1.7.1
 MAINTAINER Jaime Soto <docker@simverge.com>
 
 RUN \
