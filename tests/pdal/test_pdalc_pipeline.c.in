@@ -1,6 +1,31 @@
-/*
- * Copyright (c) Simverge Software LLC - All Rights Reserved
- */
+/******************************************************************************
+ * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of Simverge Software LLC nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,188 +41,188 @@ static char *gPipelineJson = NULL;
 
 static void setup_test_pdalc_pipeline(void *arg)
 {
-	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
+    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
 
-	if (file)
-	{
-		fseek(file, 0, SEEK_END);
-		long length = ftell(file);
-		fseek(file, 0, SEEK_SET);
-		gPipelineJson = malloc(length + 1);
+    if (file)
+    {
+        fseek(file, 0, SEEK_END);
+        long length = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        gPipelineJson = malloc(length + 1);
 
-		if (gPipelineJson)
-		{
-			fread(gPipelineJson, 1, length, file);
-			gPipelineJson[length] = '\0';
-		}
+        if (gPipelineJson)
+        {
+            fread(gPipelineJson, 1, length, file);
+            gPipelineJson[length] = '\0';
+        }
 
-		fclose(file);
-	}
+        fclose(file);
+    }
 }
 
 static void teardown_test_pdalc_pipeline(void *arg)
 {
-	if (gPipelineJson)
-	{
-		free(gPipelineJson);
-	}
+    if (gPipelineJson)
+    {
+        free(gPipelineJson);
+    }
 }
 
 TEST testPDALCreateAndDisposePipeline(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(NULL);
-	ASSERT_EQ(NULL, pipeline);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(NULL);
+    ASSERT_EQ(NULL, pipeline);
 
-	pipeline = PDALCreatePipeline("");
-	ASSERT_EQ(NULL, pipeline);
+    pipeline = PDALCreatePipeline("");
+    ASSERT_EQ(NULL, pipeline);
 
-	pipeline = PDALCreatePipeline("This is not a valid pipeline, it's not even JSON");
-	ASSERT_EQ(NULL, pipeline);
+    pipeline = PDALCreatePipeline("This is not a valid pipeline, it's not even JSON");
+    ASSERT_EQ(NULL, pipeline);
 
-	pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
+    pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
 
-	PDALDisposePipeline(pipeline);
-	PDALDisposePipeline(NULL);
+    PDALDisposePipeline(pipeline);
+    PDALDisposePipeline(NULL);
 
-	PASS();
+    PASS();
 }
 
 TEST testPDALGetPipelineAsString(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT_FALSE(pipeline == NULL);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT_FALSE(pipeline == NULL);
 
-	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT(count > 0);
+    int64_t count = PDALExecutePipeline(pipeline);
+    ASSERT(count > 0);
 
-	char json[1024];
-	size_t size = PDALGetPipelineAsString(pipeline, json, 1024);
-	ASSERT(size > 0 && size <= 1024);
-	ASSERT_FALSE(json[0] == '\0');
+    char json[1024];
+    size_t size = PDALGetPipelineAsString(pipeline, json, 1024);
+    ASSERT(size > 0 && size <= 1024);
+    ASSERT_FALSE(json[0] == '\0');
 
-	// Make sure that the JSON object's name is "pipeline"
-	char jsonName[16];
-	sscanf(json, "%*s\n\t%10s", &jsonName);
-	ASSERT_STR_EQ("\"pipeline\"", jsonName);
+    // Make sure that the JSON object's name is "pipeline"
+    char jsonName[16];
+    sscanf(json, "%*s\n\t%10s", &jsonName);
+    ASSERT_STR_EQ("\"pipeline\"", jsonName);
 
-	PDALDisposePipeline(pipeline);
-	PASS();
+    PDALDisposePipeline(pipeline);
+    PASS();
 }
 
 TEST testPDALGetPipelineMetadata(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
 
-	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT(count > 0);
+    int64_t count = PDALExecutePipeline(pipeline);
+    ASSERT(count > 0);
 
-	char json[1024];
-	size_t size = PDALGetPipelineMetadata(pipeline, json, 1024);
-	ASSERT(size > 0 && size <= 1024);
-	ASSERT_FALSE(json[0] == '\0');
+    char json[1024];
+    size_t size = PDALGetPipelineMetadata(pipeline, json, 1024);
+    ASSERT(size > 0 && size <= 1024);
+    ASSERT_FALSE(json[0] == '\0');
 
-	// Make sure that the JSON object's name is "metadata"
-	char jsonName[16];
-	sscanf(json, "%*s\n\t%10s", &jsonName);
-	ASSERT_STR_EQ("\"metadata\"", jsonName);
+    // Make sure that the JSON object's name is "metadata"
+    char jsonName[16];
+    sscanf(json, "%*s\n\t%10s", &jsonName);
+    ASSERT_STR_EQ("\"metadata\"", jsonName);
 
-	PDALDisposePipeline(pipeline);
-	PASS();
+    PDALDisposePipeline(pipeline);
+    PASS();
 }
 
 TEST testPDALGetPipelineSchema(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
 
-	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT(count > 0);
+    int64_t count = PDALExecutePipeline(pipeline);
+    ASSERT(count > 0);
 
-	char json[2048];
-	size_t size = PDALGetPipelineSchema(pipeline, json, 2048);
-	ASSERT(size > 0 && size <= 2048);
-	ASSERT_FALSE(json[0] == '\0');
+    char json[2048];
+    size_t size = PDALGetPipelineSchema(pipeline, json, 2048);
+    ASSERT(size > 0 && size <= 2048);
+    ASSERT_FALSE(json[0] == '\0');
 
-	// Make sure that the JSON object's name is "schema"
-	char jsonName[16];
-	sscanf(json, "%*s\n\t%8s", &jsonName);
-	ASSERT_STR_EQ("\"schema\"", jsonName);
+    // Make sure that the JSON object's name is "schema"
+    char jsonName[16];
+    sscanf(json, "%*s\n\t%8s", &jsonName);
+    ASSERT_STR_EQ("\"schema\"", jsonName);
 
-	PDALDisposePipeline(pipeline);
-	PASS();
+    PDALDisposePipeline(pipeline);
+    PASS();
 }
 
 TEST testPDALGetSetPipelineLog(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
 
-	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT(count > 0);
+    int64_t count = PDALExecutePipeline(pipeline);
+    ASSERT(count > 0);
 
-	// Test valid cases: 0 to 8
-	char log[1024];
+    // Test valid cases: 0 to 8
+    char log[1024];
 
-	for (int i = 0; i < 9; ++i)
-	{
-		PDALSetPipelineLogLevel(pipeline, i);
-		int j = PDALGetPipelineLogLevel(pipeline);
-		ASSERT_EQ(i, j);
-	}
+    for (int i = 0; i < 9; ++i)
+    {
+        PDALSetPipelineLogLevel(pipeline, i);
+        int j = PDALGetPipelineLogLevel(pipeline);
+        ASSERT_EQ(i, j);
+    }
 
-	// TODO Determine why all levels yield empty logs
-	size_t size = PDALGetPipelineLog(pipeline, log, 1024);
-	//ASSERT(size > 0 && size <= 1024);
-	//ASSERT_FALSE(log[0] == '\0');
+    // TODO Determine why all levels yield empty logs
+    size_t size = PDALGetPipelineLog(pipeline, log, 1024);
+    //ASSERT(size > 0 && size <= 1024);
+    //ASSERT_FALSE(log[0] == '\0');
 
-	PDALDisposePipeline(pipeline);
+    PDALDisposePipeline(pipeline);
 
-	PASS();
+    PASS();
 }
 
 TEST testPDALExecutePipeline(void)
 {
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
 
-	int64_t count = PDALExecutePipeline(pipeline);
-	ASSERT(count > 0);
+    int64_t count = PDALExecutePipeline(pipeline);
+    ASSERT(count > 0);
 
-	count = PDALExecutePipeline(NULL);
-	ASSERT_EQ(0, count);
+    count = PDALExecutePipeline(NULL);
+    ASSERT_EQ(0, count);
 
-	PDALDisposePipeline(pipeline);
-	PASS();
+    PDALDisposePipeline(pipeline);
+    PASS();
 }
 
 TEST testPDALValidatePipeline(void)
 {
-	bool valid = PDALValidatePipeline(NULL);
-	ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
+    bool valid = PDALValidatePipeline(NULL);
+    ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
 
-	PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-	ASSERT(pipeline);
-	valid = PDALValidatePipeline(pipeline);
-	ASSERTm("Valid pipeline evaluated as invalid", valid);
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
+    valid = PDALValidatePipeline(pipeline);
+    ASSERTm("Valid pipeline evaluated as invalid", valid);
 
-	PASS();
+    PASS();
 }
 
 GREATEST_SUITE(test_pdalc_pipeline)
 {
-	SET_SETUP(setup_test_pdalc_pipeline, NULL);
-	SET_TEARDOWN(teardown_test_pdalc_pipeline, NULL);
+    SET_SETUP(setup_test_pdalc_pipeline, NULL);
+    SET_TEARDOWN(teardown_test_pdalc_pipeline, NULL);
 
-	RUN_TEST(testPDALCreateAndDisposePipeline);
-	RUN_TEST(testPDALExecutePipeline);
-	RUN_TEST(testPDALGetSetPipelineLog);
-	RUN_TEST(testPDALGetPipelineAsString);
-	RUN_TEST(testPDALGetPipelineMetadata);
-	RUN_TEST(testPDALGetPipelineSchema);
-	RUN_TEST(testPDALValidatePipeline);
+    RUN_TEST(testPDALCreateAndDisposePipeline);
+    RUN_TEST(testPDALExecutePipeline);
+    RUN_TEST(testPDALGetSetPipelineLog);
+    RUN_TEST(testPDALGetPipelineAsString);
+    RUN_TEST(testPDALGetPipelineMetadata);
+    RUN_TEST(testPDALGetPipelineSchema);
+    RUN_TEST(testPDALValidatePipeline);
 
-	SET_SETUP(NULL, NULL);
-	SET_TEARDOWN(NULL, NULL);
+    SET_SETUP(NULL, NULL);
+    SET_TEARDOWN(NULL, NULL);
 }

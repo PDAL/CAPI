@@ -1,14 +1,39 @@
-/*
- * Copyright (c) Simverge Software LLC - All Rights Reserved
- */
+/******************************************************************************
+ * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of Simverge Software LLC nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
-#include "greatest.h"
-
 #include <pdal/pdalc.h>
+
+#include "greatest.h"
 
 SUITE(test_pdalc_pointlayout);
 
@@ -18,190 +43,190 @@ static PDALPointLayoutPtr gLayout = NULL;
 
 static void setup_test_pdalc_pointlayout(void *arg)
 {
-	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
-	char *json = NULL;
+    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
+    char *json = NULL;
 
-	if (file)
-	{
-		fseek(file, 0, SEEK_END);
-		long length = ftell(file);
-		fseek(file, 0, SEEK_SET);
-		char *json = malloc(length + 1);
+    if (file)
+    {
+        fseek(file, 0, SEEK_END);
+        long length = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        char *json = malloc(length + 1);
 
-		if (json)
-		{
-			fread(json, 1, length, file);
-			json[length] = '\0';
-			gPipeline = PDALCreatePipeline(json);
+        if (json)
+        {
+            fread(json, 1, length, file);
+            json[length] = '\0';
+            gPipeline = PDALCreatePipeline(json);
 
-			if (gPipeline && PDALExecutePipeline(gPipeline))
-			{
-				PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
+            if (gPipeline && PDALExecutePipeline(gPipeline))
+            {
+                PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
 
-				if (PDALHasNextPointView(views))
-				{
-					gPointView = PDALGetNextPointView(views);
+                if (PDALHasNextPointView(views))
+                {
+                    gPointView = PDALGetNextPointView(views);
 
-					if (gPointView)
-					{
-						gLayout = PDALGetPointViewLayout(gPointView);
-					}
-				}
-			}
+                    if (gPointView)
+                    {
+                        gLayout = PDALGetPointViewLayout(gPointView);
+                    }
+                }
+            }
 
-			free(json);
-		}
+            free(json);
+        }
 
-		fclose(file);
-	}
+        fclose(file);
+    }
 }
 
 static void teardown_test_pdalc_pointlayout(void *arg)
 {
-	PDALDisposePointView(gPointView);
-	PDALDisposePipeline(gPipeline);
+    PDALDisposePointView(gPointView);
+    PDALDisposePipeline(gPipeline);
 }
 
 TEST testPDALGetPointLayoutDimTypes(void)
 {
-	ASSERT(gLayout);
-	PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(NULL);
-	ASSERT_EQm("PDALGetPointLayoutDimTypes(NULL) should return NULL", NULL, types);
+    ASSERT(gLayout);
+    PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(NULL);
+    ASSERT_EQm("PDALGetPointLayoutDimTypes(NULL) should return NULL", NULL, types);
 
-	types = PDALGetPointLayoutDimTypes(gLayout);
-	ASSERTm("PDALGetPointLayoutDimTypes should return non-NULL for a valid layout", types);
+    types = PDALGetPointLayoutDimTypes(gLayout);
+    ASSERTm("PDALGetPointLayoutDimTypes should return non-NULL for a valid layout", types);
 
-	size_t size = PDALGetDimTypeListSize(types);
-	ASSERTm("PDALGetDimTypeListSize should return more than zero for a valid list", size > 0);
+    size_t size = PDALGetDimTypeListSize(types);
+    ASSERTm("PDALGetDimTypeListSize should return more than zero for a valid list", size > 0);
 
-	PDALDisposeDimTypeList(types);
-	PASS();
+    PDALDisposeDimTypeList(types);
+    PASS();
 }
 
 TEST testPDALFindDimType(void)
 {
-	uint32_t idUnknown = 0;
-	uint32_t typeNone = 0;
-	double tolerance = 1.0e-4;
+    uint32_t idUnknown = 0;
+    uint32_t typeNone = 0;
+    double tolerance = 1.0e-4;
 
-	ASSERT(gLayout);
+    ASSERT(gLayout);
 
-	PDALDimType actual = PDALFindDimType(NULL, NULL);
-	ASSERT_EQ(idUnknown, actual.id);
-	ASSERT_EQ(typeNone, actual.type);
-	ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
-	ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+    PDALDimType actual = PDALFindDimType(NULL, NULL);
+    ASSERT_EQ(idUnknown, actual.id);
+    ASSERT_EQ(typeNone, actual.type);
+    ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+    ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
 
-	actual = PDALFindDimType(gLayout, NULL);
-	ASSERT_EQ(idUnknown, actual.id);
-	ASSERT_EQ(typeNone, actual.type);
-	ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
-	ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+    actual = PDALFindDimType(gLayout, NULL);
+    ASSERT_EQ(idUnknown, actual.id);
+    ASSERT_EQ(typeNone, actual.type);
+    ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+    ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
 
-	PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(gLayout);
-	size_t size = PDALGetDimTypeListSize(types);
+    PDALDimTypeListPtr types = PDALGetPointLayoutDimTypes(gLayout);
+    size_t size = PDALGetDimTypeListSize(types);
 
-	for (size_t i = 0; i < size; ++i)
-	{
-		PDALDimType expected = PDALGetDimType(types, i);
-		ASSERT(idUnknown != expected.id);
-		ASSERT(typeNone != expected.type);
+    for (size_t i = 0; i < size; ++i)
+    {
+        PDALDimType expected = PDALGetDimType(types, i);
+        ASSERT(idUnknown != expected.id);
+        ASSERT(typeNone != expected.type);
 
-		char name[64];
-		ASSERT(PDALGetDimTypeInterpretationName(expected, name, 64) > 0);
-		ASSERT(PDALGetDimTypeIdName(expected, name, 64) > 0);
+        char name[64];
+        ASSERT(PDALGetDimTypeInterpretationName(expected, name, 64) > 0);
+        ASSERT(PDALGetDimTypeIdName(expected, name, 64) > 0);
 
-		actual = PDALFindDimType(NULL, name);
-		ASSERT_EQ(idUnknown, actual.id);
-		ASSERT_EQ(typeNone, actual.type);
-		ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
-		ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+        actual = PDALFindDimType(NULL, name);
+        ASSERT_EQ(idUnknown, actual.id);
+        ASSERT_EQ(typeNone, actual.type);
+        ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
+        ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
 
-		actual = PDALFindDimType(gLayout, name);
-		ASSERT_EQ(expected.id, actual.id);
-		ASSERT_EQ(expected.type, actual.type);
-		ASSERT_IN_RANGE(expected.scale, actual.scale, tolerance);
-		ASSERT_IN_RANGE(expected.offset, actual.offset, tolerance);
-	}
+        actual = PDALFindDimType(gLayout, name);
+        ASSERT_EQ(expected.id, actual.id);
+        ASSERT_EQ(expected.type, actual.type);
+        ASSERT_IN_RANGE(expected.scale, actual.scale, tolerance);
+        ASSERT_IN_RANGE(expected.offset, actual.offset, tolerance);
+    }
 
-	PDALDisposeDimTypeList(types);
+    PDALDisposeDimTypeList(types);
 
-	PASS();
+    PASS();
 }
 
 
 TEST testPDALGetDimSize(void)
 {
-	ASSERT(gLayout);
-	size_t size = PDALGetDimSize(NULL, NULL);
-	ASSERT_EQ(0, size);
+    ASSERT(gLayout);
+    size_t size = PDALGetDimSize(NULL, NULL);
+    ASSERT_EQ(0, size);
 
-	int numTypes = 3;
-	const char *types[] = {"X", "Y", "Z"};
+    int numTypes = 3;
+    const char *types[] = {"X", "Y", "Z"};
 
-	for (int i = 0; i < numTypes; ++i)
-	{
-		size = PDALGetDimSize(NULL, types[i]);
-		ASSERT_EQ(0, size);
+    for (int i = 0; i < numTypes; ++i)
+    {
+        size = PDALGetDimSize(NULL, types[i]);
+        ASSERT_EQ(0, size);
 
-		size = PDALGetDimSize(gLayout, types[i]);
-		ASSERT(size > 0);
-	}
+        size = PDALGetDimSize(gLayout, types[i]);
+        ASSERT(size > 0);
+    }
 
-	PASS();
+    PASS();
 }
 
 TEST testPDALGetDimPackedOffset(void)
 {
-	ASSERT(gLayout);
-	size_t offset = PDALGetDimPackedOffset(NULL, NULL);
-	ASSERT_EQ(0, offset);
+    ASSERT(gLayout);
+    size_t offset = PDALGetDimPackedOffset(NULL, NULL);
+    ASSERT_EQ(0, offset);
 
-	int numTypes = 3;
-	const char *types[] = {"X", "Y", "Z"};
+    int numTypes = 3;
+    const char *types[] = {"X", "Y", "Z"};
 
-	for (int i = 0; i < numTypes; ++i)
-	{
-		offset = PDALGetDimPackedOffset(NULL, types[i]);
-		ASSERT_EQ(0, offset);
+    for (int i = 0; i < numTypes; ++i)
+    {
+        offset = PDALGetDimPackedOffset(NULL, types[i]);
+        ASSERT_EQ(0, offset);
 
-		offset = PDALGetDimPackedOffset(gLayout, types[i]);
-	
-		if (strcmp(types[i], "X") == 0)
-		{
-			ASSERT_EQ(0, offset);
-		}
-		else
-		{
-			ASSERT(offset > 0);
-		}
-	}
+        offset = PDALGetDimPackedOffset(gLayout, types[i]);
 
-	PASS();
+        if (strcmp(types[i], "X") == 0)
+        {
+            ASSERT_EQ(0, offset);
+        }
+        else
+        {
+            ASSERT(offset > 0);
+        }
+    }
+
+    PASS();
 }
 
 TEST testPDALGetPointSize(void)
 {
-	ASSERT(gLayout);
-	size_t size = PDALGetPointSize(NULL);
-	ASSERT_EQ(0, size);
+    ASSERT(gLayout);
+    size_t size = PDALGetPointSize(NULL);
+    ASSERT_EQ(0, size);
 
-	size = PDALGetPointSize(gLayout);
-	ASSERT(size > 0);
-	PASS();
+    size = PDALGetPointSize(gLayout);
+    ASSERT(size > 0);
+    PASS();
 }
 
 GREATEST_SUITE(test_pdalc_pointlayout)
 {
-	SET_SETUP(setup_test_pdalc_pointlayout, NULL);
-	SET_TEARDOWN(teardown_test_pdalc_pointlayout, NULL);
+    SET_SETUP(setup_test_pdalc_pointlayout, NULL);
+    SET_TEARDOWN(teardown_test_pdalc_pointlayout, NULL);
 
-	RUN_TEST(testPDALGetPointLayoutDimTypes);
-	RUN_TEST(testPDALFindDimType);
-	RUN_TEST(testPDALGetDimSize);
-	RUN_TEST(testPDALGetDimPackedOffset);
-	RUN_TEST(testPDALGetPointSize);
+    RUN_TEST(testPDALGetPointLayoutDimTypes);
+    RUN_TEST(testPDALFindDimType);
+    RUN_TEST(testPDALGetDimSize);
+    RUN_TEST(testPDALGetDimPackedOffset);
+    RUN_TEST(testPDALGetPointSize);
 
-	SET_SETUP(NULL, NULL);
-	SET_TEARDOWN(NULL, NULL);
+    SET_SETUP(NULL, NULL);
+    SET_TEARDOWN(NULL, NULL);
 }

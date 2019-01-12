@@ -1,16 +1,41 @@
-/*
- * Copyright (c) Simverge Software LLC - All Rights Reserved
- */
+/******************************************************************************
+ * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following
+ * conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of Simverge Software LLC nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
-#include "greatest.h"
-
 #include <pdal/pdalc_pipeline.h>
 #include <pdal/pdalc_pointview.h>
 #include <pdal/pdalc_pointviewiterator.h>
+
+#include "greatest.h"
 
 SUITE(test_pdalc_pointviewiterator);
 
@@ -19,120 +44,120 @@ static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
 static void setup_test_pdalc_pointviewiterator(void *arg)
 {
-	FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
-	char *json = NULL;
+    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
+    char *json = NULL;
 
-	if (file)
-	{
-		fseek(file, 0, SEEK_END);
-		long length = ftell(file);
-		fseek(file, 0, SEEK_SET);
-		char *json = malloc(length + 1);
+    if (file)
+    {
+        fseek(file, 0, SEEK_END);
+        long length = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        char *json = malloc(length + 1);
 
-		if (json)
-		{
-			fread(json, 1, length, file);
-			json[length] = '\0';
+        if (json)
+        {
+            fread(json, 1, length, file);
+            json[length] = '\0';
 
-			gPipeline = PDALCreatePipeline(json);
+            gPipeline = PDALCreatePipeline(json);
 
-			if (gPipeline && PDALExecutePipeline(gPipeline))
-			{
-				gPointViewIterator = PDALGetPointViews(gPipeline);
-			}
+            if (gPipeline && PDALExecutePipeline(gPipeline))
+            {
+                gPointViewIterator = PDALGetPointViews(gPipeline);
+            }
 
-			free(json);
-		}
+            free(json);
+        }
 
-		fclose(file);
-	}
+        fclose(file);
+    }
 }
 
 static void teardown_test_pdalc_pointviewiterator(void *arg)
 {
-	PDALDisposePointViewIterator(gPointViewIterator);
-	PDALDisposePipeline(gPipeline);
+    PDALDisposePointViewIterator(gPointViewIterator);
+    PDALDisposePipeline(gPipeline);
 }
 
 TEST testPDALHasNextPointView(void)
 {
-	bool hasNext = PDALHasNextPointView(NULL);
-	ASSERT_FALSE(hasNext);
+    bool hasNext = PDALHasNextPointView(NULL);
+    ASSERT_FALSE(hasNext);
 
-	ASSERT(gPointViewIterator);
-	hasNext = PDALHasNextPointView(gPointViewIterator);
-	ASSERT(hasNext);
+    ASSERT(gPointViewIterator);
+    hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
 
-	PASS();
+    PASS();
 }
 
 TEST testPDALGetNextPointView(void)
 {
-	PDALPointViewPtr view = PDALGetNextPointView(NULL);
-	ASSERT_EQ(NULL, view);
+    PDALPointViewPtr view = PDALGetNextPointView(NULL);
+    ASSERT_EQ(NULL, view);
 
-	ASSERT_FALSE(gPointViewIterator == NULL);
-	PDALResetPointViewIterator(gPointViewIterator);
-	bool hasNext = PDALHasNextPointView(gPointViewIterator);
-	ASSERT(hasNext);
+    ASSERT_FALSE(gPointViewIterator == NULL);
+    PDALResetPointViewIterator(gPointViewIterator);
+    bool hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
 
-	view = PDALGetNextPointView(gPointViewIterator);
-	ASSERT(view);
+    view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
 
-	if (PDALHasNextPointView(gPointViewIterator))
-	{
-		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-		ASSERT(anotherView);
-		ASSERT_FALSE(anotherView == view);
-		PDALDisposePointView(anotherView);
-	}
+    if (PDALHasNextPointView(gPointViewIterator))
+    {
+        PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
+        ASSERT(anotherView);
+        ASSERT_FALSE(anotherView == view);
+        PDALDisposePointView(anotherView);
+    }
 
-	PDALDisposePointView(view);
-	PASS();
+    PDALDisposePointView(view);
+    PASS();
 }
 
 TEST testPDALResetPointViewIterator(void)
 {
-	ASSERT(gPointViewIterator);
-	PDALResetPointViewIterator(gPointViewIterator);
-	bool hasNext = PDALHasNextPointView(gPointViewIterator);
-	ASSERT(hasNext);
+    ASSERT(gPointViewIterator);
+    PDALResetPointViewIterator(gPointViewIterator);
+    bool hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
 
-	PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
-	ASSERT(view);
+    PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
 
-	while (PDALHasNextPointView(gPointViewIterator))
-	{
-		PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-		ASSERT(anotherView);
-		ASSERT_FALSE(anotherView == view);
-		PDALDisposePointView(anotherView);
-	}
+    while (PDALHasNextPointView(gPointViewIterator))
+    {
+        PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
+        ASSERT(anotherView);
+        ASSERT_FALSE(anotherView == view);
+        PDALDisposePointView(anotherView);
+    }
 
-	PDALDisposePointView(view);
+    PDALDisposePointView(view);
 
-	view = PDALGetNextPointView(gPointViewIterator);
-	ASSERT_EQ(NULL, view);
-	PDALDisposePointView(view);
+    view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT_EQ(NULL, view);
+    PDALDisposePointView(view);
 
-	PDALResetPointViewIterator(gPointViewIterator);
+    PDALResetPointViewIterator(gPointViewIterator);
 
-	view = PDALGetNextPointView(gPointViewIterator);
-	ASSERT(view);
-	PDALDisposePointView(view);
+    view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
+    PDALDisposePointView(view);
 
-	PASS();
+    PASS();
 }
 
 GREATEST_SUITE(test_pdalc_pointviewiterator)
 {
-	SET_SETUP(setup_test_pdalc_pointviewiterator, NULL);
-	SET_TEARDOWN(teardown_test_pdalc_pointviewiterator, NULL);
+    SET_SETUP(setup_test_pdalc_pointviewiterator, NULL);
+    SET_TEARDOWN(teardown_test_pdalc_pointviewiterator, NULL);
 
-	RUN_TEST(testPDALHasNextPointView);
-	RUN_TEST(testPDALGetNextPointView);
-	RUN_TEST(testPDALResetPointViewIterator);
+    RUN_TEST(testPDALHasNextPointView);
+    RUN_TEST(testPDALGetNextPointView);
+    RUN_TEST(testPDALResetPointViewIterator);
 
-	SET_SETUP(NULL, NULL);
-	SET_TEARDOWN(NULL, NULL);
+    SET_SETUP(NULL, NULL);
+    SET_TEARDOWN(NULL, NULL);
 }

@@ -1,0 +1,24 @@
+# usage (for a single file):
+#  AStyle.exe --options=astylerc source/pdal/pdalc_config.cpp
+# usage (for directories):
+#  AStyle.exe --options=astylerc --recursive "source/pdal/*.h" "source/pdal/*.cpp" "tests/pdal/*.c" "tests/pdal/*.c.in"
+
+--style=ansi
+
+--indent=spaces=4
+
+--convert-tabs
+
+--lineend=linux
+
+--suffix=none
+
+--unpad-paren
+
+--indent-switches
+
+--indent-cases
+
+--indent-labels
+
+--pad-header
