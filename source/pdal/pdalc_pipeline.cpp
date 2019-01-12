@@ -28,11 +28,12 @@
  *****************************************************************************/
 
 #include "pdalc_pipeline.h"
-#include "pdalc_pointviewiterator.h"
+
+#include <string>
 
 #include <pdal/PipelineExecutor.hpp>
 
-#include <string>
+#include "pdalc_pointviewiterator.h"
 
 namespace pdal
 {

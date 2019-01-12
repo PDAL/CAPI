@@ -28,10 +28,11 @@
  *****************************************************************************/
 
 #include "pdalc_pointlayout.h"
-#include "pdalc_dimtype.h"
 
 #include <pdal/DimType.hpp>
 #include <pdal/PointLayout.hpp>
+
+#include "pdalc_dimtype.h"
 
 namespace pdal
 {

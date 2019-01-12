@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include "pdal/pdalc_dimtype.h"
+
 #include <pdal/DimType.hpp>
 
 namespace pdal

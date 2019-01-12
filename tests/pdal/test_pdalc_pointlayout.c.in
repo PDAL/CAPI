@@ -31,9 +31,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "greatest.h"
-
 #include <pdal/pdalc.h>
+
+#include "greatest.h"
 
 SUITE(test_pdalc_pointlayout);
 

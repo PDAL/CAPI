@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include "pdalc_pointview.h"
+
 #include <pdal/PointView.hpp>
 
 namespace pdal

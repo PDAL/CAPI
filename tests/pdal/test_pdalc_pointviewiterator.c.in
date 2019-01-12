@@ -31,11 +31,11 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "greatest.h"
-
 #include <pdal/pdalc_pipeline.h>
 #include <pdal/pdalc_pointview.h>
 #include <pdal/pdalc_pointviewiterator.h>
+
+#include "greatest.h"
 
 SUITE(test_pdalc_pointviewiterator);
 

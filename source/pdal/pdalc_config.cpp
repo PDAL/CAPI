@@ -29,12 +29,12 @@
 
 #include "pdalc_config.h"
 
-#include <pdal/pdal_config.hpp>
-#include <pdal/util/Utils.hpp>
-
 #include <cstdlib>
 #include <cstring>
 #include <string>
+
+#include <pdal/pdal_config.hpp>
+#include <pdal/util/Utils.hpp>
 
 namespace pdal
 {
