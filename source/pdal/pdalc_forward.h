@@ -52,20 +52,20 @@
 
 namespace pdal
 {
-	struct DimType;
-	class PipelineExecutor;
-	class PointView;
+struct DimType;
+class PipelineExecutor;
+class PointView;
 
-	using PointViewPtr = std::shared_ptr<PointView>;
-	using DimTypeList = std::vector<DimType>;
+using PointViewPtr = std::shared_ptr<PointView>;
+using DimTypeList = std::vector<DimType>;
 
-	namespace capi
-	{
-		class PointViewIterator;
-		using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
-		using PointView = pdal::PointViewPtr;
-		using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
-	}
+namespace capi
+{
+class PointViewIterator;
+using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
+using PointView = pdal::PointViewPtr;
+using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
+}
 }
 
 #else
@@ -77,17 +77,17 @@ typedef struct PDALDimType PDALDimType;
 /// A dimension type
 struct PDALDimType
 {
-	/// The dimension's identifier
-	uint32_t id;
+    /// The dimension's identifier
+    uint32_t id;
 
-	/// The dimension's interpretation type
-	uint32_t type;
+    /// The dimension's interpretation type
+    uint32_t type;
 
-	/// The dimension's scaling factor
-	double scale;
+    /// The dimension's scaling factor
+    double scale;
 
-	/// The dimension's offset value
-	double offset;
+    /// The dimension's offset value
+    double offset;
 };
 
 /// A pointer to a dimension type list

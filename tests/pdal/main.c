@@ -43,11 +43,11 @@ GREATEST_MAIN_DEFS();
 
 int main(int argc, char **argv)
 {
-	GREATEST_MAIN_BEGIN();
-	RUN_SUITE(test_pdalc_config);
-	RUN_SUITE(test_pdalc_pipeline);
-	RUN_SUITE(test_pdalc_pointlayout);
-	RUN_SUITE(test_pdalc_pointviewiterator);
-	RUN_SUITE(test_pdalc_pointview);
-	GREATEST_MAIN_END();
+    GREATEST_MAIN_BEGIN();
+    RUN_SUITE(test_pdalc_config);
+    RUN_SUITE(test_pdalc_pipeline);
+    RUN_SUITE(test_pdalc_pointlayout);
+    RUN_SUITE(test_pdalc_pointviewiterator);
+    RUN_SUITE(test_pdalc_pointview);
+    GREATEST_MAIN_END();
 }
