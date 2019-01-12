@@ -34,24 +34,24 @@ namespace pdal
 	namespace capi
 	{
 		PointViewIterator::PointViewIterator(const pdal::PointViewSet& views) :
-			mViews(views)
+			m_views(views)
 		{
 			reset();
 		}
 
 		bool PointViewIterator::hasNext() const
 		{
-			return (mItr != mViews.cend());
+			return (m_itr != m_views.cend());
 		}
 
 		const pdal::PointViewPtr PointViewIterator::next()
 		{
-			return hasNext() ? *(mItr++) : nullptr;
+			return hasNext() ? *(m_itr++) : nullptr;
 		}
 
 		void PointViewIterator::reset()
 		{
-			mItr = mViews.cbegin();
+			m_itr = m_views.cbegin();
 		}
 
 

@@ -53,8 +53,8 @@ namespace pdal
 			void reset();
 
 		private:
-			const pdal::PointViewSet &mViews;
-			pdal::PointViewSet::const_iterator mItr;
+			const pdal::PointViewSet &m_views;
+			pdal::PointViewSet::const_iterator m_itr;
 		};
 
 		extern "C"
