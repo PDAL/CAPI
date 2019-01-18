@@ -5,8 +5,7 @@ g++ --version
 
 export CI_PROJECT_DIR=/pdalc
 export CI_PROJECT_NAME=pdal-c
-uname -m
-export TARGET_PLATFORM=`uname`-$BUILD_TYPE
+export TARGET_PLATFORM=$DISTRO-`uname -m`-$BUILD_TYPE
 echo "Building $CI_PROJECT_NAME ($TRAVIS_BRANCH branch) for $TARGET_PLATFORM"
 rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
 mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
