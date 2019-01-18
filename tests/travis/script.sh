@@ -7,7 +7,7 @@ set CI_PROJECT_DIR=/pdalc
 set CI_PROJECT_NAME=pdal-c
 
 export TARGET_PLATFORM=`uname`-`arch`-$BUILD_TYPE
-echo "Building $CI_PROJECT_NAME ($BRANCH branch) for $TARGET_PLATFORM"
+echo "Building $CI_PROJECT_NAME ($TRAVIS_BRANCH branch) for $TARGET_PLATFORM"
 rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
 mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
 cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
