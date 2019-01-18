@@ -1,5 +1,6 @@
 sudo: required
 
+language: minimal
 services: docker
 
 before_install:
@@ -10,4 +11,4 @@ env:
   - BUILD_TYPE=Debug
 
 script:
-  - docker run -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine -e "BRANCH=$TRAVIS_BRANCH" -e "BUILD_TYPE=$BUILD_TYPE" /pdalc/
+  - docker run -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine -e "BRANCH=$TRAVIS_BRANCH" -e "BUILD_TYPE=$BUILD_TYPE" /pdalc/tests/travis/script.sh
