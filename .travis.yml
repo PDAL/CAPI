@@ -6,9 +6,10 @@ services: docker
 before_install:
   - docker pull simverge/pdalc-build-deps:alpine
 
-env:
-  - BUILD_TYPE=Release
-  - BUILD_TYPE=Debug
+#env:
+#  - BUILD_TYPE=Release
+#  - BUILD_TYPE=Debug
 
 script:
-  - docker run -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine -e TRAVIS_BRANCH -e BUILD_TYPE /pdalc/tests/travis/script.sh
+  - dir $TRAVIS_BUILD_DIR
+  - docker run -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine /pdalc/tests/travis/script.sh
