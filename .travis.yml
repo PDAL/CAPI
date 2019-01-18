@@ -12,4 +12,4 @@ before_install:
 
 script:
   - chmod u+x $TRAVIS_BUILD_DIR/tests/travis/script.sh
-  - docker run -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine /pdalc/tests/travis/script.sh
+  - docker run -e TRAVIS_BRANCH -v $TRAVIS_BUILD_DIR:/pdalc -t simverge/pdalc-build-deps:alpine /pdalc/tests/travis/script.sh
