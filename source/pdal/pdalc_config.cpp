@@ -40,20 +40,28 @@ namespace pdal
 {
 namespace capi
 {
-size_t PDALGetGdalDataPath(char *path, size_t size)
+/**
+ * Retrieves the value of an environment variable.
+ * 
+ * @param name The name of the environment variable
+ * @param[out] path The buffer used to retrieve the value
+ * @param size The size of the provided buffer
+ * @return The size of the retrieved value
+ */
+size_t getEnvironmentVariable(const char *name, char *value, size_t size)
 {
     size_t length = 0;
 
-    if (path && size > 0)
+    if (value && size > 0)
     {
-        path[0] = '\0';
-        path[size-1] = '\0';
+        value[0] = '\0';
+        value[size-1] = '\0';
 
         char *env = nullptr;
 
         try
         {
-            env = std::getenv("GDAL_DATA");
+            env = std::getenv(name);
         }
         catch (const std::exception &)
         {
@@ -62,7 +70,7 @@ size_t PDALGetGdalDataPath(char *path, size_t size)
 
         if (env)
         {
-            std::strncpy(path, env, size - 1);
+            std::strncpy(value, env, size - 1);
             length = std::min(std::strlen(env), size - 1);
         }
     }
@@ -70,34 +78,14 @@ size_t PDALGetGdalDataPath(char *path, size_t size)
     return length;
 }
 
+size_t PDALGetGdalDataPath(char *path, size_t size)
+{
+    return getEnvironmentVariable("GDAL_DATA", path, size);
+}
+
 size_t PDALGetProj4DataPath(char *path, size_t size)
 {
-    size_t length = 0;
-
-    if (path && size > 0)
-    {
-        path[0] = '\0';
-        path[size-1] = '\0';
-
-        char *env = nullptr;
-
-        try
-        {
-            env = std::getenv("PROJ_LIB");
-        }
-        catch (const std::exception &)
-        {
-            env = nullptr;
-        }
-
-        if (env)
-        {
-            std::strncpy(path, env, size - 1);
-            length = std::min(std::strlen(env), size - 1);
-        }
-    }
-
-    return length;
+    return getEnvironmentVariable("PROJ_LIB", path, size);
 }
 
 void PDALSetGdalDataPath(const char *path)

@@ -11,4 +11,5 @@ RUN \
 		g++ \
 		lcov \
 		make \
-		cmake
+		cmake \
+		curl
