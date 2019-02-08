@@ -4,9 +4,10 @@ gcc --version
 g++ --version
 
 # Download and unzip the sonarcloud build wrapper
+cd $CI_PROJECT_DIR
 curl -LsS https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip > build-wrapper-linux-x86.zip
 unzip build-wrapper-linux-x86.zip
-export SONARCLOUD_DIR=$PWD/build-wrapper-linux-x86
+export SONARCLOUD_DIR=$CI_PROJECT_DIR/build-wrapper-linux-x86
 
 export CI_PROJECT_DIR=/pdalc
 export CI_PROJECT_NAME=pdal-c
