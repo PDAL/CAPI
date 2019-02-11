@@ -52,7 +52,7 @@ size_t getEnvironmentVariable(const char *name, char *value, size_t size)
 {
     size_t length = 0;
 
-    if (value && size > 0)
+    if (name && value && size > 0)
     {
         value[0] = '\0';
         value[size-1] = '\0';
