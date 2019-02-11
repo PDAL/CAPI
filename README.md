@@ -1,9 +1,9 @@
 pdal-c: PDAL C API
 ==================
 
-[![Build Status](https://travis-ci.com/Simverge/pdal-c.svg?branch=master)](https://travis-ci.com/Simverge/pdal-c)
+[![Build Status](https://travis-ci.com/Simverge/pdal-c.svg?branch=master)](https://travis-ci.com/Simverge/pdal-c)[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=alert_status)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=alert_status)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=ncloc)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=ncloc)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=sqale_index)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
