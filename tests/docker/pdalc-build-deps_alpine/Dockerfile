@@ -12,4 +12,5 @@ RUN \
 		lcov \
 		make \
 		cmake \
-		curl
+		curl \
+		wget
