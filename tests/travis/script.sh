@@ -3,6 +3,7 @@
 gcc --version
 g++ --version
 
+# Run sonarcloud and coverity only on ubuntu
 if [ "$DISTRO" = "ubuntu" && "$BUILD_TYPE" = "Release" ]; then
 	# Download and unzip the sonarcloud build wrapper
 	curl -LsS https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip > build-wrapper-linux-x86.zip
@@ -10,6 +11,11 @@ if [ "$DISTRO" = "ubuntu" && "$BUILD_TYPE" = "Release" ]; then
 	rm build-wrapper-linux-x86.zip
 	export SONARCLOUD_DIR=${PWD}/build-wrapper-linux-x86
 
+	wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -O coverity_tool.tgz
+	tar xaf coverity_tool.tgz
+	rm coverity_tool.tgz
+	mv cov-analysis-linux64-* cov-analysis-linux64
+	export COVERITY_DIR=${PWD}/cov-analysis-linux64/bin
 fi
 
 export CI_PROJECT_DIR=/pdalc
@@ -23,7 +29,18 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPDALC_GCC_PARAM_GGC_M
 
 if [ "$DISTRO" = "ubuntu" && "$BUILD_TYPE" = "Release" ]; then
 	${SONARCLOUD_DIR}/build-wrapper-linux-x86-64 --out-dir $CI_PROJECT_DIR/bw-output make
+
+	${COVERITY_DIR}/cov-build --dir $CI_PROJECT_DIR/cov-int make.bat
+	tar czvf cov-int.tgz cov-int
+
+	curl --form token="${COVERITY_TOKEN}" \
+		--form email="${COVERITY_EMAIL}" \
+		--form file=@cov-int.tgz \
+		--form version="${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
+		--form description="Automatic Coverity Scan build for ${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
+		https://scan.coverity.com/builds?project=Simverge%2Fpdal-c
 else
 	make
 fi
+
 make coverage_pdalc
