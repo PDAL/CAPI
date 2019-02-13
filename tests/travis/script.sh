@@ -30,7 +30,7 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPDALC_GCC_PARAM_GGC_M
 if [ "$DISTRO" = "ubuntu" && "$BUILD_TYPE" = "Release" ]; then
 	${SONARCLOUD_DIR}/build-wrapper-linux-x86-64 --out-dir $CI_PROJECT_DIR/bw-output make
 
-	${COVERITY_DIR}/cov-build --dir $CI_PROJECT_DIR/cov-int make.bat
+	${COVERITY_DIR}/cov-build --dir $CI_PROJECT_DIR/cov-int make
 	tar czvf cov-int.tgz cov-int
 
 	curl --form token="${COVERITY_TOKEN}" \
