@@ -16,6 +16,7 @@ if [ "$DISTRO" = "ubuntu" ] && [ "$BUILD_TYPE" = "Release" ]; then
 	rm coverity_tool.tgz
 	mv cov-analysis-linux64-* cov-analysis-linux64
 	export COVERITY_DIR=${PWD}/cov-analysis-linux64/bin
+	ls $COVERITY_DIR
 fi
 
 export CI_PROJECT_DIR=/pdalc
