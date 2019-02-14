@@ -11,8 +11,7 @@ if [ "$DISTRO" = "ubuntu" ] && [ "$BUILD_TYPE" = "Release" ]; then
 	rm build-wrapper-linux-x86.zip
 	export SONARCLOUD_DIR=${PWD}/build-wrapper-linux-x86
 
-#	wget -q https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -O coverity_tool.tgz
-	curl -LsS -d "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -X POST https://scan.coverity.com/download/linux64 > coverity_tool.tgz
+	curl -LsS -d "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -X POST https://scan.coverity.com/download/cxx/linux64 > coverity_tool.tgz
 	tar xaf coverity_tool.tgz
 	rm coverity_tool.tgz
 	mv cov-analysis-linux64-* cov-analysis-linux64
