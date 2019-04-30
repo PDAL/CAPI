@@ -40,5 +40,9 @@ elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 		--form description="Automatic Coverity Scan build for ${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
 		https://scan.coverity.com/builds?project=Simverge%2Fpdal-c
 else
+	echo "Running build without static analysis scans"
 	make
 fi
+
+echo "SCAN=$SCAN"
+echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
