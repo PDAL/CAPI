@@ -29,9 +29,12 @@ if [ "$SCAN" = "sonarcloud" ]; then
 	${SONARCLOUD_DIR}/build-wrapper-linux-x86-64 --out-dir ${CI_PROJECT_DIR}/bw-output make
 elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	echo "Running cov-build"
+	echo "COVERITY_DIR=${COVERITY_DIR}"
+	echo "CI_PROJECT_DIR=${CI_PROJECT_DIR}"
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
 	ls ${CI_PROJECT_DIR}/cov-int
-	tar czf ${CI_PROJECT_DIR}/cov-int.tgz ${CI_PROJECT_DIR}/cov-int
+	tar cvzf ${CI_PROJECT_DIR}/cov-int.tgz ${CI_PROJECT_DIR}/cov-int
+	tar tvzf ${CI_PROJECT_DIR}/cov-int.tgz
 
 	curl --form token="${COVERITY_TOKEN}" \
 		--form email="${COVERITY_EMAIL}" \
