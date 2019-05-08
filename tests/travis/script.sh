@@ -33,15 +33,15 @@ elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	echo "CI_PROJECT_DIR=${CI_PROJECT_DIR}"
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
 	ls ${CI_PROJECT_DIR}/cov-int
-	tar cvf ${CI_PROJECT_DIR}/cov-int.tar ${CI_PROJECT_DIR}/cov-int
-	tar tvf ${CI_PROJECT_DIR}/cov-int.tar
+	tar czvf ${CI_PROJECT_DIR}/cov-int.tgz ${CI_PROJECT_DIR}/cov-int
+	tar tzvf ${CI_PROJECT_DIR}/cov-int.tgz
 
 	curl --form token="${COVERITY_TOKEN}" \
 		--form email="${COVERITY_EMAIL}" \
-		--form file=@${CI_PROJECT_DIR}/cov-int.tar \
+		--form file=@${CI_PROJECT_DIR}/cov-int.tgz \
 		--form version="${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
 		--form description="Automatic Coverity Scan build for ${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
-		https://scan.coverity.com/builds?project=Simverge%2Fpdal-c
+		https://scan.coverity.com/builds?project=Simverge_pdal-c
 else
 	echo "Running build without static analysis scans"
 	make
