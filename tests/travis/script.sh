@@ -34,8 +34,9 @@ elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	${COVERITY_DIR}/cov-configure --gcc
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
 	ls ${CI_PROJECT_DIR}/cov-int
-	tar czvf ${CI_PROJECT_DIR}/cov-int.tgz ${CI_PROJECT_DIR}/cov-int
-	tar tzvf ${CI_PROJECT_DIR}/cov-int.tgz
+	cd ${CI_PROJECT_DIR}
+	tar czvf cov-int.tgz cov-int
+	tar tzvf cov-int.tgz
 
 	curl --form token="${COVERITY_TOKEN}" \
 		--form email="${COVERITY_EMAIL}" \
