@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-const char *PDALReadPipelineJson(const char *path)
+char *PDALReadPipelineJson(const char *path)
 {
     FILE *file = fopen(path, "rb");
     char *json = NULL;
@@ -64,7 +64,7 @@ const char *PDALReadPipelineJson(const char *path)
 PDALPipelinePtr *PDALLoadPipeline(const char *path)
 {
     PDALPipelinePtr *pipeline = NULL;
-    const char *json = PDALReadPipelineJson(path);
+    char *json = PDALReadPipelineJson(path);
 
     if (json)
     {

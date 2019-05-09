@@ -38,7 +38,7 @@
  * @param path The path to the PDAL pipeline JSON file
  * @return The contents of the PDAL pipeline JSON file as a string
  */
-const char *PDALReadPipelineJson(const char *path);
+char *PDALReadPipelineJson(const char *path);
 
 /**
  * Creates a PDAL pipeline from the provided path and attempts to execute it.

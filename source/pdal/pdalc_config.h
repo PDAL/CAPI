@@ -46,6 +46,7 @@ namespace capi
 extern "C"
 {
 #else
+#include <stddef.h>
 #include <stdbool.h>
 #endif
 /**
