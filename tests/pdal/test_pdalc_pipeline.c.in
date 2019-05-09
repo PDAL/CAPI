@@ -88,7 +88,7 @@ TEST testPDALGetPipelineAsString(void)
 
     // Make sure that the JSON object's name is "pipeline"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%10s", &jsonName);
+    sscanf_s(json, "%*s\n\t%10s", &jsonName, 16);
     ASSERT_STR_EQ("\"pipeline\"", jsonName);
 
     PDALDisposePipeline(pipeline);
@@ -110,7 +110,7 @@ TEST testPDALGetPipelineMetadata(void)
 
     // Make sure that the JSON object's name is "metadata"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%10s", &jsonName);
+    sscanf_s(json, "%*s\n\t%10s", &jsonName, 16);
     ASSERT_STR_EQ("\"metadata\"", jsonName);
 
     PDALDisposePipeline(pipeline);
@@ -132,7 +132,7 @@ TEST testPDALGetPipelineSchema(void)
 
     // Make sure that the JSON object's name is "schema"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%8s", &jsonName);
+    sscanf_s(json, "%*s\n\t%8s", &jsonName, 16);
     ASSERT_STR_EQ("\"schema\"", jsonName);
 
     PDALDisposePipeline(pipeline);
