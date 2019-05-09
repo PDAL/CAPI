@@ -31,6 +31,7 @@ elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	echo "Running cov-build"
 	echo "COVERITY_DIR=${COVERITY_DIR}"
 	echo "CI_PROJECT_DIR=${CI_PROJECT_DIR}"
+	${COVERITY_DIR}/cov-configure --gcc
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
 	ls ${CI_PROJECT_DIR}/cov-int
 	tar czvf ${CI_PROJECT_DIR}/cov-int.tgz ${CI_PROJECT_DIR}/cov-int
