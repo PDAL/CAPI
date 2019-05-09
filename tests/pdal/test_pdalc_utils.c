@@ -61,9 +61,9 @@ char *PDALReadPipelineJson(const char *path)
     return json;
 }
 
-PDALPipelinePtr *PDALLoadPipeline(const char *path)
+PDALPipelinePtr PDALLoadPipeline(const char *path)
 {
-    PDALPipelinePtr *pipeline = NULL;
+    PDALPipelinePtr pipeline = NULL;
     char *json = PDALReadPipelineJson(path);
 
     if (json)

@@ -50,4 +50,4 @@ char *PDALReadPipelineJson(const char *path);
  * @param path The path to the PDAL pipeline JSON file
  * @return The loaded PDAL pipeline
  */
-PDALPipelinePtr *PDALLoadPipeline(const char *path);
+PDALPipelinePtr PDALLoadPipeline(const char *path);
