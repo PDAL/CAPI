@@ -29,7 +29,9 @@
  *****************************************************************************/
 
 // Required before including stdio.h to support secure scanf C functions
+#if defined(__STDC_LIB_EXT1__)
 #define __STDC_WANT_LIB_EXT1__ 1
+#endif
 
 #include <stdio.h>
 #include <assert.h>
@@ -91,7 +93,11 @@ TEST testPDALGetPipelineAsString(void)
 
     // Make sure that the JSON object's name is "pipeline"
     char jsonName[16];
-    sscanf_s(json, "%*s\n\t%10s", &jsonName, 16);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
     ASSERT_STR_EQ("\"pipeline\"", jsonName);
 
     PDALDisposePipeline(pipeline);
@@ -113,7 +119,11 @@ TEST testPDALGetPipelineMetadata(void)
 
     // Make sure that the JSON object's name is "metadata"
     char jsonName[16];
-    sscanf_s(json, "%*s\n\t%10s", &jsonName, 16);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
     ASSERT_STR_EQ("\"metadata\"", jsonName);
 
     PDALDisposePipeline(pipeline);
@@ -135,7 +145,11 @@ TEST testPDALGetPipelineSchema(void)
 
     // Make sure that the JSON object's name is "schema"
     char jsonName[16];
-    sscanf_s(json, "%*s\n\t%8s", &jsonName, 16);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
     ASSERT_STR_EQ("\"schema\"", jsonName);
 
     PDALDisposePipeline(pipeline);
