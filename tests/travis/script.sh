@@ -36,7 +36,8 @@ if [ "$SCAN" = "sonarcloud" ]; then
 elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	${COVERITY_DIR}/cov-configure --gcc
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
-	tar czvf cov-int.tgz -C ${CI_PROJECT_DIR} cov-int
+	cd ${CI_PROJECT_DIR}
+	tar czf cov-int.tgz cov-int
 
 	curl --form token="${COVERITY_TOKEN}" \
 		--form email="${COVERITY_EMAIL}" \
