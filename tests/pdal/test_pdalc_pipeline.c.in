@@ -1,3 +1,4 @@
+
 /******************************************************************************
  * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
  *
@@ -27,13 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 
 #include <pdal/pdalc_pipeline.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pipeline);
 
@@ -41,23 +42,7 @@ static char *gPipelineJson = NULL;
 
 static void setup_test_pdalc_pipeline(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
-
-    if (file)
-    {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        gPipelineJson = malloc(length + 1);
-
-        if (gPipelineJson)
-        {
-            fread(gPipelineJson, 1, length, file);
-            gPipelineJson[length] = '\0';
-        }
-
-        fclose(file);
-    }
+    gPipelineJson = PDALReadPipelineJson("@CMAKE_BINARY_DIR@/data/stats.json");
 }
 
 static void teardown_test_pdalc_pipeline(void *arg)

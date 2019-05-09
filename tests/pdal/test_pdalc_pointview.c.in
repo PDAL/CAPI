@@ -34,6 +34,7 @@
 #include <pdal/pdalc.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 /// A simple binary tree implementation for int values
 struct node
@@ -85,31 +86,11 @@ static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
 static void setup_test_pdalc_pointview(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
-    char *json = NULL;
+    gPipeline = PDALLoadPipeline("@CMAKE_BINARY_DIR@/data/simple-reproject.json");
 
-    if (file)
+    if (gPipeline)
     {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        char *json = malloc(length + 1);
-
-        if (json)
-        {
-            fread(json, 1, length, file);
-            json[length] = '\0';
-            gPipeline = PDALCreatePipeline(json);
-
-            if (gPipeline && PDALExecutePipeline(gPipeline))
-            {
-                gPointViewIterator = PDALGetPointViews(gPipeline);
-            }
-
-            free(json);
-        }
-
-        fclose(file);
+        gPointViewIterator = PDALGetPointViews(gPipeline);
     }
 }
 

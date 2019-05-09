@@ -7,9 +7,13 @@ set(CONFIGS )
 set(SOURCES
 	main.c
 	test_pdalc_config.c
+	test_pdalc_utils.c
 )
 
-set(HEADERS )
+set(HEADERS 
+	test_pdalc_utils.h
+)
+
 set(DEPENDENCIES 
 	${PDAL_LIBRARIES}
 	pdalc

@@ -27,13 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 #include <pdal/pdalc.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pointlayout);
 
@@ -43,41 +42,21 @@ static PDALPointLayoutPtr gLayout = NULL;
 
 static void setup_test_pdalc_pointlayout(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
-    char *json = NULL;
+    gPipeline = PDALLoadPipeline("@CMAKE_BINARY_DIR@/data/simple-reproject.json");
 
-    if (file)
+    if (gPipeline)
     {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        char *json = malloc(length + 1);
+        PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
 
-        if (json)
+        if (PDALHasNextPointView(views))
         {
-            fread(json, 1, length, file);
-            json[length] = '\0';
-            gPipeline = PDALCreatePipeline(json);
+            gPointView = PDALGetNextPointView(views);
 
-            if (gPipeline && PDALExecutePipeline(gPipeline))
+            if (gPointView)
             {
-                PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
-
-                if (PDALHasNextPointView(views))
-                {
-                    gPointView = PDALGetNextPointView(views);
-
-                    if (gPointView)
-                    {
-                        gLayout = PDALGetPointViewLayout(gPointView);
-                    }
-                }
+                gLayout = PDALGetPointViewLayout(gPointView);
             }
-
-            free(json);
         }
-
-        fclose(file);
     }
 }
 
