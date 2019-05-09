@@ -4,6 +4,32 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "coverity-vcpkg-x64-windows-release",
+            "type": "shell",
+            "windows": {
+                "command": "rd ${workspaceFolder}\\build\\x64-windows -Recurse; ${env:COVERITY_ROOT}\\bin\\cov-configure.exe --msvc; ${env:COVERITY_ROOT}\\bin\\cov-build.exe --dir ${workspaceFolder}\\build\\x64-windows\\cov-int ${workspaceFolder}\\make.bat"
+            },
+            "options": {
+                "env": {
+                    "BUILD_TYPE": "Release",
+                    "ARCH": "x64",
+                    "TARGET_OS": "windows",
+                    "TOOLCHAIN": "${env:VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
             "label": "vcpkg-x64-windows-release",
             "type": "shell",
             "windows": {
