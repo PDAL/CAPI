@@ -34,26 +34,17 @@ cmake -G "Unix Makefiles" \
 if [ "$SCAN" = "sonarcloud" ]; then
 	${SONARCLOUD_DIR}/build-wrapper-linux-x86-64 --out-dir ${CI_PROJECT_DIR}/bw-output make
 elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
-	echo "Running cov-build"
-	echo "COVERITY_DIR=${COVERITY_DIR}"
-	echo "CI_PROJECT_DIR=${CI_PROJECT_DIR}"
 	${COVERITY_DIR}/cov-configure --gcc
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
-	ls ${CI_PROJECT_DIR}/cov-int
-	cd ${CI_PROJECT_DIR}
-	tar czvf cov-int.tgz cov-int
-	tar tzvf cov-int.tgz
+	tar czvf cov-int.tgz -C ${CI_PROJECT_DIR} cov-int
 
 	curl --form token="${COVERITY_TOKEN}" \
 		--form email="${COVERITY_EMAIL}" \
 		--form file=@${CI_PROJECT_DIR}/cov-int.tgz \
 		--form version="${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
 		--form description="Automatic Coverity Scan build for ${TRAVIS_BRANCH}-$TRAVIS_COMMIT" \
-		https://scan.coverity.com/builds?project=Simverge_pdal-c
+		https://scan.coverity.com/builds?project=Simverge%2Fpdal-c
 else
 	echo "Running build without static analysis scans"
 	make
 fi
-
-echo "SCAN=$SCAN"
-echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
