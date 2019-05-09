@@ -3,17 +3,24 @@
 gcc --version
 g++ --version
 
+PDALC_CMAKE_ARGS="-DPDALC_GCC_PARAM_GGC_MIN_HEAPSIZE=8192"
+
 if [ "$SCAN" = "sonarcloud" ]; then
 	curl -LsS https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip > build-wrapper-linux-x86.zip
 	unzip build-wrapper-linux-x86.zip
 	rm build-wrapper-linux-x86.zip
 	export SONARCLOUD_DIR=${PWD}/build-wrapper-linux-x86
+
 elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "coverity" ]; then
 	curl -LsS -d "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -X POST https://scan.coverity.com/download/cxx/linux64 > coverity_tool.tgz
 	tar xaf coverity_tool.tgz
 	rm coverity_tool.tgz
 	mv cov-analysis-linux64-* cov-analysis-linux64
 	export COVERITY_DIR=${PWD}/cov-analysis-linux64/bin
+
+	PDALC_CMAKE_ARGS += "-DPDALC_ENABLE_CODE_COVERAGE=OFF"
+	PDALC_CMAKE_ARGS += "-DPDALC_ENABLE_DOCS=OFF"
+	PDALC_CMAKE_ARGS += "-DPDALC_ENABLE_TESTS=OFF"
 fi
 
 export CI_PROJECT_DIR=/pdalc
@@ -23,12 +30,10 @@ echo "Building $CI_PROJECT_NAME ($TRAVIS_BRANCH-$TRAVIS_COMMIT) for $TARGET_PLAT
 rm -rf "$CI_PROJECT_DIR/build/$TARGET_PLATFORM" 
 mkdir -p "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
 cd "$CI_PROJECT_DIR/build/$TARGET_PLATFORM"
+
 cmake -G "Unix Makefiles" \
 	-DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-	-DPDALC_ENABLE_CODE_COVERAGE=OFF \
-	-DPDAL_ENABLE_DOCS=OFF \
-	-DPDAL_ENABLE_TESTS=OFF \
-	-DPDALC_GCC_PARAM_GGC_MIN_HEAPSIZE=8192 \
+	${PDALC_CMAKE_ARGS} \
 	"${CI_PROJECT_DIR}"
 
 if [ "$SCAN" = "sonarcloud" ]; then
