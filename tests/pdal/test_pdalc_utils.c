@@ -40,18 +40,25 @@ char *PDALReadPipelineJson(const char *path)
     if (file)
     {
         fseek(file, 0, SEEK_END);
-        size_t length = (size_t) ftell(file);
-        fseek(file, 0, SEEK_SET);
-        json = malloc(length + 1);
+        long length = ftell(file);
 
-        if (json && fread(json, 1, length, file) == length)
+		// Check that length is positive to avoid CWE-687
+		// See http://cwe.mitre.org/data/definitions/687.html
+		// See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_NEGATIVE_RETURNS
+        if (length > 0)
         {
-            json[length] = '\0';
-        }
-        else
-        {
-            free(json);
-            json = NULL;
+            fseek(file, 0, SEEK_SET);
+            json = malloc(length + 1);
+
+            if (json && fread(json, 1, (size_t) length, file) == length)
+            {
+                json[length] = '\0';
+            }
+            else
+            {
+                free(json);
+                json = NULL;
+            }
         }
 
         fclose(file);

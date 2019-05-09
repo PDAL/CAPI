@@ -36,6 +36,7 @@
 #include <pdal/pdalc_pointviewiterator.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pointviewiterator);
 
