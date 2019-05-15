@@ -46,8 +46,7 @@ namespace capi
 extern "C"
 {
 #else
-#include <stddef.h>
-#include <stdbool.h>
+#include <stddef.h> // for size_t
 #endif
 /**
  * Retrieves the path to the GDAL data directory.

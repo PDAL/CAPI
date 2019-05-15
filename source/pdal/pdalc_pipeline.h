@@ -47,6 +47,7 @@ extern "C"
 {
 #else
 #include <stdbool.h> // for bool
+#include <stddef.h> // for size_t
 #include <stdint.h> // for int64_t
 #endif /* __cplusplus */
 

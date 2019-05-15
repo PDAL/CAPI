@@ -46,6 +46,8 @@ namespace capi
 
 extern "C"
 {
+#else
+#include <stddef.h> // for size_t
 #endif
 /**
  * Returns the list of dimension types used by the provided `layout`.
