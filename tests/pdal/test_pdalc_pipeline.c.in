@@ -32,8 +32,9 @@
 #define __STDC_WANT_LIB_EXT1__ 1
 #endif
 
-#include <stdio.h>
 #include <assert.h>
+#include <stdio.h> // for sscanf and sscanf_s
+#include <string.h> // for strncmp
 
 #include <pdal/pdalc_pipeline.h>
 
@@ -351,14 +352,12 @@ TEST testPDALValidatePipeline(void)
     PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
     ASSERT(pipeline);
     valid = PDALValidatePipeline(pipeline);
+    PDALDisposePipeline(pipeline);
 
     if (!valid)
     {
-        PDALDisposePipeline(pipeline);
-        pipeline = NULL;
         FAILm("PDALValidatePipeline returned false for a valid pipeline");
     }
-    ASSERTm("Valid pipeline evaluated as invalid", valid);
 
     PASS();
 }

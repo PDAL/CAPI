@@ -27,8 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 #include <pdal/pdalc_pipeline.h>
@@ -87,8 +85,14 @@ TEST testPDALGetNextPointView(void)
     if (PDALHasNextPointView(gPointViewIterator))
     {
         PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-        ASSERT(anotherView);
-        ASSERT_FALSE(anotherView == view);
+
+        if (!anotherView || anotherView == view)
+        {
+            PDALDisposePointView(view);
+            view = NULL;
+            FAILm("PDALGetNextPointView returned the same view as the first view");
+        }
+
         PDALDisposePointView(anotherView);
     }
 
@@ -109,17 +113,34 @@ TEST testPDALResetPointViewIterator(void)
     while (PDALHasNextPointView(gPointViewIterator))
     {
         PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-        ASSERT(anotherView);
-        ASSERT_FALSE(anotherView == view);
+
+        if (!anotherView || anotherView == view)
+        {
+            PDALDisposePointView(view);
+            view = NULL;
+            FAILm("PDALGetNextPointView returned the same view as the first view");
+        }
+
         PDALDisposePointView(anotherView);
     }
 
     PDALDisposePointView(view);
 
+    // The next view should be null since we reached the end of the point view iteration
     view = PDALGetNextPointView(gPointViewIterator);
-    ASSERT_EQ(NULL, view);
-    PDALDisposePointView(view);
 
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (view)
+    {
+        PDALDisposePointView(view);
+        view = NULL;
+        FAILm("PDALGetNextPointView returned a non-null view immediately after PDALHasNextPointView returned false");
+    }
+
+    // The next view should be non-null since we reset the point view iterator
     PDALResetPointViewIterator(gPointViewIterator);
 
     view = PDALGetNextPointView(gPointViewIterator);
