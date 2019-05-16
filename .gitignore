@@ -2,12 +2,14 @@
 tests/pdal-stats.las
 tests/data/*.json
 tests/pdal/test_pdalc_*.c
+!tests/pdal/test_pdalc_utils.c
 
 # Ignore doxygen docs
 /doc/doxygen
 /doc/Doxyfile
 
 # Select VS Code configurations
+.vscode/ipch/**
 .vscode/settings.json
 .vscode/c_cpp_properties.json
 

@@ -27,13 +27,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
+// Required before including stdio.h to support secure scanf C functions
+#if defined(__STDC_LIB_EXT1__)
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
+
 #include <assert.h>
+#include <stdio.h> // for sscanf and sscanf_s
+#include <string.h> // for strncmp
 
 #include <pdal/pdalc_pipeline.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pipeline);
 
@@ -41,23 +47,7 @@ static char *gPipelineJson = NULL;
 
 static void setup_test_pdalc_pipeline(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
-
-    if (file)
-    {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        gPipelineJson = malloc(length + 1);
-
-        if (gPipelineJson)
-        {
-            fread(gPipelineJson, 1, length, file);
-            gPipelineJson[length] = '\0';
-        }
-
-        fclose(file);
-    }
+    gPipelineJson = PDALReadPipelineJson("@CMAKE_BINARY_DIR@/data/stats.json");
 }
 
 static void teardown_test_pdalc_pipeline(void *arg)
@@ -71,13 +61,35 @@ static void teardown_test_pdalc_pipeline(void *arg)
 TEST testPDALCreateAndDisposePipeline(void)
 {
     PDALPipelinePtr pipeline = PDALCreatePipeline(NULL);
-    ASSERT_EQ(NULL, pipeline);
+
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (pipeline)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALCreatePipeline returned a non-null pipeline when given a NULL argument");
+    }
 
     pipeline = PDALCreatePipeline("");
-    ASSERT_EQ(NULL, pipeline);
+
+    if (pipeline)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALCreatePipeline returned a non-null pipeline when given an empty string argument");
+    }
 
     pipeline = PDALCreatePipeline("This is not a valid pipeline, it's not even JSON");
-    ASSERT_EQ(NULL, pipeline);
+
+    if (pipeline)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALCreatePipeline returned a non-null pipeline when given a string argument with an invalid pipeline");
+    }
 
     pipeline = PDALCreatePipeline(gPipelineJson);
     ASSERT(pipeline);
@@ -91,20 +103,48 @@ TEST testPDALCreateAndDisposePipeline(void)
 TEST testPDALGetPipelineAsString(void)
 {
     PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
-    ASSERT_FALSE(pipeline == NULL);
+    ASSERT(pipeline);
 
     int64_t count = PDALExecutePipeline(pipeline);
-    ASSERT(count > 0);
+
+    if (count <= 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a non-positive point count for a valid pipeline");
+    }
 
     char json[1024];
     size_t size = PDALGetPipelineAsString(pipeline, json, 1024);
-    ASSERT(size > 0 && size <= 1024);
-    ASSERT_FALSE(json[0] == '\0');
+
+    if (size == 0 || size > 1024)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString returned a string size equal to zero or greater than the provided buffer size");
+    }
+
+    if (json[0] == '\0')
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString generated a JSON string whose first character is null");
+    }
 
     // Make sure that the JSON object's name is "pipeline"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%10s", &jsonName);
-    ASSERT_STR_EQ("\"pipeline\"", jsonName);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
+
+    if (strncmp("\"pipeline\"", jsonName, 10) != 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"pipeline\"");
+    }
 
     PDALDisposePipeline(pipeline);
     PASS();
@@ -116,17 +156,49 @@ TEST testPDALGetPipelineMetadata(void)
     ASSERT(pipeline);
 
     int64_t count = PDALExecutePipeline(pipeline);
-    ASSERT(count > 0);
+
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (count <= 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a non-positive point count for a valid pipeline");
+    }
 
     char json[1024];
     size_t size = PDALGetPipelineMetadata(pipeline, json, 1024);
-    ASSERT(size > 0 && size <= 1024);
-    ASSERT_FALSE(json[0] == '\0');
+
+    if (size == 0 || size > 1024)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata returned a string size equal to zero or greater than the provided buffer size");
+    }
+
+    if (json[0] == '\0')
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata generated a JSON string whose first character is null");
+    }
 
     // Make sure that the JSON object's name is "metadata"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%10s", &jsonName);
-    ASSERT_STR_EQ("\"metadata\"", jsonName);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
+
+    if (strncmp("\"metadata\"", jsonName, 10) != 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"schema\"");
+    }
 
     PDALDisposePipeline(pipeline);
     PASS();
@@ -138,17 +210,49 @@ TEST testPDALGetPipelineSchema(void)
     ASSERT(pipeline);
 
     int64_t count = PDALExecutePipeline(pipeline);
-    ASSERT(count > 0);
+
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (count <= 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a non-positive point count for a valid pipeline");
+    }
 
     char json[2048];
     size_t size = PDALGetPipelineSchema(pipeline, json, 2048);
-    ASSERT(size > 0 && size <= 2048);
-    ASSERT_FALSE(json[0] == '\0');
+
+    if (size == 0 || size > 2048)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineSchema returned a string size equal to zero or greater than the provided buffer size");
+    }
+
+    if (json[0] == '\0')
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineSchema generated a JSON string whose first character is null");
+    }
 
     // Make sure that the JSON object's name is "schema"
     char jsonName[16];
-    sscanf(json, "%*s\n\t%8s", &jsonName);
-    ASSERT_STR_EQ("\"schema\"", jsonName);
+#if defined(__STDC_LIB_EXT1__)
+    sscanf_s(json, "%*s\n\t%10s", jsonName, 16);
+#else
+    sscanf(json, "%*s\n\t%10s", jsonName);
+#endif
+
+    if (strncmp("\"schema\"", jsonName, 8) != 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineSchema generated a JSON string whose object name is not \"schema\"");
+    }
 
     PDALDisposePipeline(pipeline);
     PASS();
@@ -160,7 +264,17 @@ TEST testPDALGetSetPipelineLog(void)
     ASSERT(pipeline);
 
     int64_t count = PDALExecutePipeline(pipeline);
-    ASSERT(count > 0);
+
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (count <= 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a non-positive point count for a valid pipeline");
+    }
 
     // Test valid cases: 0 to 8
     char log[1024];
@@ -168,14 +282,31 @@ TEST testPDALGetSetPipelineLog(void)
     for (int i = 0; i < 9; ++i)
     {
         PDALSetPipelineLogLevel(pipeline, i);
-        int j = PDALGetPipelineLogLevel(pipeline);
-        ASSERT_EQ(i, j);
+
+        if (i != PDALGetPipelineLogLevel(pipeline))
+        {
+            PDALDisposePipeline(pipeline);
+            pipeline = NULL;
+            FAILm("PDALGetPipelineLogLevel returned a number different than the immediately preceding PDALSetPipelineLogLevel call's argument");
+        }
     }
 
     // TODO Determine why all levels yield empty logs
     size_t size = PDALGetPipelineLog(pipeline, log, 1024);
-    //ASSERT(size > 0 && size <= 1024);
-    //ASSERT_FALSE(log[0] == '\0');
+
+    //  if (size == 0 || size > 1024)
+    //  {
+    //      PDALDisposePipeline(pipeline);
+    //      pipeline = NULL;
+    //      FAILm("PDALGetPipelineLog returned a string size equal to zero or greater than the provided buffer size");
+    //  }
+
+    //  if (log[0] == '\0')
+    //  {
+    //      PDALDisposePipeline(pipeline);
+    //      pipeline = NULL;
+    //      FAILm("PDALGetPipelineLog generated a JSON string whose first character is null");
+    //  }
 
     PDALDisposePipeline(pipeline);
 
@@ -188,10 +319,26 @@ TEST testPDALExecutePipeline(void)
     ASSERT(pipeline);
 
     int64_t count = PDALExecutePipeline(pipeline);
-    ASSERT(count > 0);
+
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (count <= 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a non-positive point count for a valid pipeline");
+    }
 
     count = PDALExecutePipeline(NULL);
-    ASSERT_EQ(0, count);
+
+    if (count != 0)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALExecutePipeline returned a positive count for a null pipeline");
+    }
 
     PDALDisposePipeline(pipeline);
     PASS();
@@ -200,12 +347,17 @@ TEST testPDALExecutePipeline(void)
 TEST testPDALValidatePipeline(void)
 {
     bool valid = PDALValidatePipeline(NULL);
-    ASSERT_FALSEm("Null pipeline evaluated as valid when it should be invalid", valid);
+    ASSERT_FALSEm("PDALValidatePipeline returned true for a NULL pipeline argument", valid);
 
     PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
     ASSERT(pipeline);
     valid = PDALValidatePipeline(pipeline);
-    ASSERTm("Valid pipeline evaluated as invalid", valid);
+    PDALDisposePipeline(pipeline);
+
+    if (!valid)
+    {
+        FAILm("PDALValidatePipeline returned false for a valid pipeline");
+    }
 
     PASS();
 }

@@ -27,8 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
 
 #include <pdal/pdalc_pipeline.h>
@@ -36,6 +34,7 @@
 #include <pdal/pdalc_pointviewiterator.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pointviewiterator);
 
@@ -44,32 +43,11 @@ static PDALPointViewIteratorPtr gPointViewIterator = NULL;
 
 static void setup_test_pdalc_pointviewiterator(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/stats.json", "rb");
-    char *json = NULL;
+    gPipeline = PDALLoadPipeline("@CMAKE_BINARY_DIR@/data/simple-reproject.json");
 
-    if (file)
+    if (gPipeline)
     {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        char *json = malloc(length + 1);
-
-        if (json)
-        {
-            fread(json, 1, length, file);
-            json[length] = '\0';
-
-            gPipeline = PDALCreatePipeline(json);
-
-            if (gPipeline && PDALExecutePipeline(gPipeline))
-            {
-                gPointViewIterator = PDALGetPointViews(gPipeline);
-            }
-
-            free(json);
-        }
-
-        fclose(file);
+        gPointViewIterator = PDALGetPointViews(gPipeline);
     }
 }
 
@@ -107,8 +85,14 @@ TEST testPDALGetNextPointView(void)
     if (PDALHasNextPointView(gPointViewIterator))
     {
         PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-        ASSERT(anotherView);
-        ASSERT_FALSE(anotherView == view);
+
+        if (!anotherView || anotherView == view)
+        {
+            PDALDisposePointView(view);
+            view = NULL;
+            FAILm("PDALGetNextPointView returned the same view as the first view");
+        }
+
         PDALDisposePointView(anotherView);
     }
 
@@ -129,17 +113,34 @@ TEST testPDALResetPointViewIterator(void)
     while (PDALHasNextPointView(gPointViewIterator))
     {
         PDALPointViewPtr anotherView = PDALGetNextPointView(gPointViewIterator);
-        ASSERT(anotherView);
-        ASSERT_FALSE(anotherView == view);
+
+        if (!anotherView || anotherView == view)
+        {
+            PDALDisposePointView(view);
+            view = NULL;
+            FAILm("PDALGetNextPointView returned the same view as the first view");
+        }
+
         PDALDisposePointView(anotherView);
     }
 
     PDALDisposePointView(view);
 
+    // The next view should be null since we reached the end of the point view iteration
     view = PDALGetNextPointView(gPointViewIterator);
-    ASSERT_EQ(NULL, view);
-    PDALDisposePointView(view);
 
+    // Use check with FAIL instead of assertions to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+    if (view)
+    {
+        PDALDisposePointView(view);
+        view = NULL;
+        FAILm("PDALGetNextPointView returned a non-null view immediately after PDALHasNextPointView returned false");
+    }
+
+    // The next view should be non-null since we reset the point view iterator
     PDALResetPointViewIterator(gPointViewIterator);
 
     view = PDALGetNextPointView(gPointViewIterator);

@@ -27,13 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <assert.h>
+#include <math.h> // for fabs
 
 #include <pdal/pdalc.h>
 
 #include "greatest.h"
+#include "test_pdalc_utils.h"
 
 SUITE(test_pdalc_pointlayout);
 
@@ -43,41 +43,23 @@ static PDALPointLayoutPtr gLayout = NULL;
 
 static void setup_test_pdalc_pointlayout(void *arg)
 {
-    FILE *file = fopen("@CMAKE_BINARY_DIR@/data/simple-reproject.json", "rb");
-    char *json = NULL;
+    gPipeline = PDALLoadPipeline("@CMAKE_BINARY_DIR@/data/simple-reproject.json");
 
-    if (file)
+    if (gPipeline)
     {
-        fseek(file, 0, SEEK_END);
-        long length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        char *json = malloc(length + 1);
+        PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
 
-        if (json)
+        if (PDALHasNextPointView(views))
         {
-            fread(json, 1, length, file);
-            json[length] = '\0';
-            gPipeline = PDALCreatePipeline(json);
+            gPointView = PDALGetNextPointView(views);
 
-            if (gPipeline && PDALExecutePipeline(gPipeline))
+            if (gPointView)
             {
-                PDALPointViewIteratorPtr views = PDALGetPointViews(gPipeline);
-
-                if (PDALHasNextPointView(views))
-                {
-                    gPointView = PDALGetNextPointView(views);
-
-                    if (gPointView)
-                    {
-                        gLayout = PDALGetPointViewLayout(gPointView);
-                    }
-                }
+                gLayout = PDALGetPointViewLayout(gPointView);
             }
-
-            free(json);
         }
 
-        fclose(file);
+        PDALDisposePointViewIterator(views);
     }
 }
 
@@ -97,9 +79,14 @@ TEST testPDALGetPointLayoutDimTypes(void)
     ASSERTm("PDALGetPointLayoutDimTypes should return non-NULL for a valid layout", types);
 
     size_t size = PDALGetDimTypeListSize(types);
+
+    // Dispose types list before assertion to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+    PDALDisposeDimTypeList(types);
+
     ASSERTm("PDALGetDimTypeListSize should return more than zero for a valid list", size > 0);
 
-    PDALDisposeDimTypeList(types);
     PASS();
 }
 
@@ -129,24 +116,38 @@ TEST testPDALFindDimType(void)
     for (size_t i = 0; i < size; ++i)
     {
         PDALDimType expected = PDALGetDimType(types, i);
-        ASSERT(idUnknown != expected.id);
-        ASSERT(typeNone != expected.type);
+
+        // Use check with FAIL instead of assertions to avoid CWE-404
+        // See http://cwe.mitre.org/data/definitions/404.html
+        // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+
+        bool success = (idUnknown != expected.id);
+        success &= (typeNone != expected.type);
 
         char name[64];
-        ASSERT(PDALGetDimTypeInterpretationName(expected, name, 64) > 0);
-        ASSERT(PDALGetDimTypeIdName(expected, name, 64) > 0);
+        success &= (PDALGetDimTypeInterpretationName(expected, name, 64) > 0);
+        success &= (PDALGetDimTypeIdName(expected, name, 64) > 0);
 
         actual = PDALFindDimType(NULL, name);
-        ASSERT_EQ(idUnknown, actual.id);
-        ASSERT_EQ(typeNone, actual.type);
-        ASSERT_IN_RANGE(1.0, actual.scale, tolerance);
-        ASSERT_IN_RANGE(0.0, actual.offset, tolerance);
+        success &= (idUnknown == actual.id); 
+        success &= (typeNone == actual.type);
+
+        success &= (fabs(1.0 - actual.scale) < tolerance);
+        success &= (fabs(actual.offset) < tolerance);
 
         actual = PDALFindDimType(gLayout, name);
-        ASSERT_EQ(expected.id, actual.id);
-        ASSERT_EQ(expected.type, actual.type);
-        ASSERT_IN_RANGE(expected.scale, actual.scale, tolerance);
-        ASSERT_IN_RANGE(expected.offset, actual.offset, tolerance);
+        success &= (expected.id == actual.id); 
+        success &= (expected.type == actual.type);
+
+        success &= (fabs(expected.scale - actual.scale) < tolerance);
+        success &= (fabs(expected.offset - actual.offset) < tolerance);
+
+        if (!success)
+        {
+            PDALDisposeDimTypeList(types);
+            types = NULL;
+            FAILm("PDALGetPointLayoutDimTypes returned a list with an invalid element");
+        }
     }
 
     PDALDisposeDimTypeList(types);

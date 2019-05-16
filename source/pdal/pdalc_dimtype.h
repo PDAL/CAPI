@@ -45,6 +45,8 @@ namespace capi
 {
 extern "C"
 {
+#else
+#include <stddef.h> // for size_t
 #endif
 /**
  * Returns the number of elements in a dimension type list.
