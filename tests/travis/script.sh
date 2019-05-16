@@ -11,7 +11,7 @@ if [ "$SCAN" = "sonarcloud" ]; then
 	rm build-wrapper-linux-x86.zip
 	export SONARCLOUD_DIR=${PWD}/build-wrapper-linux-x86
 
-elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "github-6_address-coverity-faults" ]; then
+elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
 	curl -LsS -d "token=${COVERITY_TOKEN}&project=Simverge%2Fpdal-c" -X POST https://scan.coverity.com/download/cxx/linux64 > coverity_tool.tgz
 	tar xaf coverity_tool.tgz
 	rm coverity_tool.tgz
@@ -37,7 +37,7 @@ cmake -G "Unix Makefiles" \
 
 if [ "$SCAN" = "sonarcloud" ]; then
 	${SONARCLOUD_DIR}/build-wrapper-linux-x86-64 --out-dir ${CI_PROJECT_DIR}/bw-output make
-elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "github-6_address-coverity-faults" ]; then
+elif [ "$SCAN" = "coverity" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
 	${COVERITY_DIR}/cov-configure --gcc
 	${COVERITY_DIR}/cov-build --dir ${CI_PROJECT_DIR}/cov-int make
 	cd ${CI_PROJECT_DIR}
