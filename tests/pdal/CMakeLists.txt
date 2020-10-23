@@ -4,11 +4,19 @@ find_package(PDAL REQUIRED CONFIG)
 
 set(CONFIGS )
 
-set(SOURCES
-	main.c
-	test_pdalc_config.c
-	test_pdalc_utils.c
-)
+IF (CONDA_BUILD)
+	set(SOURCES
+		main_conda.c
+		test_pdalc_config.c
+		test_pdalc_utils.c
+	)
+ELSE()
+	set(SOURCES
+		main.c
+		test_pdalc_config.c
+		test_pdalc_utils.c
+	)
+ENDIF()
 
 set(HEADERS 
 	test_pdalc_utils.h
@@ -19,21 +27,23 @@ set(DEPENDENCIES
 	pdalc
 )
 
-set(TESTS
-	test_pdalc_pipeline
-	test_pdalc_pointlayout
-	test_pdalc_pointview
-	test_pdalc_pointviewiterator
-)
+if (NOT CONDA_BUILD)
+	set(TESTS
+		test_pdalc_pipeline
+		test_pdalc_pointlayout
+		test_pdalc_pointview
+		test_pdalc_pointviewiterator
+	)
 
-foreach(TEST ${TESTS})
-	configure_file(${TEST}.c.in ${CMAKE_CURRENT_SOURCE_DIR}/${TEST}.c)
+	foreach(TEST ${TESTS})
+		configure_file(${TEST}.c.in ${CMAKE_CURRENT_SOURCE_DIR}/${TEST}.c)
 
-	list(APPEND CONFIGS ${TEST}.c.in)
-	list(APPEND SOURCES ${TEST}.c)
-endforeach()
+		list(APPEND CONFIGS ${TEST}.c.in)
+		list(APPEND SOURCES ${TEST}.c)
+	endforeach()
 
-source_group("Config Files" FILES ${CONFIGS})
+	source_group("Config Files" FILES ${CONFIGS})
+ENDIF()
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/source
@@ -56,3 +66,5 @@ install(TARGETS ${TARGET}
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib
 	RUNTIME DESTINATION bin)
+
+set(TARGET test_pdalc)

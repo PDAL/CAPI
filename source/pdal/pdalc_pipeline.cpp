@@ -35,6 +35,8 @@
 
 #include "pdalc_pointviewiterator.h"
 
+#undef min
+
 namespace pdal
 {
 namespace capi

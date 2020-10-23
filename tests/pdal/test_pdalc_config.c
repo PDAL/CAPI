@@ -131,7 +131,12 @@ TEST testPDALVersionInfo(void)
     ASSERT(size > 0 && size <= 64);
     ASSERT(version[0]);
     ASSERT_STR_EQ(expected, version);
+
+    printf("PDAL Version : %s",version);
+    
+#ifdef PDAL_VERSION_STRING
     ASSERT_STR_EQ(PDAL_VERSION_STRING, version);
+#endif
 
     char sha1[64];
     size = PDALSha1(sha1, 64);
@@ -139,8 +144,9 @@ TEST testPDALVersionInfo(void)
     ASSERT(sha1[0]);
 
     // Shorten SHA1 to six characters
-    ASSERT(size > 6);
-    sha1[6] = '\0';
+    if (size > 7) {
+        sha1[6] = '\0';
+    }
 
     sprintf(expected + strlen(version), " (git-version: %s)", sha1);
 
@@ -162,26 +168,10 @@ TEST testPDALDebugInformation(void)
     PASS();
 }
 
-TEST testPDALPluginInstallPath(void)
-{
-    char path[1024];
-    size_t size = PDALPluginInstallPath(path, 1024);
-    ASSERT(size > 0 && size <= 1024);
-    ASSERT(path[0]);
-
-#if !defined USING_VCPKG_DEBUG
-    ASSERT_STR_EQ(PDAL_PLUGIN_INSTALL_PATH, path);
-#endif
-
-    PASS();
-}
-
-
 GREATEST_SUITE(test_pdalc_config)
 {
     RUN_TEST(testPDALGetSetGdalDataPath);
     RUN_TEST(testPDALGetSetProj4DataPath);
     RUN_TEST(testPDALVersionInfo);
     RUN_TEST(testPDALDebugInformation);
-    RUN_TEST(testPDALPluginInstallPath);
 }

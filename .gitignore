@@ -13,9 +13,12 @@ tests/pdal/test_pdalc_*.c
 .vscode/settings.json
 .vscode/c_cpp_properties.json
 
+.vs/
+
 # Vim ancillary files
 *~
 *.swp
+
 
 # Build directory
 /build
