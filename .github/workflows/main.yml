@@ -18,12 +18,14 @@ jobs:
         run: conda install -c conda-forge pdal
         
       - name: Build
-        shell: cmd
+        shell: pwsh
         run: |
           set TOOLCHAIN=""
           make
           
       - name: Test
-        shell: cmd
-        run: test_pdalc.exe
+        shell: pwsh
+        run: |
+          cp build\x64-windows\source\pdal\release\pdalc.dll build\x64-windows\tests\pdal\release\
+          build\x64-windows\tests\pdal\release\test_pdalc.exe
 
