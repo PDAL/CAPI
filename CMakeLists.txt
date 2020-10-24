@@ -49,7 +49,7 @@ endif()
 add_subdirectory("source/pdal")
 
 if(PDALC_ENABLE_DOCS)
-	add_subdirectory("doc")
+	add_subdirectory("docs")
 endif()
 
 if(PDALC_ENABLE_TESTS)
