@@ -22,11 +22,11 @@ jobs:
         run: |
           set TOOLCHAIN=""
           cd $env:GITHUB_WORKSPACE
-          exec {make.bat}
+          make.bat
           
       - name: Test
         shell: pwsh
         run: |
            $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release;$env:PATH"
-           exec { test_pdalc.exe }
+           test_pdalc.exe
 
