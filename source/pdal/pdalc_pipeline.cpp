@@ -35,6 +35,7 @@
 
 #include "pdalc_pointviewiterator.h"
 
+// TODO Address cause of std::min problems. See https://github.com/PDAL/CAPI/issues/4
 #undef min
 
 namespace pdal
