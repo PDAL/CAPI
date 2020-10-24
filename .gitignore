@@ -15,7 +15,7 @@ tests/pdal/test_pdalc_*.c
 *~
 *.swp
 
-
+.DS_Store
 # Build directory
 /build
 
