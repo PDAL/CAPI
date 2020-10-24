@@ -22,7 +22,7 @@ endif()
 # Do not use a suffix for RelWithDebInfo
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "CMake debug suffix")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "" CACHE STRING "CMake RelWithDebInfo suffix")
-set(PDALC_ENABLE_CODE_COVERAGE ON CACHE BOOL "Enable code coverage calculation")
+set(PDALC_ENABLE_CODE_COVERAGE OFF CACHE BOOL "Enable code coverage calculation")
 set(PDALC_ENABLE_DOCS ON CACHE BOOL "Enable documentation generation")
 set(PDALC_ENABLE_TESTS ON CACHE BOOL "Enable pdal-c tests")
 set(PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE "131072" CACHE STRING "GCC garbage collection minimum heap size")
@@ -49,7 +49,7 @@ endif()
 add_subdirectory("source/pdal")
 
 if(PDALC_ENABLE_DOCS)
-	add_subdirectory("doc")
+	add_subdirectory("docs")
 endif()
 
 if(PDALC_ENABLE_TESTS)

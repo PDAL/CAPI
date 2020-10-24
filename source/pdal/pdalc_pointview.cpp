@@ -31,6 +31,8 @@
 
 #include <pdal/PointView.hpp>
 
+#undef min 
+
 namespace pdal
 {
 namespace capi

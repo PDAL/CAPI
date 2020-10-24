@@ -1,0 +1,32 @@
+name: Windows Build Test
+on:
+  workflow_dispatch
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout The PR
+        uses: actions/checkout@v2
+        
+      - name: Install Conda
+        uses: conda-incubator/setup-miniconda@v1.7.0
+        
+      - name: Install PDAL
+        shell: pwsh
+        run: conda install -c conda-forge pdal
+        
+      - name: Build
+        shell: pwsh
+        run: |
+          set TOOLCHAIN=""
+          cd $env:GITHUB_WORKSPACE
+          Start-Process make.bat
+          
+      - name: Test
+        shell: pwsh
+        run: |
+           $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release;$env:PATH"
+           Start-Process test_pdalc.exe
+
