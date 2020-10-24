@@ -18,15 +18,14 @@ jobs:
         run: conda install -c conda-forge pdal
         
       - name: Build
-        shell: pwsh
+        shell: cmd /C call {0}
         run: |
           set TOOLCHAIN=""
-          cd $env:GITHUB_WORKSPACE
-          Start-Process make.bat
+          make.bat
           
       - name: Test
         shell: pwsh
         run: |
            $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release;$env:PATH"
-           Start-Process test_pdalc.exe
+           test_pdalc.exe
 
