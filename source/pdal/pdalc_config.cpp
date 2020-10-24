@@ -42,7 +42,7 @@ namespace capi
 {
 /**
  * Retrieves the value of an environment variable.
- * 
+ *
  * @param name The name of the environment variable
  * @param[out] path The buffer used to retrieve the value
  * @param size The size of the provided buffer

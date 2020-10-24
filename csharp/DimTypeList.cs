@@ -27,27 +27,68 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <pdal/pdalc.h>
+using System;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
-/**
- * Reads the contents of a PDAL pipeline file.
- *
- * @note Caller obtains ownership of the returned string and is responsible for
- *       freeing the allocated memory.
- *
- * @param path The path to the PDAL pipeline JSON file
- * @return The contents of the PDAL pipeline JSON file as a string
- */
-char *PDALReadPipelineJson(const char *path);
+ namespace Pdal
+ {
+	public class DimTypeList : IDisposable
+	{
+		private const string PDALC_LIBRARY = "pdalc";
 
-/**
- * Creates a PDAL pipeline from the provided path and attempts to execute it.
- *
- * @note Caller obtains ownership of the returned pipeline and is responsible for
- *       freeing the allocated memory with PDALDisposePipeline.
- * @note The returned pipeline will be NULL if it could not be executed.
- *
- * @param path The path to the PDAL pipeline JSON file
- * @return The loaded PDAL pipeline
- */
-PDALPipelinePtr PDALLoadPipeline(const char *path);
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALGetDimTypeListSize")]
+		private static extern uint getSize(IntPtr list);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALGetDimTypeListByteCount")]
+		private static extern ulong getByteCount(IntPtr list);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALGetDimType")]
+		[return:MarshalAs( UnmanagedType.Struct)]
+		private static extern DimType.NativeDimType getType(IntPtr list, uint index);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALDisposeDimTypeList")]
+		private static extern void dispose(IntPtr list);
+
+		private IntPtr mNative = IntPtr.Zero;
+		private Dictionary<uint, DimType> mCache = new Dictionary<uint, DimType>();
+
+		public DimTypeList(IntPtr nativeList)
+		{
+			mNative = nativeList;
+		}
+
+		public ulong ByteCount
+		{
+			get { return getByteCount(mNative); }
+		}
+
+		public IntPtr Native
+		{
+			get { return mNative; }
+		}
+
+		public uint Size
+		{
+			get { return getSize(mNative); }
+		}
+
+		public void Dispose()
+		{
+			dispose(mNative);
+		}
+
+		public DimType at(uint index)
+		{
+			DimType type = null;
+			
+			if (!mCache.TryGetValue(index, out type))
+			{
+				type = new DimType(getType(mNative, index));
+				mCache.Add(index, type);
+			}
+
+			return type;
+		}
+	}
+ }

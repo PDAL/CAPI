@@ -27,27 +27,66 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <pdal/pdalc.h>
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
 
-/**
- * Reads the contents of a PDAL pipeline file.
- *
- * @note Caller obtains ownership of the returned string and is responsible for
- *       freeing the allocated memory.
- *
- * @param path The path to the PDAL pipeline JSON file
- * @return The contents of the PDAL pipeline JSON file as a string
- */
-char *PDALReadPipelineJson(const char *path);
+ namespace Pdal
+ {
+	public class PointViewIterator : IDisposable
+	{
+		private const string PDALC_LIBRARY = "pdalc";
 
-/**
- * Creates a PDAL pipeline from the provided path and attempts to execute it.
- *
- * @note Caller obtains ownership of the returned pipeline and is responsible for
- *       freeing the allocated memory with PDALDisposePipeline.
- * @note The returned pipeline will be NULL if it could not be executed.
- *
- * @param path The path to the PDAL pipeline JSON file
- * @return The loaded PDAL pipeline
- */
-PDALPipelinePtr PDALLoadPipeline(const char *path);
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALHasNextPointView")]
+		private static extern bool hasNext(IntPtr itr);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALGetNextPointView")]
+		private static extern IntPtr next(IntPtr itr);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALResetPointViewIterator")]
+		private static extern void reset(IntPtr itr);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint="PDALDisposePointViewIterator")]
+		private static extern void dispose(IntPtr itr);
+
+		private IntPtr mNative = IntPtr.Zero;
+
+		public PointViewIterator(IntPtr nativeIterator)
+		{
+			mNative = nativeIterator;
+		}
+
+		public void Dispose()
+		{
+			dispose(mNative);
+			mNative = IntPtr.Zero;
+		}
+
+		public PointView Next
+		{
+			get
+			{
+				PointView view = null;
+
+				IntPtr nativeView = next(mNative);
+
+				if (nativeView != IntPtr.Zero)
+				{
+					view = new PointView(nativeView);
+				}
+
+				return view;
+			}
+		}
+
+		public bool HasNext()
+		{
+			return hasNext(mNative);
+		}
+
+		public void Reset()
+		{
+			reset(mNative);
+		}
+	}
+ }

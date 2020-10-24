@@ -42,9 +42,9 @@ char *PDALReadPipelineJson(const char *path)
         fseek(file, 0, SEEK_END);
         long length = ftell(file);
 
-		// Check that length is positive to avoid CWE-687
-		// See http://cwe.mitre.org/data/definitions/687.html
-		// See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_NEGATIVE_RETURNS
+        // Check that length is positive to avoid CWE-687
+        // See http://cwe.mitre.org/data/definitions/687.html
+        // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_NEGATIVE_RETURNS
         if (length > 0)
         {
             fseek(file, 0, SEEK_SET);

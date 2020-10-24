@@ -1,0 +1,47 @@
+name: Update Docs
+on:
+  workflow_dispatch
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout The PR
+        uses: actions/checkout@v2
+              
+      - name: Build
+        shell: bash
+        run: |
+          SOURCE=$(pwd)
+          cd docs
+          cat Doxyfile.in | \
+          sed s:'${PROJECT_NAME}':'pdal-c': | \
+          sed s:'${pdal-c_VERSION}':'v2.0.0': | \
+          sed s:'${CMAKE_SOURCE_DIR}':.: | \
+          sed s:'${PDAL_INCLUDE_DIRS}':NONE: \
+          > Doxyfile
+
+          cat Doxyfile
+
+      - name: Run Doxygen
+        uses: mattnotmitt/doxygen-action@v1.2.0
+        with:
+          doxyfile-path: 'docs/Doxyfile'
+
+      - name: Commit files
+        run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -m "Automatic Documentation Update" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      
+          
+
+
