@@ -4,7 +4,7 @@ on:
   
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout The PR
@@ -14,18 +14,25 @@ jobs:
         uses: conda-incubator/setup-miniconda@v1.7.0
         
       - name: Install PDAL
-        shell: pwsh
+        shell: bash -l {0}
         run: conda install -c conda-forge pdal
         
       - name: Build
-        shell: cmd /C call {0}
+        shell: bash -l {0}
         run: |
-          set TOOLCHAIN=""
-          make.bat
+        cmake -G "Unix Makefiles" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=$PREFIX \
+        -DCMAKE_LIBRARY_PATH=$PREFIX/lib \
+        -DCMAKE_INCLUDE_PATH=$PREFIX/include \
+        -DCONDA_BUILD=ON \
+        .
+        make
+        make install
           
       - name: Test
-        shell: pwsh
+        shell: bash -l {0}
         run: |
-           $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release;$env:PATH"
+           test_pdalc.exe
            ctest -VV
 
