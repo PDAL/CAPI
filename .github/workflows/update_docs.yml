@@ -13,7 +13,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          SOURCE = pwd
+          SOURCE=$(pwd)
           cd docs
           cat Doxyfile.in | \
           sed 's|${PROJECT_NAME}|pdal-c|' | \
