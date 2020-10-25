@@ -63,3 +63,11 @@ tests/pdal/test_pdalc_*.c
 *.su
 *.idb
 *.pdb
+
+CMakeFiles/
+*.cmake
+CMakeCache.txt
+Makefile
+Data/
+Doxyfile
+*.tcl

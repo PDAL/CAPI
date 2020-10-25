@@ -28,6 +28,7 @@ set(PDALC_ENABLE_TESTS ON CACHE BOOL "Enable pdal-c tests")
 set(PDALC_GCC_PARAM_GGC_MIN_HEAPSIZE "131072" CACHE STRING "GCC garbage collection minimum heap size")
 
 include(ObtainProjectVersion)
+
 include_directories("${CMAKE_SOURCE_DIR}/source")
 
 if(CMAKE_COMPILER_IS_GNUCXX)

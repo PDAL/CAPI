@@ -1,10 +1,12 @@
 # CMake configuration file for Keryx documentation
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in" "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile")
+
+message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
+
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
-	configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in" "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile")
-
 	add_custom_target( "${PROJECT_NAME}_doxygen" ALL
 		COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile"
 		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
