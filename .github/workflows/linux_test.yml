@@ -27,6 +27,6 @@ jobs:
       - name: Test
         shell: bash -l {0}
         run: |
-           test_pdalc.exe
            ctest -VV
+           test_pdalc
 
