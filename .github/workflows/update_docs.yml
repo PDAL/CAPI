@@ -25,6 +25,22 @@ jobs:
 
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@v1.2.0
+        with:
+          working-directory: 'docs'
+
+      - name: Commit files
+        run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -m "Automatic Documentation Update" -a
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
+      
           
 
 
