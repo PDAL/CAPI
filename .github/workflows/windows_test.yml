@@ -26,7 +26,7 @@ jobs:
       - name: Test
         shell: cmd /C call {0}
         run: |
-           cp build\x64-windows\source\pdal\release\pdalc.dll
+           cp build\x64-windows\source\pdal\release\pdalc.dll build\x64-windows\tests\pdal\release
            cd build\x64-windows\tests\pdal\release
            dir
            test_pdalc
