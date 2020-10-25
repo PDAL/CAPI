@@ -3,9 +3,7 @@ pdal-c: PDAL C API
 
 [//]: # (@cond Hide build status from Doxygen)
 
-[![Build Status](https://travis-ci.com/Simverge/pdal-c.svg?branch=master)](https://travis-ci.com/Simverge/pdal-c)
-[![Coverity Scan](https://scan.coverity.com/projects/17631/badge.svg)](https://scan.coverity.com/projects/simverge-pdal-c)
-[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=Simverge_pdal-c&metric=alert_status)](https://sonarcloud.io/dashboard?id=Simverge_pdal-c)
+
 
 [//]: # (@endcond)
 
