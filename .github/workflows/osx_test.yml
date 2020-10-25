@@ -1,6 +1,6 @@
 name: OSX Build Test
 on:
-  workflow_dispatch
+  [pull-request]
   
 jobs:
   build:
