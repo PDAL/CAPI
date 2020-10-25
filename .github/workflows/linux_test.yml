@@ -20,9 +20,9 @@ jobs:
       - name: Build
         shell: bash -l {0}
         run: |
-        cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_LIBRARY_PATH=$PREFIX/lib -DCMAKE_INCLUDE_PATH=$PREFIX/include -DCONDA_BUILD=OFF \ .
-        make
-        make install
+          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_LIBRARY_PATH=$PREFIX/lib -DCMAKE_INCLUDE_PATH=$PREFIX/include -DCONDA_BUILD=OFF \ .
+          make
+          make install
           
       - name: Test
         shell: bash -l {0}
