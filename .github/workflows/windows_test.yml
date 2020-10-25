@@ -24,10 +24,10 @@ jobs:
           make.bat
           
       - name: Test
-        shell: pwsh
+        shell: cmd /C call {0}
         run: |
-           $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:PATH"
-           cd $env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release
+           cp build\x64-windows\source\pdal\release\pdalc.dll
+           cd build\x64-windows\tests\pdal\release
            dir
-           & test_pdalc
+           test_pdalc
 
