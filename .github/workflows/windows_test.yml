@@ -29,5 +29,5 @@ jobs:
            $env:PATH="$env:GITHUB_WORKSPACE\build\x64-windows\source\pdal\release\;$env:PATH"
            cd $env:GITHUB_WORKSPACE\build\x64-windows\tests\pdal\release
            dir
-           test_pdalc
+           & test_pdalc
 
