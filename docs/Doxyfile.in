@@ -29,7 +29,7 @@ PROJECT_NAME           = "${PROJECT_NAME}"
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = "v${${PROJECT_NAME}_VERSION}, ${BUILD_ID}"
+PROJECT_NUMBER         = "${${PROJECT_NAME}_VERSION}"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -49,7 +49,7 @@ PROJECT_LOGO           =
 # If a relative path is entered, it will be relative to the location
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = "${CMAKE_SOURCE_DIR}/doc/doxygen"
+OUTPUT_DIRECTORY       = "${CMAKE_SOURCE_DIR}/docs/doxygen"
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create
 # 4096 sub-directories (in 2 levels) under the output directory of each output

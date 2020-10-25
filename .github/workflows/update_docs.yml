@@ -9,20 +9,22 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout The PR
         uses: actions/checkout@v2
-      
+              
+      - name: Build
+        shell: bash
+        run: |
+          SOURCE = pwd
+          cd docs
+          cat Doxyfile.in | \
+          sed 's|${PROJECT_NAME}|pdal-c|' | \
+          sed 's|${pdal-c_VERSION}|v2.0.0|' | \
+          sed 's|${CMAKE_SOURCE_DIR}|$SOURCE|' \
+          > Doxyfile
+
+          cat Doxyfile
+
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@v1.2.0
-      
-        
-      - name: Build
-        shell: bash -l {0}
-        run: |
-          cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCONDA_BUILD=OFF .
-          make
-          make install
           
-      - name: Test
-        shell: bash -l {0}
-        run: |
-           ctest -VV
+
 

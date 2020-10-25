@@ -2,8 +2,6 @@
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in" "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile")
 
-message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
-
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
