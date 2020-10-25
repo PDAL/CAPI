@@ -1,6 +1,6 @@
 name: Linux Build Test
 on:
-  [pull-request]
+  [pull_request]
   
 jobs:
   build:

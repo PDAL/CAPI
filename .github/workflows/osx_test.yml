@@ -1,6 +1,6 @@
 name: OSX Build Test
 on:
-  [pull-request]
+  [pull_request]
   
 jobs:
   build:
