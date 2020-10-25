@@ -28,6 +28,5 @@ jobs:
         run: |
            cp build\x64-windows\source\pdal\release\pdalc.dll build\x64-windows\tests\pdal\release
            cd build\x64-windows\tests\pdal\release
-           dir
            test_pdalc
 
