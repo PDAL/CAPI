@@ -28,5 +28,4 @@ jobs:
         shell: bash -l {0}
         run: |
            ctest -VV
-           test_pdalc
 
