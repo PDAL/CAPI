@@ -29,6 +29,8 @@ The library can be installed as a package on Windows, Mac and Linux using Conda.
 conda install -c conda-forge pdal-c
 ```
 
+The conda package includes a tool called `test_pdalc`. Run this to confirm that the API configuration is correct and to report on the version of PDAL that the API is connected to.
+
 ## Dependencies
 
 The library is dependent on PDAL and has currently been tested up to v2.2.0.
