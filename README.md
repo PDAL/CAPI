@@ -8,7 +8,6 @@ pdal-c: PDAL C API
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pdal-c/badges/version.svg)](https://anaconda.org/conda-forge/pdal-c)
 
-
 [//]: # (@endcond)
 
 # Basics
