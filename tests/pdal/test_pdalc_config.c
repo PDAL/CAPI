@@ -133,7 +133,7 @@ TEST testPDALVersionInfo(void)
     ASSERT_STR_EQ(expected, version);
 
     printf("PDAL Version : %s",version);
-    
+
 #ifdef PDAL_VERSION_STRING
     ASSERT_STR_EQ(PDAL_VERSION_STRING, version);
 #endif
@@ -144,7 +144,8 @@ TEST testPDALVersionInfo(void)
     ASSERT(sha1[0]);
 
     // Shorten SHA1 to six characters
-    if (size > 7) {
+    if (size > 7)
+    {
         sha1[6] = '\0';
     }
 

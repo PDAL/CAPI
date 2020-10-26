@@ -31,10 +31,10 @@
 
 /**
  * Reads the contents of a PDAL pipeline file.
- * 
+ *
  * @note Caller obtains ownership of the returned string and is responsible for
  *       freeing the allocated memory.
- * 
+ *
  * @param path The path to the PDAL pipeline JSON file
  * @return The contents of the PDAL pipeline JSON file as a string
  */
@@ -42,11 +42,11 @@ char *PDALReadPipelineJson(const char *path);
 
 /**
  * Creates a PDAL pipeline from the provided path and attempts to execute it.
- * 
+ *
  * @note Caller obtains ownership of the returned pipeline and is responsible for
  *       freeing the allocated memory with PDALDisposePipeline.
  * @note The returned pipeline will be NULL if it could not be executed.
- * 
+ *
  * @param path The path to the PDAL pipeline JSON file
  * @return The loaded PDAL pipeline
  */

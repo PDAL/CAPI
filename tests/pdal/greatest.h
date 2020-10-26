@@ -42,19 +42,23 @@ extern "C" {
 
 #include "greatest.h"
 
-TEST foo_should_foo(void) {
+TEST foo_should_foo(void)
+{
     PASS();
 }
 
-static void setup_cb(void *data) {
+static void setup_cb(void *data)
+{
     printf("setup callback for each test case\n");
 }
 
-static void teardown_cb(void *data) {
+static void teardown_cb(void *data)
+{
     printf("teardown callback for each test case\n");
 }
 
-SUITE(suite) {
+SUITE(suite)
+{
     /* Optional setup/teardown callbacks which will be run before/after
      * every test case. If using a test suite, they will be cleared when
      * the suite finishes. */
@@ -68,7 +72,8 @@ SUITE(suite) {
 GREATEST_MAIN_DEFS();
 
 /* Set up, run suite(s) of tests, report pass/fail/skip stats. */
-int run_tests(void) {
+int run_tests(void)
+{
     GREATEST_INIT();            /* init. greatest internals */
     /* List of suites to run (if any). */
     RUN_SUITE(suite);
@@ -83,7 +88,8 @@ int run_tests(void) {
 /* main(), for a standalone command-line test runner.
  * This replaces run_tests above, and adds command line option
  * handling and exiting with a pass/fail status. */
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     GREATEST_MAIN_BEGIN();      /* init & parse command-line args */
     RUN_SUITE(suite);
     GREATEST_MAIN_END();        /* display results */
@@ -158,7 +164,8 @@ int main(int argc, char **argv) {
  *********/
 
 /* Info for the current running suite. */
-typedef struct greatest_suite_info {
+typedef struct greatest_suite_info
+{
     unsigned int tests_run;
     unsigned int passed;
     unsigned int failed;
@@ -193,12 +200,14 @@ typedef int greatest_printf_cb(const void *t, void *udata);
 
 /* Callbacks for an arbitrary type; needed for type-specific
  * comparisons via GREATEST_ASSERT_EQUAL_T[m].*/
-typedef struct greatest_type_info {
+typedef struct greatest_type_info
+{
     greatest_equal_cb *equal;
     greatest_printf_cb *print;
 } greatest_type_info;
 
-typedef struct greatest_memory_cmp_env {
+typedef struct greatest_memory_cmp_env
+{
     const unsigned char *exp;
     const unsigned char *got;
     size_t size;
@@ -208,14 +217,16 @@ typedef struct greatest_memory_cmp_env {
 extern greatest_type_info greatest_type_info_string;
 extern greatest_type_info greatest_type_info_memory;
 
-typedef enum {
+typedef enum
+{
     GREATEST_FLAG_FIRST_FAIL = 0x01,
     GREATEST_FLAG_LIST_ONLY = 0x02,
     GREATEST_FLAG_ABORT_ON_FAIL = 0x04
 } greatest_flag_t;
 
 /* Internal state for a PRNG, used to shuffle test order. */
-struct greatest_prng {
+struct greatest_prng
+{
     unsigned char random_order; /* use random ordering? */
     unsigned char initialized;  /* is random ordering initialized? */
     unsigned char pad_0[6];
@@ -229,7 +240,8 @@ struct greatest_prng {
 };
 
 /* Struct containing all test runner state. */
-typedef struct greatest_run_info {
+typedef struct greatest_run_info
+{
     unsigned char flags;
     unsigned char verbosity;
     unsigned char pad_0[2];
@@ -283,7 +295,8 @@ typedef struct greatest_run_info {
 #endif
 } greatest_run_info;
 
-struct greatest_report_t {
+struct greatest_report_t
+{
     /* overall pass/fail/skip counts */
     unsigned int passed;
     unsigned int failed;
@@ -307,7 +320,7 @@ typedef const char *greatest_enum_str_fun(int value);
 int greatest_test_pre(const char *name);
 void greatest_test_post(int res);
 int greatest_do_assert_equal_t(const void *exp, const void *got,
-    greatest_type_info *type_info, void *udata);
+                               greatest_type_info *type_info, void *udata);
 void greatest_prng_init_first_pass(int id);
 int greatest_prng_init_second_pass(int id, unsigned long seed);
 void greatest_prng_step(int id);
@@ -358,7 +371,8 @@ void greatest_set_test_suffix(const char *suffix);
 #define GREATEST_TEST static enum greatest_test_res
 
 /* PASS/FAIL/SKIP result from a test. Used internally. */
-typedef enum greatest_test_res {
+typedef enum greatest_test_res
+{
     GREATEST_TEST_RES_PASS = 0,
     GREATEST_TEST_RES_FAIL = -1,
     GREATEST_TEST_RES_SKIP = 1
