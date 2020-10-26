@@ -15,9 +15,11 @@ jobs:
         run: |
           SOURCE=$(pwd)
           cd docs
+          VERSION=$(basename ${GITHUB_REF})
+          echo "Version Being built: ${GITHUB_REF}"
           cat Doxyfile.in | \
           sed s:'${PROJECT_NAME}':'pdal-c': | \
-          sed s:'${pdal-c_VERSION}':'v2.0.0': | \
+          sed s:'${pdal-c_VERSION}': $GITHUB_REF: | \
           sed s:'${CMAKE_SOURCE_DIR}':.: | \
           sed s:'${PDAL_INCLUDE_DIRS}':NONE: \
           > Doxyfile
