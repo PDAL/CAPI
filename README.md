@@ -12,7 +12,7 @@ pdal-c: PDAL C API
 
 # Basics
 
-*pdal-c* is a C API for the Point Data Abstraction Library ([PDAL](https:/pdal.io))
+*pdal-c* is a C API for the Point Data Abstraction Library ([PDAL](https://pdal.io))
 and is compatible with PDAL 1.7 and later.
 
 *pdal-c* is released under the [BSD 3-clause license](LICENSE.md).
