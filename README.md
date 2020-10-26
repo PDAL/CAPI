@@ -2,9 +2,9 @@ pdal-c: PDAL C API
 ==================
 
 [//]: # (@cond Hide build status from Doxygen)
-[![Actions Status](https://github.com/ViRGIS-Team/CAPI/workflows/OSX%20Build%20Test/badge.svg)](https://github.com/ViRGIS-Team/CAPI/actions)
-[![Actions Status](https://github.com/ViRGIS-Team/CAPI/workflows/Linux%20Build%20Test/badge.svg)](https://github.com/ViRGIS-Team/CAPI/actions)
-[![Actions Status](https://github.com/ViRGIS-Team/CAPI/workflows/Windows%20Build%20Test/badge.svg)](https://github.com/ViRGIS-Team/CAPI/actions)
+[![Actions Status](https://github.com/PDAL/CAPI/workflows/OSX%20Build%20Test/badge.svg)](https://github.com/PDAL/CAPI/actions)
+[![Actions Status](https://github.com/PDAL/CAPI/workflows/Linux%20Build%20Test/badge.svg)](https://github.com/PDAL/CAPI/actions)
+[![Actions Status](https://github.com/PDAL/CAPI/workflows/Windows%20Build%20Test/badge.svg)](https://github.com/PDAL/CAPI/actions)
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pdal-c/badges/version.svg)](https://anaconda.org/conda-forge/pdal-c)
 
