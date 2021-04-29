@@ -55,15 +55,18 @@ namespace pdal
 struct DimType;
 class PipelineExecutor;
 class PointView;
+class TriangularMesh
 
 using PointViewPtr = std::shared_ptr<PointView>;
 using DimTypeList = std::vector<DimType>;
+using MeshPtr = std::shared_ptr<TriangularMesh>
 
 namespace capi
 {
 class PointViewIterator;
 using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 using PointView = pdal::PointViewPtr;
+using TriangularMesh = pdal::MeshPtr;
 using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
 }
 }
@@ -104,6 +107,9 @@ typedef void* PDALPointLayoutPtr;
 
 /// A pointer to point view
 typedef void* PDALPointViewPtr;
+
+/// A pointer to a Mesh
+typedef void* PDALMeshPtr
 
 /// A pointer to a point view iterator
 typedef void* PDALPointViewIteratorPtr;

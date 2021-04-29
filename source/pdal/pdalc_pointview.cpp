@@ -210,7 +210,7 @@ extern "C"
     uint64_t PDALGetMeshSize(PDALPointViewPtr view)
     {
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-        pdal::TriangularMesh* mesh=wrapper.mesh();
+        pdal::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>wrapper->mesh();
         return mesh && *mesh ? (uint64_t)(*mesh)->size() : 0;
     }
 
@@ -221,7 +221,7 @@ extern "C"
         if (view && buf)
         {
             pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
-            pdal::TriangularMesh* mesh=capiView.mesh();
+            pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>capiView->mesh();
             
 
             if (*capiView && *mesh)

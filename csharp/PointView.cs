@@ -82,6 +82,17 @@ namespace Pdal
 
 		private IntPtr mNative = IntPtr.Zero;
 
+		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetMeshViewSize")]
+
+		private static extern ulong meshSize(IntPtr view);
+
+		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetAllTriangles")]
+
+		private static extern ulong getAllTriangles(IntPtr view, [MarshalAs(UnmanagedType.LPArray)] byte[] buf);
+
+		private IntPtr mNative = IntPtr.Zero;
+
+
 		public PointView(IntPtr nativeView)
 		{
 			mNative = nativeView;
@@ -232,6 +243,11 @@ namespace Pdal
 
             pc.Initialize(positions, colors, (int)size);
             return pc;
+        }
+
+		public DMesh3 getMesh()
+        {
+
         }
 
         private double parseDouble(byte[] buffer, string interpretationName, int position) {
