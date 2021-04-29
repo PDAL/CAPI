@@ -175,7 +175,7 @@ PDALC_API uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeList
  * @param view The point view
  * @return The number of triangles or zero if there is no mesh.
  */
-PDALC_API uint32_t PDALGetMeshSize(PDALPointViewPtr view);
+PDALC_API uint64_t PDALGetMeshSize(PDALPointViewPtr view);
 
 /**
  * Retrieves the triangles from the PointView.

@@ -84,7 +84,7 @@ namespace Pdal
 
 		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetMeshSize")]
 
-		private static extern uint meshSize(IntPtr view);
+		private static extern ulong meshSize(IntPtr view);
 
 		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetAllTriangles")]
 
@@ -112,7 +112,7 @@ namespace Pdal
 			get { return size(mNative); }
 		}
 
-		public uint MeshSize
+		public ulong MeshSize
         {
 			get { return meshSize(mNative); }
         }
