@@ -254,14 +254,18 @@ namespace Pdal
 				ulong byteCount = this.meshSize * 12;
 				data = new byte[byteCount];
 				szie = getAllTriangles(mNative, data);
-				List<long> 
-				for (long i=0; i < size; i++)
+				List<long> tris = new List<long>();
+				for (int i=0; i < size; i++)
                 {
+					int position = i * 12;
+					tris.add(BitConverter.ToUInt32(data, position);
+					tris.add(BitConverter.ToUInt32(data, position + 4);
+					tris.add(BitConverter.ToUInt32(data, position + 8);
+				}
 
-                }
 			}
 
-			return data;
+			return default
 		}
 
         private double parseDouble(byte[] buffer, string interpretationName, int position) {

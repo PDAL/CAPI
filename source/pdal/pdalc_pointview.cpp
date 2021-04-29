@@ -229,7 +229,7 @@ extern "C"
                 uint64_t size = 0;
                 for (unsigned idx = 0; idx < (*mesh)->size(); ++idx)
                 {
-                    const Triangle& t = (*mesh)[idx];
+                    const Triangle& t = (*(*mesh))[idx];
                     uint32_t a = (uint32_t)t.m_a;
                     std::memcpy(buff, &a, 4);
                     uint32_t b = (uint32_t)t.m_b;
