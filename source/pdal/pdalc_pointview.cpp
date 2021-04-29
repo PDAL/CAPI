@@ -210,12 +210,12 @@ extern "C"
     uint64_t PDALGetMeshSize(PDALPointViewPtr view)
     {
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-        pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*wrapper)->mesh());
+        pdal::TriangularMesh* mesh=(*wrapper)->mesh();
         uint64_t idx = 0;
-        for (size_t i = 0; i < (*(*mesh)).size(); ++i) {
+        for (size_t i = 0; i < (*mesh).size(); ++i) {
             ++idx;
         }
-        return mesh && *mesh ? idx :  static_cast<uint64_t>(101);
+        return mesh ? idx :  static_cast<uint64_t>(101);
     }
 
     uint32_t PDALGetAllTriangles(PDALPointViewPtr view, char *buff)
