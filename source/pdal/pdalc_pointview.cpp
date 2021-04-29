@@ -228,7 +228,7 @@ extern "C"
             {
                 for (size_t idx = 0; idx < (*mesh)->size(); ++idx)
                 {
-                    const Triangle& t = (*mesh).get()[idx];
+                    const Triangle& t = (*(*mesh))[idx];
                     uint32_t a = (uint32_t)t.m_a;
                     std::memcpy(buff, &a, 4);
                     uint32_t b = (uint32_t)t.m_b;
