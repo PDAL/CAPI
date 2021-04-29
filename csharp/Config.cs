@@ -1,6 +1,7 @@
 /******************************************************************************
  * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
  *
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following
  * conditions are met:
@@ -27,10 +28,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using UnityEngine;
+using System;
 
 namespace Pdal
 {
@@ -39,19 +39,17 @@ namespace Pdal
 		public static void ConfigurePdal()
 		{
 			Config config = new Config();
-			Debug.Log("GDAL Data Path: " + config.GdalData);
-			Debug.Log("Proj4 Data Path: " + config.Proj4Data);
 
-			Debug.Log("PDAL Version Integer: " + config.VersionInteger);
-			Debug.Log("PDAL Version Major: " + config.VersionMajor);
-			Debug.Log("PDAL Version Minor: " + config.VersionMinor);
-			Debug.Log("PDAL Version Patch: " + config.VersionPatch);
+            Console.WriteLine("PDAL Version Integer: " + config.VersionInteger);
+            Console.WriteLine("PDAL Version Major: " + config.VersionMajor);
+            Console.WriteLine("PDAL Version Minor: " + config.VersionMinor);
+            Console.WriteLine("PDAL Version Patch: " + config.VersionPatch);
 
-			Debug.Log("PDAL Full Version: " + config.FullVersion);
-			Debug.Log("PDAL Version: " + config.Version);
-			Debug.Log("PDAL SHA1: " + config.Sha1);
-			Debug.Log("PDAL Debug Info: " + config.DebugInfo);
-		}
+            Console.WriteLine("PDAL Full Version: " + config.FullVersion);
+            Console.WriteLine("PDAL Version: " + config.Version);
+            Console.WriteLine("PDAL SHA1: " + config.Sha1);
+            Console.WriteLine("PDAL Debug Info: " + config.DebugInfo);
+        }
 	}
 
 	/**
@@ -109,38 +107,8 @@ namespace Pdal
 		 */
 		public Config()
 		{
-            //string cwd = Environment.CurrentDirectory;
 
-            string gdalPath = Application.streamingAssetsPath;
-            GdalData = Path.Combine(gdalPath, "gdal-data");
-            Proj4Data = Path.Combine(gdalPath, "proj");
         }
-
-		/// The path to the GDAL data directory
-		public string GdalData
-		{
-			get
-			{
-				StringBuilder buffer = new StringBuilder(256);
-				getGdalDataPath(buffer, (uint) buffer.Capacity);
-				return buffer.ToString();
-			}
-
-			set	{ setGdalDataPath(value); }
-		}
-
-		/// The path to the proj4 data directory
-		public string Proj4Data
-		{
-			get
-			{
-				StringBuilder buffer = new StringBuilder(256);
-				getProj4DataPath(buffer, (uint) buffer.Capacity);
-				return buffer.ToString();
-			}
-
-			set	{ setProj4DataPath(value); }
-		}
 
 		/// The PDAL full version string with dot-separated major, minor, and patch version numbers and PDAL commit SHA1
 		public string FullVersion

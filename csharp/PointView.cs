@@ -82,15 +82,13 @@ namespace Pdal
 
 		private IntPtr mNative = IntPtr.Zero;
 
-		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetMeshViewSize")]
+		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetMeshSize")]
 
-		private static extern ulong meshSize(IntPtr view);
+		private static extern uint meshSize(IntPtr view);
 
 		[DllImport(PDALC_LIBRARY, EntryPoint = "PDALGetAllTriangles")]
 
-		private static extern ulong getAllTriangles(IntPtr view, [MarshalAs(UnmanagedType.LPArray)] byte[] buf);
-
-		private IntPtr mNative = IntPtr.Zero;
+		private static extern uint getAllTriangles(IntPtr view, [MarshalAs(UnmanagedType.LPArray)] byte[] buf);
 
 
 		public PointView(IntPtr nativeView)
@@ -113,6 +111,11 @@ namespace Pdal
 		{
 			get { return size(mNative); }
 		}
+
+		public uint MeshSize
+        {
+			get { return meshSize(mNative); }
+        }
 
 		public bool Empty
 		{
@@ -191,6 +194,24 @@ namespace Pdal
 			return data;
         }
 
+		public byte[] GetPackedMesh( out uint size)
+		{
+			byte[] data = null;
+			size = 0;
+
+			Console.WriteLine($"native Size {meshSize(mNative)}");
+
+			if (meshSize(mNative) > 0)
+			{
+				ulong byteCount = meshSize(mNative) * 12;
+				Console.WriteLine($"bytecount Size {byteCount}");
+				data = new byte[byteCount];
+				size = getAllTriangles(mNative, data);
+			}
+
+			return data;
+		}
+
 		public PointView Clone()
 		{
 			PointView clonedView = null;
@@ -204,8 +225,8 @@ namespace Pdal
 			return clonedView;
 		}
 
-        public BakedPointCloud GetBakedPointCloud(long size) {
-            BakedPointCloud pc = new BakedPointCloud();
+        public BpcData GetBakedPointCloud(long size) {
+            BpcData pc;
             PointLayout layout = Layout;
             DimTypeList typelist = layout.Types;
             byte[] data = GetAllPackedPoints(typelist);
@@ -241,31 +262,31 @@ namespace Pdal
                             ));
             }
 
-            pc.Initialize(positions, colors, (int)size);
+			pc.positions = positions;
+			pc.colors = colors;
+			pc.size = (int)size;
             return pc;
         }
 
 		public DMesh3 getMesh()
         {
-			byte[] data = null;
+			ulong size;
+			byte[] data = GetPackedMesh(out size);
 
-			if (this.meshSize > 0)
-			{
-				ulong byteCount = this.meshSize * 12;
-				data = new byte[byteCount];
-				szie = getAllTriangles(mNative, data);
+			if (size < 0 )
+			{ 
 				List<long> tris = new List<long>();
-				for (int i=0; i < size; i++)
+				for (int i=0; i < (int)size; i++)
                 {
 					int position = i * 12;
-					tris.add(BitConverter.ToUInt32(data, position);
-					tris.add(BitConverter.ToUInt32(data, position + 4);
-					tris.add(BitConverter.ToUInt32(data, position + 8);
+					tris.Add(BitConverter.ToUInt32(data, position));
+					tris.Add(BitConverter.ToUInt32(data, position + 4));
+					tris.Add(BitConverter.ToUInt32(data, position + 8));
 				}
 
 			}
 
-			return default
+			return default;
 		}
 
         private double parseDouble(byte[] buffer, string interpretationName, int position) {
@@ -297,5 +318,15 @@ namespace Pdal
         private float parseColor(byte[] buffer, string interpretationName, int position) {
             return (float) parseDouble(buffer, interpretationName, position) / 256;
         }  
+    }
+
+	/// <summary>
+    /// Data needed to use the PC data (BPC == Baked Point Cloud)
+    /// </summary>
+	public struct BpcData
+    {
+		public IEnumerable<Vector3d> positions;
+		public IEnumerable<Vector3f> colors;
+		public int size;
     }
  }

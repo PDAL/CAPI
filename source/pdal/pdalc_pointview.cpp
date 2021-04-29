@@ -207,16 +207,16 @@ extern "C"
         return size;
     }
 
-    uint64_t PDALGetMeshSize(PDALPointViewPtr view)
+    size_t PDALGetMeshSize(PDALPointViewPtr view)
     {
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
         pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*wrapper)->mesh());
         return mesh && *mesh ? (uint64_t)(*mesh)->size() : 0;
     }
 
-    uint64_t PDALGetAllTriangles(PDALPointViewPtr view, char *buff)
+    size_t PDALGetAllTriangles(PDALPointViewPtr view, char *buff)
     {
-        uint64_t size = 0;
+        size_t size = 0;
 
         if (view && buff)
         {
@@ -229,7 +229,7 @@ extern "C"
                 uint64_t size = 0;
                 for (unsigned idx = 0; idx < (*mesh)->size(); ++idx)
                 {
-                    const Triangle& t = (*(*mesh))[idx];
+                    const Triangle& t = (*mesh).get()[idx];
                     uint32_t a = (uint32_t)t.m_a;
                     std::memcpy(buff, &a, 4);
                     uint32_t b = (uint32_t)t.m_b;

@@ -18,6 +18,8 @@ tests/pdal/test_pdalc_*.c
 .DS_Store
 # Build directory
 /build
+bin/
+obj/
 
 # Prerequisites
 *.d
@@ -28,6 +30,7 @@ tests/pdal/test_pdalc_*.c
 *.o
 *.obj
 *.elf
+*.sln
 
 # Linker output
 *.ilk
