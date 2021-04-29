@@ -213,7 +213,7 @@ extern "C"
         pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*wrapper)->mesh());
         uint64_t idx = 0;
         for (size_t i = 0; i < (*(*mesh)).size(); ++i) {
-            ++idx
+            ++idx;
         }
         return mesh && *mesh ? idx :  static_cast<uint64_t>(101);
     }
