@@ -210,7 +210,7 @@ extern "C"
     uint64_t PDALGetMeshSize(PDALPointViewPtr view)
     {
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-        pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>(wrapper->mesh());
+        pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*wrapper)->mesh());
         return mesh && *mesh ? (uint64_t)(*mesh)->size() : 0;
     }
 
@@ -218,10 +218,10 @@ extern "C"
     {
         uint64_t size = 0;
 
-        if (view && buf)
+        if (view && buff)
         {
             pdal::capi::PointView* capiView = reinterpret_cast<pdal::capi::PointView *>(view);
-            pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>(capiView->mesh());
+            pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*capiView)->mesh());
             
 
             if (*capiView && *mesh)
@@ -229,7 +229,7 @@ extern "C"
                 uint64_t size = 0;
                 for (unsigned idx = 0; idx < (*mesh)->size(); ++idx)
                 {
-                    const Triangle& t = *mesh[idx];
+                    const Triangle& t = (*mesh)[idx];
                     uint32_t a = (uint32_t)t.m_a;
                     std::memcpy(buff, &a, 4);
                     uint32_t b = (uint32_t)t.m_b;
@@ -237,8 +237,8 @@ extern "C"
                     uint32_t c = (uint32_t)t.m_c;
                     std::memcpy(buff + 8, &c,  4);
 
-                    buf += 12;
-                    size += pointSize;
+                    buff += 12;
+                    size += 12;
                 }
             }
         }

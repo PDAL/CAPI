@@ -253,8 +253,12 @@ namespace Pdal
 			{
 				ulong byteCount = this.meshSize * 12;
 				data = new byte[byteCount];
-				getAllTriangles(mNative, dims.Native, data);
+				szie = getAllTriangles(mNative, data);
+				List<long> 
+				for (long i=0; i < size; i++)
+                {
 
+                }
 			}
 
 			return data;

@@ -170,6 +170,28 @@ TEST testPDALGetPointViewSize(void)
     PASS();
 }
 
+TEST testPDALGetMeshSize(void)
+{
+    ASSERT_EQ(0, PDALGetMeshSize(NULL));
+
+    PDALResetPointViewIterator(gPointViewIterator);
+    bool hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
+
+    PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
+
+    // Dispose view before assertion to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+    size_t size = PDALGetMeshSize(view);
+    PDALDisposePointView(view);
+    ASSERT(size == 0);
+
+    
+    PASS();
+}
+
 TEST testPDALIsPointViewEmpty(void)
 {
     ASSERT(PDALIsPointViewEmpty(NULL));
