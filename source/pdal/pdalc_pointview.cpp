@@ -211,7 +211,7 @@ extern "C"
     {
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
         pdal::capi::TriangularMesh* mesh=reinterpret_cast<pdal::capi::TriangularMesh *>((*wrapper)->mesh());
-        std::cout << " Mesh Size : " << std::to_string((*mesh)->size())
+        std::cout << " Mesh Size : " << std::to_string((*mesh)->size());
         return mesh && *mesh ? (*mesh)->size() : 0;
     }
 
