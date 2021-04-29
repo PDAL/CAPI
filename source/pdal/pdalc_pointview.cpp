@@ -227,7 +227,7 @@ extern "C"
 
             if (*capiView && mesh)
             {
-                for (size_t idx = 0; idx < (*mesh)->size(); ++idx)
+                for (size_t idx = 0; idx < (*mesh).size(); ++idx)
                 {
                     const Triangle& t = (*mesh)[idx];
                     uint32_t a = (uint32_t)t.m_a;
