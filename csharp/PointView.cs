@@ -270,7 +270,7 @@ namespace Pdal
 
 		public DMesh3 getMesh()
         {
-			ulong size;
+			uint size;
 			byte[] data = GetPackedMesh(out size);
 
 			if (size < 0 )
