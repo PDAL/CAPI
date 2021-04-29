@@ -247,8 +247,18 @@ namespace Pdal
 
 		public DMesh3 getMesh()
         {
+			byte[] data = null;
 
-        }
+			if (this.meshSize > 0)
+			{
+				ulong byteCount = this.meshSize * 12;
+				data = new byte[byteCount];
+				getAllTriangles(mNative, dims.Native, data);
+
+			}
+
+			return data;
+		}
 
         private double parseDouble(byte[] buffer, string interpretationName, int position) {
             double value = 0;
