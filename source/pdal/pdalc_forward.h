@@ -80,17 +80,17 @@ typedef struct PDALDimType PDALDimType;
 /// A dimension type
 struct PDALDimType
 {
-/// The dimension's identifier
-uint32_t id;
+    /// The dimension's identifier
+    uint32_t id;
 
-/// The dimension's interpretation type
-uint32_t type;
+    /// The dimension's interpretation type
+    uint32_t type;
 
-/// The dimension's scaling factor
-double scale;
+    /// The dimension's scaling factor
+    double scale;
 
-/// The dimension's offset value
-double offset;
+    /// The dimension's offset value
+    double offset;
 };
 
 /// A pointer to a dimension type list
