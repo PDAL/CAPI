@@ -27,85 +27,79 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef PDALC_FORWARD_H
-#define PDALC_FORWARD_H
+#ifndef PDALC_POINTVIEWITERATOR_H
+#define PDALC_POINTVIEWITERATOR_H
 
-#include "pdalc_defines.h"
-
-#ifdef PDALC_BUILD_DLL
-#define PDALC_API PDALC_EXPORT_API
-#elif defined(PDALC_BUILD_STATIC)
-#define PDALC_API PDALC_STATIC_API
-#else
-#define PDALC_API PDALC_IMPORT_API
-#endif
+#include "pdalc_forward.h"
 
 /**
- * @file pdalc_forward.h
- * Forward declarations for the PDAL C API.
+ * @file pdalc_pointviewiterator.h
+ * Functions to inspect the contents of a PDAL point view iterator.
  */
 
 #ifdef __cplusplus
-#include <memory>
-#include <set>
-#include <vector>
+#include <pdal/PointView.hpp>
 
 namespace pdal
 {
-struct DimType;
-class PipelineExecutor;
-class PointView;
-
-using PointViewPtr = std::shared_ptr<PointView>;
-using DimTypeList = std::vector<DimType>;
-
 namespace capi
 {
-class PointViewIterator;
-using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
-using PointView = pdal::PointViewPtr;
-using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
-}
-}
-
-#else
-#include <stdint.h> // for uint64_t
-#endif /* __cplusplus */
-
-typedef struct PDALDimType PDALDimType;
-
-/// A dimension type
-struct PDALDimType
+class PointViewIterator
 {
-/// The dimension's identifier
-uint32_t id;
+public:
+    PointViewIterator(const pdal::PointViewSet& views);
+    bool hasNext() const;
+    const pdal::PointViewPtr next();
+    void reset();
 
-/// The dimension's interpretation type
-uint32_t type;
-
-/// The dimension's scaling factor
-double scale;
-
-/// The dimension's offset value
-double offset;
+private:
+    const pdal::PointViewSet &m_views;
+    pdal::PointViewSet::const_iterator m_itr;
 };
 
-/// A pointer to a dimension type list
-typedef void* PDALDimTypeListPtr;
+extern "C"
+{
+#else
+#include <stdbool.h> // for bool
+#endif /* __cplusplus */
 
-/// A pointer to a pipeline
-typedef void* PDALPipelinePtr;
+/**
+ * Returns whether another point view is available in the provided iterator.
+ *
+ * @param itr A pointer to the point view iterator
+ * @return Whether another point view is available or `false` if `itr` is NULL
+ */
+PDALC_API bool PDALHasNextPointView(PDALPointViewIteratorPtr itr);
 
-/// An index to a point in a list
-typedef uint64_t PDALPointId;
+/**
+ * Returns the next available point view in the provided iterator.
+ *
+ * @note The caller obtains ownership of the data structure pointed by the returned value.
+ * Use PDALDisposePointView to free the point view data structure.
+ *
+ * @param itr A pointer to the point view iterator
+ * @return The next point view in the iterator or NULL if none available
+ */
+PDALC_API PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr);
 
-/// A pointer to a point layout
-typedef void* PDALPointLayoutPtr;
+/**
+ * Resets the provided point view iterator to its starting position.
+ *
+ * @param itr A pointer to the point view iterator
+ */
+PDALC_API void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr);
 
-/// A pointer to point view
-typedef void* PDALPointViewPtr;
+/**
+ * Disposes the provided point view iterator.
+ *
+ * @param itr A pointer to the point view iterator
+ */
+PDALC_API void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr);
 
-/// A pointer to a point view iterator
-typedef void* PDALPointViewIteratorPtr;
+#ifdef __cplusplus
+}
+}
+}
+#endif /* __cplusplus */
 
-#endif /* PDALC_FORWARD_H */
+#endif

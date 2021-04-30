@@ -47,14 +47,14 @@ namespace capi
 class PointViewIterator
 {
 public:
-    PointViewIterator(const pdal::PointViewSet& views);
-    bool hasNext() const;
-    const pdal::PointViewPtr next();
-    void reset();
+PointViewIterator(const pdal::PointViewSet& views);
+bool hasNext() const;
+const pdal::PointViewPtr next();
+void reset();
 
 private:
-    const pdal::PointViewSet &m_views;
-    pdal::PointViewSet::const_iterator m_itr;
+const pdal::PointViewSet &m_views;
+pdal::PointViewSet::const_iterator m_itr;
 };
 
 extern "C"

@@ -39,173 +39,173 @@ namespace capi
 {
 extern "C"
 {
-    void PDALDisposePointView(PDALPointViewPtr view)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+void PDALDisposePointView(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
 
-        if (wrapper)
-        {
-            delete wrapper;
-        }
+    if (wrapper)
+    {
+        delete wrapper;
+    }
+}
+
+int PDALGetPointViewId(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+    return wrapper && *wrapper ? (*wrapper)->id() : 0;
+}
+
+uint64_t PDALGetPointViewSize(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+    return wrapper && *wrapper ? (*wrapper)->size() : 0;
+}
+
+bool PDALIsPointViewEmpty(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+    return !wrapper || !*wrapper || (*wrapper)->empty();
+}
+
+PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+    PDALPointViewPtr ptr = nullptr;
+
+    if (wrapper && *wrapper)
+    {
+        ptr = new pdal::capi::PointView(std::move((*wrapper)->makeNew()));
     }
 
-    int PDALGetPointViewId(PDALPointViewPtr view)
+    return ptr;
+}
+
+size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+    size_t result = 0;
+
+    if (size > 0 && proj)
     {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-
-        return wrapper && *wrapper ? (*wrapper)->id() : 0;
-    }
-
-    uint64_t PDALGetPointViewSize(PDALPointViewPtr view)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-        return wrapper && *wrapper ? (*wrapper)->size() : 0;
-    }
-
-    bool PDALIsPointViewEmpty(PDALPointViewPtr view)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-        return !wrapper || !*wrapper || (*wrapper)->empty();
-    }
-
-    PDALPointViewPtr PDALClonePointView(PDALPointViewPtr view)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-
-        PDALPointViewPtr ptr = nullptr;
+        proj[0] = '\0';
+        proj[size-1] = '\0';
 
         if (wrapper && *wrapper)
         {
-            ptr = new pdal::capi::PointView(std::move((*wrapper)->makeNew()));
+            std::string s = (*wrapper)->spatialReference().getProj4();
+            std::strncpy(proj, s.c_str(), size - 1);
+            result = std::min(s.length(), size);
         }
-
-        return ptr;
     }
 
-    size_t PDALGetPointViewProj4(PDALPointViewPtr view, char *proj, size_t size)
+    return result;
+}
+
+size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+    size_t result = 0;
+
+    if (size > 0 && wkt)
     {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-
-        size_t result = 0;
-
-        if (size > 0 && proj)
-        {
-            proj[0] = '\0';
-            proj[size-1] = '\0';
-
-            if (wrapper && *wrapper)
-            {
-                std::string s = (*wrapper)->spatialReference().getProj4();
-                std::strncpy(proj, s.c_str(), size - 1);
-                result = std::min(s.length(), size);
-            }
-        }
-
-        return result;
-    }
-
-    size_t PDALGetPointViewWkt(PDALPointViewPtr view, char *wkt, size_t size, bool pretty)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-
-        size_t result = 0;
-
-        if (size > 0 && wkt)
-        {
-            wkt[0] = '\0';
-            wkt[size-1] = '\0';
-
-            if (wrapper && *wrapper)
-            {
-                std::string s = (*wrapper)->spatialReference().getWKT();
-
-                if (pretty)
-                {
-                    s = SpatialReference::prettyWkt(s);
-                }
-
-                std::strncpy(wkt, s.c_str(), size - 1);
-                result = std::min(s.length(), size);
-            }
-        }
-
-        return result;
-    }
-
-    PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view)
-    {
-        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
-
-        PDALPointLayoutPtr layout = nullptr;
+        wkt[0] = '\0';
+        wkt[size-1] = '\0';
 
         if (wrapper && *wrapper)
         {
-            layout = (*wrapper)->layout();
-        }
+            std::string s = (*wrapper)->spatialReference().getWKT();
 
-        return layout;
+            if (pretty)
+            {
+                s = SpatialReference::prettyWkt(s);
+            }
+
+            std::strncpy(wkt, s.c_str(), size - 1);
+            result = std::min(s.length(), size);
+        }
     }
 
-    size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf)
+    return result;
+}
+
+PDALPointLayoutPtr PDALGetPointViewLayout(PDALPointViewPtr view)
+{
+    pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+
+    PDALPointLayoutPtr layout = nullptr;
+
+    if (wrapper && *wrapper)
     {
-        size_t size = 0;
+        layout = (*wrapper)->layout();
+    }
 
-        if (view && dims && buf)
+    return layout;
+}
+
+size_t PDALGetPackedPoint(PDALPointViewPtr view, PDALDimTypeListPtr dims, PDALPointId idx, char *buf)
+{
+    size_t size = 0;
+
+    if (view && dims && buf)
+    {
+        pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
+
+        pdal::capi::DimTypeList *capiDims = reinterpret_cast<pdal::capi::DimTypeList *>(dims);
+
+
+        if (*capiView && *capiDims)
         {
-            pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
+            pdal::DimTypeList *list = capiDims->get();
 
-            pdal::capi::DimTypeList *capiDims = reinterpret_cast<pdal::capi::DimTypeList *>(dims);
+            (*capiView)->getPackedPoint(*list, idx, buf);
 
-
-            if (*capiView && *capiDims)
+            for (const auto &dim : *list)
             {
-                pdal::DimTypeList *list = capiDims->get();
+                size += pdal::Dimension::size(dim.m_type);
+            }
+        }
+    }
 
-                (*capiView)->getPackedPoint(*list, idx, buf);
+    return size;
+}
+
+uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf)
+{
+    uint64_t size = 0;
+
+    if (view && dims && buf)
+    {
+        pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
+
+        pdal::capi::DimTypeList *capiDims = reinterpret_cast<pdal::capi::DimTypeList *>(dims);
+
+
+        if (*capiView && *capiDims)
+        {
+            pdal::DimTypeList *list = capiDims->get();
+
+            for (unsigned i = 0; i < (*capiView)->size(); ++i)
+            {
+                size_t pointSize = 0;
+                (*capiView)->getPackedPoint(*list, i, buf);
 
                 for (const auto &dim : *list)
                 {
-                    size += pdal::Dimension::size(dim.m_type);
+                    pointSize += pdal::Dimension::size(dim.m_type);
                 }
+
+                buf += pointSize;
+                size += pointSize;
             }
         }
-
-        return size;
     }
 
-    uint64_t PDALGetAllPackedPoints(PDALPointViewPtr view, PDALDimTypeListPtr dims, char *buf)
-    {
-        uint64_t size = 0;
-
-        if (view && dims && buf)
-        {
-            pdal::capi::PointView *capiView = reinterpret_cast<pdal::capi::PointView *>(view);
-
-            pdal::capi::DimTypeList *capiDims = reinterpret_cast<pdal::capi::DimTypeList *>(dims);
-
-
-            if (*capiView && *capiDims)
-            {
-                pdal::DimTypeList *list = capiDims->get();
-
-                for (unsigned i = 0; i < (*capiView)->size(); ++i)
-                {
-                    size_t pointSize = 0;
-                    (*capiView)->getPackedPoint(*list, i, buf);
-
-                    for (const auto &dim : *list)
-                    {
-                        pointSize += pdal::Dimension::size(dim.m_type);
-                    }
-
-                    buf += pointSize;
-                    size += pointSize;
-                }
-            }
-        }
-
-        return size;
-    }
+    return size;
+}
 }
 }
 }

@@ -27,83 +27,85 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include "pdalc_pointviewiterator.h"
+#ifndef PDALC_FORWARD_H
+#define PDALC_FORWARD_H
+
+#include "pdalc_defines.h"
+
+#ifdef PDALC_BUILD_DLL
+#define PDALC_API PDALC_EXPORT_API
+#elif defined(PDALC_BUILD_STATIC)
+#define PDALC_API PDALC_STATIC_API
+#else
+#define PDALC_API PDALC_IMPORT_API
+#endif
+
+/**
+ * @file pdalc_forward.h
+ * Forward declarations for the PDAL C API.
+ */
+
+#ifdef __cplusplus
+#include <memory>
+#include <set>
+#include <vector>
 
 namespace pdal
 {
+struct DimType;
+class PipelineExecutor;
+class PointView;
+
+using PointViewPtr = std::shared_ptr<PointView>;
+using DimTypeList = std::vector<DimType>;
+
 namespace capi
 {
-PointViewIterator::PointViewIterator(const pdal::PointViewSet& views) :
-m_views(views)
+class PointViewIterator;
+using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
+using PointView = pdal::PointViewPtr;
+using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
+}
+}
+
+#else
+#include <stdint.h> // for uint64_t
+#endif /* __cplusplus */
+
+typedef struct PDALDimType PDALDimType;
+
+/// A dimension type
+struct PDALDimType
 {
-reset();
-}
+    /// The dimension's identifier
+    uint32_t id;
 
-bool PointViewIterator::hasNext() const
-{
-return (m_itr != m_views.cend());
-}
+    /// The dimension's interpretation type
+    uint32_t type;
 
-const pdal::PointViewPtr PointViewIterator::next()
-{
-return hasNext() ? *(m_itr++) : nullptr;
-}
+    /// The dimension's scaling factor
+    double scale;
 
-void PointViewIterator::reset()
-{
-m_itr = m_views.cbegin();
-}
+    /// The dimension's offset value
+    double offset;
+};
 
+/// A pointer to a dimension type list
+typedef void* PDALDimTypeListPtr;
 
-extern "C"
-{
-bool PDALHasNextPointView(PDALPointViewIteratorPtr itr)
-{
-    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-    return ptr && ptr->hasNext();
-}
+/// A pointer to a pipeline
+typedef void* PDALPipelinePtr;
 
-PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr)
-{
-    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-    PDALPointViewPtr view = nullptr;
+/// An index to a point in a list
+typedef uint64_t PDALPointId;
 
-    if (ptr)
-    {
-        pdal::PointViewPtr v = ptr->next();
+/// A pointer to a point layout
+typedef void* PDALPointLayoutPtr;
 
-        if (v)
-        {
-            view = new pdal::PointViewPtr(std::move(v));
-        }
-    }
+/// A pointer to point view
+typedef void* PDALPointViewPtr;
 
-    return view;
-}
+/// A pointer to a point view iterator
+typedef void* PDALPointViewIteratorPtr;
 
-void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr)
-{
-    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-
-    if (ptr)
-    {
-        ptr->reset();
-    }
-}
-
-void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr)
-{
-    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-
-    if (ptr)
-    {
-        delete ptr;
-        ptr = nullptr;
-        itr = nullptr;
-    }
-}
-
-}
-
-}
-}
+#endif /* PDALC_FORWARD_H */
