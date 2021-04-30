@@ -34,74 +34,74 @@ namespace pdal
 namespace capi
 {
 PointViewIterator::PointViewIterator(const pdal::PointViewSet& views) :
-    m_views(views)
+m_views(views)
 {
-    reset();
+reset();
 }
 
 bool PointViewIterator::hasNext() const
 {
-    return (m_itr != m_views.cend());
+return (m_itr != m_views.cend());
 }
 
 const pdal::PointViewPtr PointViewIterator::next()
 {
-    return hasNext() ? *(m_itr++) : nullptr;
+return hasNext() ? *(m_itr++) : nullptr;
 }
 
 void PointViewIterator::reset()
 {
-    m_itr = m_views.cbegin();
+m_itr = m_views.cbegin();
 }
 
 
 extern "C"
 {
-    bool PDALHasNextPointView(PDALPointViewIteratorPtr itr)
-    {
-        auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-        return ptr && ptr->hasNext();
-    }
+bool PDALHasNextPointView(PDALPointViewIteratorPtr itr)
+{
+    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
+    return ptr && ptr->hasNext();
+}
 
-    PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr)
-    {
-        auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-        PDALPointViewPtr view = nullptr;
+PDALPointViewPtr PDALGetNextPointView(PDALPointViewIteratorPtr itr)
+{
+    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
+    PDALPointViewPtr view = nullptr;
 
-        if (ptr)
+    if (ptr)
+    {
+        pdal::PointViewPtr v = ptr->next();
+
+        if (v)
         {
-            pdal::PointViewPtr v = ptr->next();
-
-            if (v)
-            {
-                view = new pdal::PointViewPtr(std::move(v));
-            }
-        }
-
-        return view;
-    }
-
-    void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr)
-    {
-        auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
-
-        if (ptr)
-        {
-            ptr->reset();
+            view = new pdal::PointViewPtr(std::move(v));
         }
     }
 
-    void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr)
-    {
-        auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
+    return view;
+}
 
-        if (ptr)
-        {
-            delete ptr;
-            ptr = nullptr;
-            itr = nullptr;
-        }
+void PDALResetPointViewIterator(PDALPointViewIteratorPtr itr)
+{
+    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
+
+    if (ptr)
+    {
+        ptr->reset();
     }
+}
+
+void PDALDisposePointViewIterator(PDALPointViewIteratorPtr itr)
+{
+    auto ptr = reinterpret_cast<pdal::capi::PointViewIterator *>(itr);
+
+    if (ptr)
+    {
+        delete ptr;
+        ptr = nullptr;
+        itr = nullptr;
+    }
+}
 
 }
 
