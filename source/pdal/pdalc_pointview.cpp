@@ -212,7 +212,8 @@ extern "C"
         pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
         pdal::TriangularMesh* mesh = nullptr;
 
-        if (wrapper && *wrapper) {
+        if (wrapper && *wrapper)
+        {
             mesh=(*wrapper)->mesh();
         }
 
