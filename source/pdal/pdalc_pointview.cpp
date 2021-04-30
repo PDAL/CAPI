@@ -212,7 +212,7 @@ extern "C"
         pdal::capi::PointView* wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
         pdal::TriangularMesh* mesh=(*wrapper)->mesh();
 
-        return mesh ? static_cast<uint64_t>( (*mesh).size()) : 0;
+        return mesh ? static_cast<uint64_t>((*mesh).size()) : 0;
     }
 
     uint64_t PDALGetAllTriangles(PDALPointViewPtr view, char *buff)
