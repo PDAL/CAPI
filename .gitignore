@@ -28,6 +28,9 @@ tests/pdal/test_pdalc_*.c
 *.o
 *.obj
 *.elf
+*.sln
+bin/
+obj/
 
 # Linker output
 *.ilk
