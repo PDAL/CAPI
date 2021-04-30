@@ -223,7 +223,7 @@ extern "C"
         {
             pdal::capi::PointView* capiView = reinterpret_cast<pdal::capi::PointView *>(view);
             pdal::TriangularMesh* mesh=(*capiView)->mesh();
-            
+
 
             if (*capiView && mesh)
             {
