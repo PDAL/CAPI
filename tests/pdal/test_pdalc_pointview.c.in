@@ -170,6 +170,29 @@ TEST testPDALGetPointViewSize(void)
     PASS();
 }
 
+TEST testPDALGetMeshSize(void)
+{
+    uint64_t size = PDALGetMeshSize(NULL);
+    ASSERT(size == 0);
+
+    PDALResetPointViewIterator(gPointViewIterator);
+    bool hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
+
+    PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
+
+    // Dispose view before assertion to avoid CWE-404
+    // See http://cwe.mitre.org/data/definitions/404.html
+    // See https://scan4.coverity.com/doc/en/cov_checker_ref.html#static_checker_RESOURCE_LEAK
+    size = PDALGetMeshSize(view);
+    PDALDisposePointView(view);
+    ASSERT(size == 2114);
+
+    
+    PASS();
+}
+
 TEST testPDALIsPointViewEmpty(void)
 {
     ASSERT(PDALIsPointViewEmpty(NULL));
@@ -653,6 +676,39 @@ TEST testPDALGetAllPackedPoints(void)
     PASS();
 }
 
+TEST testPDALGetAllTriangles(void)
+{
+    PDALResetPointViewIterator(gPointViewIterator);
+    bool hasNext = PDALHasNextPointView(gPointViewIterator);
+    ASSERT(hasNext);
+
+    PDALPointViewPtr view = PDALGetNextPointView(gPointViewIterator);
+    ASSERT(view);
+
+    uint64_t numPoints = PDALGetMeshSize(view);
+
+    if (numPoints == 0)
+    {
+        PDALDisposePointView(view);
+        FAILm("PDALGetMeshSize returned tri size of zero for a valid view");
+    }
+
+    char *actualPoints = calloc(numPoints, 12);
+
+    if (!actualPoints)
+    {
+        PDALDisposePointView(view);
+        FAILm("Could not allocate packed point list buffer");
+    }
+
+    uint64_t actualSize = PDALGetAllTriangles(view, actualPoints);
+    ASSERT_EQ(actualSize, 25368);
+
+    free(actualPoints);
+    PDALDisposePointView(view);
+    PASS();
+}
+
 GREATEST_SUITE(test_pdalc_pointview)
 {
     SET_SETUP(setup_test_pdalc_pointview, NULL);
@@ -660,6 +716,7 @@ GREATEST_SUITE(test_pdalc_pointview)
 
     RUN_TEST(testPDALGetPointViewId);
     RUN_TEST(testPDALGetPointViewSize);
+    RUN_TEST(testPDALGetMeshSize);
     RUN_TEST(testPDALIsPointViewEmpty);
     RUN_TEST(testPDALClonePointView);
     RUN_TEST(testPDALGetPointViewProj4);
@@ -667,6 +724,7 @@ GREATEST_SUITE(test_pdalc_pointview)
     RUN_TEST(testPDALGetPointViewLayout);
     RUN_TEST(testPDALGetPackedPoint);
     RUN_TEST(testPDALGetAllPackedPoints);
+    RUN_TEST(testPDALGetAllTriangles);
 
     SET_SETUP(NULL, NULL);
     SET_TEARDOWN(NULL, NULL);

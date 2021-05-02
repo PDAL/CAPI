@@ -41,6 +41,74 @@ An example of the use of the API is given in the `csharp` folder which contains 
 
 NOTE - these scripts are provided for information only as examples and are not supported in any way!
 
+## Example C# Program
+
+``` c#
+using System;
+using System.Collections.Generic;
+using Pdal;
+using Newtonsoft.Json;
+using g3;
+
+namespace pdal_mesh
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello World!");
+            Config pdal = new Config();
+            Console.WriteLine(pdal.Version);
+
+            List<object> pipe = new List<object>();
+            pipe.Add(".../CAPI/tests/data/las/1.2-with-color.las");
+            pipe.Add(new
+            {
+                type = "filters.splitter",
+                length = 1000
+            });
+            pipe.Add(new
+            {
+                type = "filters.delaunay"
+            });
+
+            string json = JsonConvert.SerializeObject(pipe.ToArray());
+
+            Pipeline pl = new Pipeline(json);
+
+            long count = pl.Execute();
+
+            Console.WriteLine($"Point Count is {count}");
+
+            using (PointViewIterator views = pl.Views) {
+                views.Reset();
+
+                while (views.HasNext())
+                {
+                    PointView view = views.Next;
+                    if (view != null)
+                    {
+                        Console.WriteLine($"Point Count is {view.Size}");
+                        Console.WriteLine($"Triangle Count is {view.MeshSize}");
+
+                        BpcData pc = view.GetBakedPointCloud();
+
+                        DMesh3 mesh = view.getMesh();
+
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+This takes a LAS file, splits the file into tiles and then creates a Delaunay Triangulation (i.e. Mesh) for each one.
+
+This code uses the sample bindings as-is and has a dependency on [Geometry3Sharp](https://github.com/gradientspace/geometry3Sharp) only.
+
+Note that `BcpData` is a custom data structure that holds the Point Cloud in a form suitable to create a [Baked PointCloud](https://medium.com/realities-io/point-cloud-rendering-7bd83c6220c8) suitable for rendering as a VFX graph in Unity. This is an efficient way to display point cloud data in VR and I have used it successfully with point clouds of 10 million points. 
+
 # For Developers
 
 ## Build on Windows

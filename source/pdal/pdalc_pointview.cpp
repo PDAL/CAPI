@@ -206,6 +206,51 @@ extern "C"
 
         return size;
     }
+
+    uint64_t PDALGetMeshSize(PDALPointViewPtr view)
+    {
+        pdal::capi::PointView *wrapper = reinterpret_cast<pdal::capi::PointView *>(view);
+        pdal::TriangularMesh* mesh = nullptr;
+
+        if (wrapper && *wrapper)
+        {
+            mesh=(*wrapper)->mesh();
+        }
+
+        return mesh ? static_cast<uint64_t>((*mesh).size()) : 0;
+    }
+
+    uint64_t PDALGetAllTriangles(PDALPointViewPtr view, char *buff)
+    {
+        size_t size = 0;
+
+        if (view && buff)
+        {
+            pdal::capi::PointView* capiView = reinterpret_cast<pdal::capi::PointView *>(view);
+            pdal::TriangularMesh* mesh=(*capiView)->mesh();
+
+
+            if (*capiView && mesh)
+            {
+                for (size_t idx = 0; idx < (*mesh).size(); ++idx)
+                {
+                    const Triangle& t = (*mesh)[idx];
+                    uint32_t a = (uint32_t)t.m_a;
+                    std::memcpy(buff, &a, 4);
+                    uint32_t b = (uint32_t)t.m_b;
+                    std::memcpy(buff + 4, &b, 4);
+                    uint32_t c = (uint32_t)t.m_c;
+                    std::memcpy(buff + 8, &c,  4);
+
+                    buff += 12;
+                    size += 12;
+                }
+            }
+        }
+
+        return static_cast<uint64_t>(size);
+    }
+
 }
 }
 }
