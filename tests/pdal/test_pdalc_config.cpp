@@ -32,7 +32,6 @@
 #include <assert.h>
 
 #include <pdal/pdalc_config.h>
-#include <pdal/gitsha.h>
 #include <pdal/pdal_features.hpp>
 
 #include "greatest.h"
@@ -41,16 +40,16 @@ SUITE(test_pdalc_config);
 
 TEST testPDALGetSetGdalDataPath(void)
 {
-    size_t size = PDALGetGdalDataPath(NULL, 1024);
+    size_t size = pdal::capi::PDALGetGdalDataPath(NULL, 1024);
     ASSERT_EQ(0, size);
 
     char *original = getenv("GDAL_DATA");
     char path[1024];
 
-    size = PDALGetGdalDataPath(path, 0);
+    size = pdal::capi::PDALGetGdalDataPath(path, 0);
     ASSERT_EQ(0, size);
 
-    size = PDALGetGdalDataPath(path, 1024);
+    size = pdal::capi::PDALGetGdalDataPath(path, 1024);
 
     if (original)
     {
@@ -63,28 +62,28 @@ TEST testPDALGetSetGdalDataPath(void)
     }
 
     const char *expected = "An arbitrary string set as the GDAL data path";
-    PDALSetGdalDataPath(expected);
-    size = PDALGetGdalDataPath(path, 1024);
+    pdal::capi::PDALSetGdalDataPath(expected);
+    size = pdal::capi::PDALGetGdalDataPath(path, 1024);
     ASSERT_STR_EQ(expected, path);
     ASSERT_EQ(size, strlen(path));
 
-    PDALSetGdalDataPath(original);
+    pdal::capi::PDALSetGdalDataPath(original);
 
     PASS();
 }
 
 TEST testPDALGetSetProj4DataPath(void)
 {
-    size_t size = PDALGetProj4DataPath(NULL, 1024);
+    size_t size = pdal::capi::PDALGetProj4DataPath(NULL, 1024);
     ASSERT_EQ(0, size);
 
     char *original = getenv("PROJ_LIB");
     char path[1024];
 
-    size = PDALGetProj4DataPath(path, 0);
+    size = pdal::capi::PDALGetProj4DataPath(path, 0);
     ASSERT_EQ(0, size);
 
-    size = PDALGetProj4DataPath(path, 1024);
+    size = pdal::capi::PDALGetProj4DataPath(path, 1024);
 
     if (original)
     {
@@ -97,37 +96,33 @@ TEST testPDALGetSetProj4DataPath(void)
     }
 
     const char *expected = "An arbitrary string set as the proj4 data path";
-    PDALSetProj4DataPath(expected);
-    size = PDALGetProj4DataPath(path, 1024);
+    pdal::capi::PDALSetProj4DataPath(expected);
+    size = pdal::capi::PDALGetProj4DataPath(path, 1024);
     ASSERT_STR_EQ(expected, path);
     ASSERT_EQ(size, strlen(path));
 
-    PDALSetProj4DataPath(original);
+    pdal::capi::PDALSetProj4DataPath(original);
 
     PASS();
 }
 
 TEST testPDALVersionInfo(void)
 {
-    int versionInteger = PDALVersionInteger();
-    ASSERT_EQ(PDAL_VERSION_INTEGER, versionInteger);
 
-    int major = PDALVersionMajor();
+    int major = pdal::capi::PDALVersionMajor();
     ASSERT_EQ(PDAL_VERSION_MAJOR, major);
 
-    int minor = PDALVersionMinor();
+    int minor = pdal::capi::PDALVersionMinor();
     ASSERT_EQ(PDAL_VERSION_MINOR, minor);
 
-    int patch = PDALVersionPatch();
+    int patch = pdal::capi::PDALVersionPatch();
     ASSERT_EQ(PDAL_VERSION_PATCH, patch);
-
-    ASSERT_EQ(major*10000 + minor*100 + patch, versionInteger);
 
     char expected[64];
     sprintf(expected, "%d.%d.%d", major, minor, patch);
 
     char version[64];
-    size_t size = PDALVersionString(version, 64);
+    size_t size = pdal::capi::PDALVersionString(version, 64);
     ASSERT(size > 0 && size <= 64);
     ASSERT(version[0]);
     ASSERT_STR_EQ(expected, version);
@@ -139,7 +134,7 @@ TEST testPDALVersionInfo(void)
 #endif
 
     char sha1[64];
-    size = PDALSha1(sha1, 64);
+    size = pdal::capi::PDALSha1(sha1, 64);
     ASSERT(size > 0 && size <= 64);
     ASSERT(sha1[0]);
 
@@ -152,7 +147,7 @@ TEST testPDALVersionInfo(void)
     sprintf(expected + strlen(version), " (git-version: %s)", sha1);
 
     char fullVersion[64];
-    size = PDALFullVersionString(fullVersion, 64);
+    size = pdal::capi::PDALFullVersionString(fullVersion, 64);
     ASSERT(size > 0 && size <= 64);
     ASSERT(fullVersion[0]);
     ASSERT_STR_EQ(expected, fullVersion);
@@ -163,7 +158,7 @@ TEST testPDALVersionInfo(void)
 TEST testPDALDebugInformation(void)
 {
     char info[1024];
-    size_t size = PDALDebugInformation(info, 1024);
+    size_t size = pdal::capi::PDALDebugInformation(info, 1024);
     ASSERT(size > 0 && size <= 1024);
     ASSERT(info[0]);
     PASS();
