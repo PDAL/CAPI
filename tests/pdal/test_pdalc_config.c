@@ -32,7 +32,6 @@
 #include <assert.h>
 
 #include <pdal/pdalc_config.h>
-#include <pdal/gitsha.h>
 #include <pdal/pdal_features.hpp>
 
 #include "greatest.h"
@@ -109,8 +108,6 @@ TEST testPDALGetSetProj4DataPath(void)
 
 TEST testPDALVersionInfo(void)
 {
-    int versionInteger = PDALVersionInteger();
-    ASSERT_EQ(PDAL_VERSION_INTEGER, versionInteger);
 
     int major = PDALVersionMajor();
     ASSERT_EQ(PDAL_VERSION_MAJOR, major);
@@ -120,8 +117,6 @@ TEST testPDALVersionInfo(void)
 
     int patch = PDALVersionPatch();
     ASSERT_EQ(PDAL_VERSION_PATCH, patch);
-
-    ASSERT_EQ(major*10000 + minor*100 + patch, versionInteger);
 
     char expected[64];
     sprintf(expected, "%d.%d.%d", major, minor, patch);
