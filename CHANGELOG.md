@@ -1,3 +1,10 @@
+# Version 2.1.1
+
+Changes to allow compilation with PDAL 2.4.0
+
+- remove gitsha.h that has been removed from PDAL
+- remove the mixed c / cpp calls in the tests
+
 # Version 2.1.0
 
 This version adds
