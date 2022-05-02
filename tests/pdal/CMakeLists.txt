@@ -6,15 +6,15 @@ set(CONFIGS )
 
 IF (CONDA_BUILD)
 	set(SOURCES
-		main_conda
-		test_pdalc_config
-		test_pdalc_utils
+		main_conda.c
+		test_pdalc_config.c
+		test_pdalc_utils.c
 	)
 ELSE()
 	set(SOURCES
-		main
-		test_pdalc_config
-		test_pdalc_utils
+		main.c
+		test_pdalc_config.c
+		test_pdalc_utils.c
 	)
 ENDIF()
 
