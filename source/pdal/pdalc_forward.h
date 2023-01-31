@@ -68,15 +68,6 @@ using PointView = pdal::PointViewPtr;
 using TriangularMesh = pdal::MeshPtr;
 using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
 
-struct Pipeline {
-    public:
-
-        std::unique_ptr<pdal::PipelineManager> manager = std::make_unique<pdal::PipelineManager>();
-
-        bool m_executed = false;
-        std::stringstream logStream;
-        pdal::LogLevel logLevel;
-    };
 }
 }
 

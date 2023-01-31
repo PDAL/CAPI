@@ -32,6 +32,7 @@
 
 #include "pdalc_forward.h"
 
+
 /**
  * @file pdalc_pipeline.h
  * Functions to launch and inspect the results of a PDAL pipeline.
@@ -45,6 +46,7 @@ namespace capi
 {
 extern "C"
 {
+
 #else
 #include <stdbool.h> // for bool
 #include <stddef.h> // for size_t
@@ -157,9 +159,6 @@ PDALC_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 #ifdef __cplusplus
 
 } /* extern C */
-
-
-
 } /* capi*/
 } /* pdal*/
 #endif /* _cplusplus */

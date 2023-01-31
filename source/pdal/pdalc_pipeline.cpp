@@ -44,8 +44,19 @@ namespace pdal
 {
 namespace capi
 {
+
 extern "C"
 {
+    struct Pipeline {
+        public:
+
+            std::unique_ptr<pdal::PipelineManager> manager = std::make_unique<pdal::PipelineManager>();
+
+            bool m_executed = false;
+            std::stringstream logStream;
+            pdal::LogLevel logLevel;
+    };
+
     PDALPipelinePtr PDALCreatePipeline(const char* json)
     {
         PDALPipelinePtr pipeline = new Pipeline();
