@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
+ * Copyright (c) 2019, Simverge Software LLC & Runette Software. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following
@@ -156,8 +156,11 @@ PDALC_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 
-}
-}
-}
+} /* extern C */
+
+
+
+} /* capi*/
+} /* pdal*/
 #endif /* _cplusplus */
 #endif /* PDALC_PIPELINE_H */

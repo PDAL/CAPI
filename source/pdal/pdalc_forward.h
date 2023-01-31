@@ -53,7 +53,7 @@
 namespace pdal
 {
 struct DimType;
-class PipelineExecutor;
+class PipelineManager;
 class PointView;
 class TriangularMesh;
 
@@ -64,10 +64,19 @@ using MeshPtr = std::shared_ptr<TriangularMesh>;
 namespace capi
 {
 class PointViewIterator;
-using Pipeline = std::unique_ptr<pdal::PipelineExecutor>;
 using PointView = pdal::PointViewPtr;
 using TriangularMesh = pdal::MeshPtr;
 using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
+
+struct Pipeline {
+    public:
+
+        std::unique_ptr<pdal::PipelineManager> manager = std::make_unique<pdal::PipelineManager>();
+
+        bool m_executed = false;
+        std::stringstream logStream;
+        pdal::LogLevel logLevel;
+    };
 }
 }
 

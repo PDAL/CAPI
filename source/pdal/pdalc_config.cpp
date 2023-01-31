@@ -27,6 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+#define _CRT_SECURE_NO_WARNINGS
 #include "pdalc_config.h"
 
 #include <cstdlib>
@@ -35,6 +36,8 @@
 
 #include <pdal/pdal_config.hpp>
 #include <pdal/util/Utils.hpp>
+
+
 
 namespace pdal
 {
