@@ -140,7 +140,7 @@ PDALC_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
  * Executes a pipeline as a streamable pipeline. Will run as non-streamed pipeline if the pipeline is not streamable.
  *
  * @param pipeline The pipeline
- * @return The total number of points produced by the pipeline
+ * @return true for success
  */
 PDALC_API bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline);
 
