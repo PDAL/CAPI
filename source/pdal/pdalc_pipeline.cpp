@@ -46,13 +46,14 @@ namespace capi
 
 extern "C"
 {
-    struct Pipeline {
-        public:
+    struct Pipeline
+    {
+    public:
 
-            PipelineManagerPtr manager = std::make_unique<PipelineManager>();
+        PipelineManagerPtr manager = std::make_unique<PipelineManager>();
 
-            bool m_executed = false;
-            std::stringstream logStream;
+        bool m_executed = false;
+        std::stringstream logStream;
     };
 
     PDALPipelinePtr PDALCreatePipeline(const char* json)
@@ -113,9 +114,9 @@ extern "C"
 
             try
             {
-                if ( ! ptr->m_executed)
+                if (! ptr->m_executed)
                     throw pdal_error("Pipeline has not been executed!");
-                
+
                 std::stringstream strm;
                 pdal::PipelineWriter::writePipeline(ptr->manager->getStage(), strm);
                 std::strncpy(buffer, strm.str().c_str(), size - 1);
@@ -142,9 +143,9 @@ extern "C"
 
             try
             {
-                if ( ! ptr->m_executed)
+                if (! ptr->m_executed)
                     throw pdal_error("Pipeline has not been executed!");
-                
+
                 std::stringstream strm;
                 MetadataNode root = ptr->manager->getMetadata().clone("metadata");
                 pdal::Utils::toJSON(root, strm);
@@ -217,8 +218,8 @@ extern "C"
     {
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
 
-        try 
-        { 
+        try
+        {
             if (level < 0 || level > 8)
                 throw pdal_error("log level must be between 0 and 8!");
 
@@ -227,7 +228,7 @@ extern "C"
         }
         catch (const std::exception &e)
         {
-        printf("Found error while setting log level: %s\n", e.what());
+            printf("Found error while setting log level: %s\n", e.what());
         }
 
     }
@@ -237,13 +238,15 @@ extern "C"
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
         try
         {
-            return (ptr) 
-                ? static_cast<int>(
-                    ptr->manager->log()->getLevel()
-                ) : 0;
+            return (ptr)
+                   ? static_cast<int>(
+                       ptr->manager->log()->getLevel()
+                   ) : 0;
         }
         catch (const std::exception &e)
-        {printf("Found error while getting log level: %s\n", e.what()); }
+        {
+            printf("Found error while getting log level: %s\n", e.what());
+        }
         return 0;
     }
 
