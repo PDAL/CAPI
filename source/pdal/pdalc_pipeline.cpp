@@ -37,7 +37,6 @@
 #include <pdal/PipelineWriter.hpp>
 #include <pdal/Stage.hpp>
 
-// TODO Address cause of std::min problems. See https://github.com/PDAL/CAPI/issues/4
 #undef min
 
 namespace pdal
@@ -50,57 +49,55 @@ extern "C"
     struct Pipeline {
         public:
 
-            std::unique_ptr<pdal::PipelineManager> manager = std::make_unique<pdal::PipelineManager>();
+            PipelineManagerPtr manager = std::make_unique<PipelineManager>();
 
             bool m_executed = false;
             std::stringstream logStream;
-            pdal::LogLevel logLevel;
     };
 
     PDALPipelinePtr PDALCreatePipeline(const char* json)
     {
-        PDALPipelinePtr pipeline = new Pipeline();
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-        PipelineManager *manager = ptr->manager.get();
+        Pipeline* pipeline = new Pipeline();
         if (json && std::strlen(json) > 0)
         {
             try
             {
-                LogPtr log(Log::makeLog("capi pipeline", &ptr->logStream));
-                manager->setLog(log);
+                std::stringstream* s = &pipeline->logStream;
+                LogPtr lptr(pdal::Log::makeLog("pdal capi", s, true));
+                pipeline->manager->setLog(lptr);
 
                 std::stringstream strm;
                 strm << json;
-                manager->readPipeline(strm);
+                pipeline->manager->readPipeline(strm);
             }
             catch (const std::exception &e)
             {
                 printf("Could not create pipeline: %s\n%s\n", e.what(), json);
+                delete pipeline;
+                return nullptr;
             }
 
-            if (manager)
+            try
             {
-                try
-                {
-                    manager->prepare();
-                }
-                catch (const std::exception &e)
-                {
-                    printf("Error while validating pipeline: %s\n%s\n", e.what(), json);
-                }
+                pipeline->manager->prepare();
             }
-        }
+            catch (const std::exception &e)
+            {
+                printf("Error while validating pipeline: %s\n%s\n", e.what(), json);
+                delete pipeline;
+                return nullptr;
+            }
 
-        return pipeline;
+            return pipeline;
+        }
+        return nullptr;
     }
 
     void PDALDisposePipeline(PDALPipelinePtr pipeline)
     {
         if (pipeline)
         {
-            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            ptr->manager.reset();
-            delete ptr;
+            delete pipeline;
         }
     }
 
@@ -111,58 +108,54 @@ extern "C"
         if (pipeline && buffer && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            PipelineManager *manager = ptr->manager.get();
             buffer[0] =  '\0';
             buffer[size - 1] = '\0';
 
-            if (manager)
+            try
             {
-                try
-                {
-                    std::stringstream strm;
-                    pdal::PipelineWriter::writePipeline(manager->getStage(), strm);
-                    std::strncpy(buffer, strm.str().c_str(), size - 1);
-                    result = std::min(strm.str().length(), size);
-                }
-                catch (const std::exception &e)
-                {
-                    printf("Found error while retrieving pipeline's string representation: %s\n", e.what());
-                }
+                if ( ! ptr->m_executed)
+                    throw pdal_error("Pipeline has not been executed!");
+                
+                std::stringstream strm;
+                pdal::PipelineWriter::writePipeline(ptr->manager->getStage(), strm);
+                std::strncpy(buffer, strm.str().c_str(), size - 1);
+                result = std::min(strm.str().length(), size);
             }
-
+            catch (const std::exception &e)
+            {
+                printf("Found error while retrieving pipeline's string representation: %s\n", e.what());
+            }
         }
-
         return result;
     }
 
     size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
     {
+        std::cout << "get metadata starts"<< std::endl;
         size_t result = 0;
 
         if (pipeline && metadata && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            PipelineManager *manager = ptr->manager.get();
             metadata[0] =  '\0';
             metadata[size - 1] = '\0';
 
-            if (manager)
+            try
             {
-                try
-                {
-                    std::stringstream strm;
-                    MetadataNode root = manager->getMetadata().clone("metadata");
-                    pdal::Utils::toJSON(root, strm);
-                    std::strncpy(metadata, strm.str().c_str(), size);
-                    result = std::min(strm.str().length(), size);
-                }
-                catch (const std::exception &e)
-                {
-                    printf("Found error while retrieving pipeline's metadata: %s\n", e.what());
-                }
+                if ( ! ptr->m_executed)
+                    throw pdal_error("Pipeline has not been executed!");
+                
+                std::stringstream strm;
+                MetadataNode root = ptr->manager->getMetadata().clone("metadata");
+                pdal::Utils::toJSON(root, strm);
+                std::strncpy(metadata, strm.str().c_str(), size);
+                result = std::min(strm.str().length(), size);
+            }
+            catch (const std::exception &e)
+            {
+                printf("Found error while retrieving pipeline's metadata: %s\n", e.what());
             }
         }
-
         return result;
     }
 
@@ -173,27 +166,25 @@ extern "C"
         if (pipeline && schema && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            PipelineManager *manager = ptr->manager.get();
+
             schema[0] =  '\0';
             schema[size - 1] = '\0';
 
-            if (manager)
+            try
             {
-                try
-                {
-                    std::stringstream strm;
-                    MetadataNode root = manager->pointTable().layout()->toMetadata().clone("schema");
-                    pdal::Utils::toJSON(root, strm);
-                    std::strncpy(schema, strm.str().c_str(), size);
-                    result = std::min(strm.str().length(), size);
-                }
-                catch (const std::exception &e)
-                {
-                    printf("Found error while retrieving pipeline's schema: %s\n", e.what());
-                }
+                std::stringstream strm;
+                MetadataNode meta = ptr->manager->pointTable().layout()->toMetadata();
+                MetadataNode root = meta.clone("schema");
+                pdal::Utils::toJSON(root, strm);
+                std::strncpy(schema, strm.str().c_str(), size);
+                result = std::min(strm.str().length(), size);
             }
-        }
+            catch (const std::exception &e)
+            {
+                printf("Found error while retrieving pipeline's schema: %s\n", e.what());
+            }
 
+        }
         return result;
     }
 
@@ -204,22 +195,18 @@ extern "C"
         if (pipeline && log && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            PipelineManager *manager = ptr->manager.get();
             log[0] =  '\0';
             log[size - 1] = '\0';
 
-            if (manager)
+            try
             {
-                try
-                {
-                    std::string s = ptr->logStream.str();
-                    std::strncpy(log, s.c_str(), size);
-                    result = std::min(s.length(), size);
-                }
-                catch (const std::exception &e)
-                {
-                    printf("Found error while retrieving pipeline's log: %s\n", e.what());
-                }
+                std::string s = ptr->logStream.str();
+                std::strncpy(log, s.c_str(), size);
+                result = std::min(s.length(), size);
+            }
+            catch (const std::exception &e)
+            {
+                printf("Found error while retrieving pipeline's log: %s\n", e.what());
             }
         }
 
@@ -229,16 +216,14 @@ extern "C"
     void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level)
     {
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-        PipelineManager *manager = ptr->manager.get();
 
         try 
         { 
             if (level < 0 || level > 8)
                 throw pdal_error("log level must be between 0 and 8!");
 
-            ptr->logLevel = static_cast<pdal::LogLevel>(level);
-            pdal::LogPtr lptr = manager->log();
-            lptr->setLevel(ptr->logLevel);
+            pdal::LogPtr lptr = ptr->manager->log();
+            lptr->setLevel(static_cast<pdal::LogLevel>(level));
         }
         catch (const std::exception &e)
         {
@@ -250,10 +235,16 @@ extern "C"
     int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline)
     {
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-        return (ptr && ptr->manager.get()) 
-        ? static_cast<int>(
-            ptr->manager.get()->log()->getLevel()
-         ) : 0;
+        try
+        {
+            return (ptr) 
+                ? static_cast<int>(
+                    ptr->manager->log()->getLevel()
+                ) : 0;
+        }
+        catch (const std::exception &e)
+        {printf("Found error while getting log level: %s\n", e.what()); }
+        return 0;
     }
 
     int64_t PDALExecutePipeline(PDALPipelinePtr pipeline)
@@ -265,48 +256,47 @@ extern "C"
         {
             try
             {
-                result = ptr->manager.get()->execute();
+                result = ptr->manager->execute();
+                ptr->m_executed = true;
             }
             catch (const std::exception &e)
             {
                 printf("Found error while executing pipeline: %s", e.what());
             }
         }
-
         return result;
     }
 
     bool PDALValidatePipeline(PDALPipelinePtr pipeline)
     {
-        int64_t result = 0;
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
 
         if (ptr)
         {
             try
             {
-                ptr->manager.get()->prepare();
+                ptr->manager->prepare();
+                return true;
             }
             catch (const std::exception &e)
             {
                 printf("Found error while validating pipeline: %s", e.what());
+                return false;
             }
         }
-
-        return result;
+        return false;
     }
 
     PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline)
     {
         Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-        PipelineManager *manager = ptr->manager.get();
         pdal::capi::PointViewIterator *views = nullptr;
 
         if (ptr)
         {
             try
             {
-                views = new pdal::capi::PointViewIterator(manager->views());
+                views = new pdal::capi::PointViewIterator(ptr->manager->views());
             }
             catch (const std::exception &e)
             {
