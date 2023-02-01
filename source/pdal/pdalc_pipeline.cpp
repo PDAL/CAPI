@@ -36,6 +36,7 @@
 #include <pdal/util/Utils.hpp>
 #include <pdal/PipelineWriter.hpp>
 #include <pdal/Stage.hpp>
+#include <pdal/pdal_types.hpp>
 
 #undef min
 
@@ -270,6 +271,40 @@ extern "C"
         }
         return result;
     }
+
+    bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline)
+    {
+        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+
+        if (ptr)
+        {
+            try
+            {
+                PipelineManager::ExecResult exec = ptr->manager->execute(ExecMode::Stream);
+                ptr->m_executed = true;
+                return true;
+            }
+            catch (const std::exception &e)
+            {
+                printf("Found error while executing pipeline: %s", e.what());
+                return false;
+            }
+        }
+        return false;
+    }
+
+    bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline)
+    {
+        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+
+        if (ptr)
+        {
+            return ptr->manager->pipelineStreamable();
+        }
+        return false;
+    }
+
+
 
     bool PDALValidatePipeline(PDALPipelinePtr pipeline)
     {

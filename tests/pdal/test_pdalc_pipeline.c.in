@@ -344,6 +344,31 @@ TEST testPDALExecutePipeline(void)
     PASS();
 }
 
+TEST testPDALExecutePipelineStream(void)
+{
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
+
+    bool isStreamable = PDALPipelineIsStreamable(pipeline);
+
+    ASSERT_EQ(isStreamable, true);
+
+    bool result = PDALExecutePipelineAsStream(pipeline);
+
+    ASSERT_EQ(result, true);
+
+    result = PDALExecutePipelineAsStream(NULL);
+
+    ASSERT_EQ(result, false);
+
+    isStreamable = PDALPipelineIsStreamable(NULL);
+
+    ASSERT_EQ(isStreamable, false);
+
+    PDALDisposePipeline(pipeline);
+    PASS();
+}
+
 TEST testPDALValidatePipeline(void)
 {
     bool valid = PDALValidatePipeline(NULL);
@@ -369,6 +394,7 @@ GREATEST_SUITE(test_pdalc_pipeline)
 
     RUN_TEST(testPDALCreateAndDisposePipeline);
     RUN_TEST(testPDALExecutePipeline);
+    RUN_TEST(testPDALExecutePipelineStream);
     RUN_TEST(testPDALGetSetPipelineLog);
     RUN_TEST(testPDALGetPipelineAsString);
     RUN_TEST(testPDALGetPipelineMetadata);

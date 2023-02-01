@@ -137,6 +137,22 @@ PDALC_API int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline);
 PDALC_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
 
 /**
+ * Executes a pipeline as a streamable pipeline. Will run as non-streamed pipeline if the pipeline is not streamable.
+ *
+ * @param pipeline The pipeline
+ * @return The total number of points produced by the pipeline
+ */
+PDALC_API bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline);
+
+/**
+ * Determines if a pipeline is streamable
+ *
+ * @param pipeline The pipeline
+ * @return Whether the pipeline is streamable
+ */
+PDALC_API bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline);
+
+/**
  * Validates a pipeline.
  *
  * @param pipeline The pipeline
