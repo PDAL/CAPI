@@ -98,7 +98,8 @@ extern "C"
     {
         if (pipeline)
         {
-            delete pipeline;
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+            delete ptr;
         }
     }
 

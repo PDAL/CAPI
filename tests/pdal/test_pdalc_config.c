@@ -140,7 +140,7 @@ TEST testPDALVersionInfo(void)
         sha1[6] = '\0';
     }
 
-    sprintf(expected + strlen(version), " (git-version: %s)", sha1);
+    snprintf(expected + strlen(version), " (git-version: %s)", sha1);
 
     char fullVersion[64];
     size = PDALFullVersionString(fullVersion, 64);
