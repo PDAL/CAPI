@@ -114,12 +114,12 @@ TEST testPDALVersionInfo(void)
 
     int patch = PDALVersionPatch();
 
-    char expected[64];
-    sprintf(expected, "%d.%d.%d", major, minor, patch);
+    char expected[128];
+    snprintf(expected, "%d.%d.%d", major, minor, patch);
 
-    char version[64];
-    size_t size = PDALVersionString(version, 64);
-    ASSERT(size > 0 && size <= 64);
+    char version[128];
+    size_t size = PDALVersionString(version, 128);
+    ASSERT(size > 0 && size <= 128);
     ASSERT(version[0]);
     ASSERT_STR_EQ(expected, version);
 
