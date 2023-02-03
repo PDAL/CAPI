@@ -59,7 +59,7 @@ extern "C"
 
     PDALPipelinePtr PDALCreatePipeline(const char* json)
     {
-        Pipeline* pipeline = new Pipeline();
+        std::unique_ptr<Pipeline> pipeline = std::make_unique<Pipeline>();
         if (json && std::strlen(json) > 0)
         {
             try
@@ -75,7 +75,6 @@ extern "C"
             catch (const std::exception &e)
             {
                 printf("Could not create pipeline: %s\n%s\n", e.what(), json);
-                delete pipeline;
                 return nullptr;
             }
 
@@ -86,11 +85,10 @@ extern "C"
             catch (const std::exception &e)
             {
                 printf("Error while validating pipeline: %s\n%s\n", e.what(), json);
-                delete pipeline;
                 return nullptr;
             }
 
-            return pipeline;
+            return pipeline.release();
         }
         return nullptr;
     }
