@@ -215,10 +215,9 @@ extern "C"
 
     void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-
         try
         {
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
             if (level < 0 || level > 8)
                 throw pdal_error("log level must be between 0 and 8!");
 
@@ -229,14 +228,16 @@ extern "C"
         {
             printf("Found error while setting log level: %s\n", e.what());
         }
-
     }
 
     int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+        if (! pipeline)
+            return 0;
+
         try
         {
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
             return (ptr)
                    ? static_cast<int>(
                        ptr->manager->log()->getLevel()
@@ -251,100 +252,88 @@ extern "C"
 
     int64_t PDALExecutePipeline(PDALPipelinePtr pipeline)
     {
-        int64_t result = 0;
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+        if (! pipeline)
+            return 0;
 
-        if (ptr)
+        try
         {
-            try
-            {
-                result = ptr->manager->execute();
-                ptr->m_executed = true;
-            }
-            catch (const std::exception &e)
-            {
-                printf("Found error while executing pipeline: %s", e.what());
-            }
+            int64_t result;
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+            result = ptr->manager->execute();
+            ptr->m_executed = true;
+            return result;
         }
-        return result;
+        catch (const std::exception &e)
+        {
+            printf("Found error while executing pipeline: %s", e.what());
+            return 0;
+        }
     }
 
     bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+        if (! pipeline)
+            return false;
 
-        if (ptr)
+        try
         {
-            try
-            {
-                PipelineManager::ExecResult exec = ptr->manager->execute(ExecMode::Stream);
-                ptr->m_executed = true;
-                return true;
-            }
-            catch (const std::exception &e)
-            {
-                printf("Found error while executing pipeline: %s", e.what());
-                return false;
-            }
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+            PipelineManager::ExecResult exec = ptr->manager->execute(ExecMode::Stream);
+            ptr->m_executed = true;
+            return true;
         }
-        return false;
+        catch (const std::exception &e)
+        {
+            printf("Found error while executing pipeline: %s", e.what());
+            return false;
+        }
     }
 
     bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+        if (! pipeline)
+            return false;
 
-        if (ptr)
-        {
-            return ptr->manager->pipelineStreamable();
-        }
-        return false;
+        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+        return ptr->manager->pipelineStreamable();
     }
 
 
 
     bool PDALValidatePipeline(PDALPipelinePtr pipeline)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-
-        if (ptr)
+        if (! pipeline)
+            return false;
+        try
         {
-            try
-            {
-                ptr->manager->prepare();
-                return true;
-            }
-            catch (const std::exception &e)
-            {
-                printf("Found error while validating pipeline: %s", e.what());
-                return false;
-            }
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+            ptr->manager->prepare();
+            return true;
         }
-        return false;
+        catch (const std::exception &e)
+        {
+            printf("Found error while validating pipeline: %s", e.what());
+            return false;
+        }
     }
 
     PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline)
     {
-        Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-        pdal::capi::PointViewIterator *views = nullptr;
+        if (! pipeline)
+            return nullptr;
 
-        if (ptr)
+        try
         {
-            try
-            {
-                views = new pdal::capi::PointViewIterator(ptr->manager->views());
-            }
-            catch (const std::exception &e)
-            {
-                printf("Found error while retrieving point views: %s\n", e.what());
-            }
+            Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
+            return new pdal::capi::PointViewIterator(ptr->manager->views());
         }
-
-        return views;
+        catch (const std::exception &e)
+        {
+            printf("Found error while retrieving point views: %s\n", e.what());
+            return nullptr;
+        }
     }
+
 } /* extern c */
-
-
-
 } /* capi */
 } /* pdal */
