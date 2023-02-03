@@ -1,3 +1,22 @@
+# Version 2.2.0
+
+This is a major change to the underlying code to remove the deprecated `pdal::PipelineExecutor` and replace it with `pdal::PipelineManager`.
+
+This version also introduces the following non-breaking changes to the ABI:
+
+- Addition of the following method to allow the consuming app to tell if a pipeline is streamable:
+
+```
+bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline)
+```
+
+- Addition of the following method to allow the consuming application to run a pipeline in streaming mode. If the pipeline is non-streamable it will be silently run in standard mode:
+
+```
+bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline)
+```
+
+
 # Version 2.1.1
 
 Changes to allow compilation with PDAL 2.4.0
