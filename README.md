@@ -7,6 +7,7 @@ pdal-c: PDAL C API
 [![Actions Status](https://github.com/PDAL/CAPI/workflows/Windows%20Build%20Test/badge.svg)](https://github.com/PDAL/CAPI/actions)
 
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pdal-c/badges/version.svg)](https://anaconda.org/conda-forge/pdal-c)
+[![openupm](https://img.shields.io/npm/v/com.virgis.pdal?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.virgis.pdal/)
 
 [//]: # (@endcond)
 
@@ -30,6 +31,10 @@ conda install -c conda-forge pdal-c
 ```
 
 The conda package includes a tool called `test_pdalc`. Run this to confirm that the API configuration is correct and to report on the version of PDAL that the API is connected to.
+
+This interface is suitable for use with C# and with Unity.
+
+There is a [Unity Package Manager (UPM) package for PDAL](https://openupm.com/packages/com.virgis.pdal/) based on this library.
 
 ## Dependencies
 
