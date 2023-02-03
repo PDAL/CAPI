@@ -134,7 +134,6 @@ extern "C"
 
     size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
     {
-        std::cout << "get metadata starts"<< std::endl;
         size_t result = 0;
 
         if (pipeline && metadata && size > 0)
