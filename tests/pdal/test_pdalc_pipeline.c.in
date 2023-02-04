@@ -149,7 +149,7 @@ TEST testPDALGetPipelineAsString(void)
     char json10[10];
     size = PDALGetPipelineAsString(pipeline, json10, 10);
 
-    if (size != 9 )
+    if (size != 9)
     {
         PDALDisposePipeline(pipeline);
         pipeline = NULL;
@@ -220,7 +220,7 @@ TEST testPDALGetPipelineMetadata(void)
     char json10[10];
     size = PDALGetPipelineMetadata(pipeline, json10, 10);
 
-    if (size != 9 )
+    if (size != 9)
     {
         PDALDisposePipeline(pipeline);
         pipeline = NULL;
@@ -284,7 +284,7 @@ TEST testPDALGetPipelineSchema(void)
     char json10[10];
     size = PDALGetPipelineSchema(pipeline, json10, 10);
 
-    if (size != 9 )
+    if (size != 9)
     {
         PDALDisposePipeline(pipeline);
         pipeline = NULL;

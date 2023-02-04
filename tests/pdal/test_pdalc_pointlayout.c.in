@@ -129,14 +129,14 @@ TEST testPDALFindDimType(void)
         success &= (PDALGetDimTypeIdName(expected, name, 64) > 0);
 
         actual = PDALFindDimType(NULL, name);
-        success &= (idUnknown == actual.id); 
+        success &= (idUnknown == actual.id);
         success &= (typeNone == actual.type);
 
         success &= (fabs(1.0 - actual.scale) < tolerance);
         success &= (fabs(actual.offset) < tolerance);
 
         actual = PDALFindDimType(gLayout, name);
-        success &= (expected.id == actual.id); 
+        success &= (expected.id == actual.id);
         success &= (expected.type == actual.type);
 
         success &= (fabs(expected.scale - actual.scale) < tolerance);

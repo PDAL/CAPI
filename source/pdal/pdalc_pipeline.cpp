@@ -167,7 +167,7 @@ extern "C"
             {
                 if (! ptr->m_executed)
                     throw pdal_error("Pipeline has not been executed!");
-                
+
                 std::stringstream strm;
                 MetadataNode meta = ptr->manager->pointTable().layout()->toMetadata();
                 MetadataNode root = meta.clone("schema");
