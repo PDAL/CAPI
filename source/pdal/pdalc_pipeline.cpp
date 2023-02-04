@@ -104,13 +104,9 @@ extern "C"
 
     size_t PDALGetPipelineAsString(PDALPipelinePtr pipeline, char *buffer, size_t size)
     {
-        size_t result = 0;
-
         if (pipeline && buffer && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            buffer[0] =  '\0';
-            buffer[size - 1] = '\0';
 
             try
             {
@@ -119,26 +115,23 @@ extern "C"
 
                 std::stringstream strm;
                 pdal::PipelineWriter::writePipeline(ptr->manager->getStage(), strm);
-                std::strncpy(buffer, strm.str().c_str(), size - 1);
-                result = std::min(strm.str().length(), size);
+                strm.get(buffer, size);
+                return std::min(static_cast<size_t>(strm.gcount()), size);
             }
             catch (const std::exception &e)
             {
                 printf("Found error while retrieving pipeline's string representation: %s\n", e.what());
+                return 0;
             }
         }
-        return result;
+        return 0;
     }
 
     size_t PDALGetPipelineMetadata(PDALPipelinePtr pipeline, char *metadata, size_t size)
     {
-        size_t result = 0;
-
         if (pipeline && metadata && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            metadata[0] =  '\0';
-            metadata[size - 1] = '\0';
 
             try
             {
@@ -148,27 +141,23 @@ extern "C"
                 std::stringstream strm;
                 MetadataNode root = ptr->manager->getMetadata().clone("metadata");
                 pdal::Utils::toJSON(root, strm);
-                std::strncpy(metadata, strm.str().c_str(), size);
-                result = std::min(strm.str().length(), size);
+                strm.get(metadata, size);
+                return std::min(static_cast<size_t>(strm.gcount()), size);
             }
             catch (const std::exception &e)
             {
                 printf("Found error while retrieving pipeline's metadata: %s\n", e.what());
+                return 0;
             }
         }
-        return result;
+        return 0;
     }
 
     size_t PDALGetPipelineSchema(PDALPipelinePtr pipeline, char *schema, size_t size)
     {
-        size_t result = 0;
-
         if (pipeline && schema && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-
-            schema[0] =  '\0';
-            schema[size - 1] = '\0';
 
             try
             {
@@ -176,41 +165,38 @@ extern "C"
                 MetadataNode meta = ptr->manager->pointTable().layout()->toMetadata();
                 MetadataNode root = meta.clone("schema");
                 pdal::Utils::toJSON(root, strm);
-                std::strncpy(schema, strm.str().c_str(), size);
-                result = std::min(strm.str().length(), size);
+                strm.get(schema, size);
+                return std::min(static_cast<size_t>(strm.gcount()), size);
             }
             catch (const std::exception &e)
             {
                 printf("Found error while retrieving pipeline's schema: %s\n", e.what());
+                return 0;
             }
 
         }
-        return result;
+        return 0;
     }
 
     size_t PDALGetPipelineLog(PDALPipelinePtr pipeline, char *log, size_t size)
     {
-        size_t result = 0;
-
         if (pipeline && log && size > 0)
         {
             Pipeline *ptr = reinterpret_cast<Pipeline *>(pipeline);
-            log[0] =  '\0';
-            log[size - 1] = '\0';
 
             try
             {
-                std::string s = ptr->logStream.str();
-                std::strncpy(log, s.c_str(), size);
-                result = std::min(s.length(), size);
+                ptr->logStream.get(log, size);
+                return std::min(static_cast<size_t>(ptr->logStream.gcount()), size);
             }
             catch (const std::exception &e)
             {
                 printf("Found error while retrieving pipeline's log: %s\n", e.what());
+                return 0;
             }
         }
 
-        return result;
+        return 0;
     }
 
     void PDALSetPipelineLogLevel(PDALPipelinePtr pipeline, int level)
