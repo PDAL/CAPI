@@ -146,6 +146,23 @@ TEST testPDALGetPipelineAsString(void)
         FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"pipeline\"");
     }
 
+    char json10[10];
+    size = PDALGetPipelineAsString(pipeline, json10, 10);
+
+    if (size != 10 )
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString truncation not working");
+    }
+
+    if (json[0] == '\0')
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString generated a JSON string whose first character is null");
+    }
+
     PDALDisposePipeline(pipeline);
     PASS();
 }
@@ -200,6 +217,16 @@ TEST testPDALGetPipelineMetadata(void)
         FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"schema\"");
     }
 
+    char json10[10];
+    size = PDALGetPipelineMetadata(pipeline, json10, 10);
+
+    if (size != 10 )
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata truncation not working");
+    }
+
     PDALDisposePipeline(pipeline);
     PASS();
 }
@@ -252,6 +279,16 @@ TEST testPDALGetPipelineSchema(void)
         PDALDisposePipeline(pipeline);
         pipeline = NULL;
         FAILm("PDALGetPipelineSchema generated a JSON string whose object name is not \"schema\"");
+    }
+
+    char json10[10];
+    size = PDALGetPipelineSchema(pipeline, json10, 10);
+
+    if (size != 10 )
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineSchema truncation not working");
     }
 
     PDALDisposePipeline(pipeline);

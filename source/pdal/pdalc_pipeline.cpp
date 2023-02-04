@@ -115,8 +115,10 @@ extern "C"
 
                 std::stringstream strm;
                 pdal::PipelineWriter::writePipeline(ptr->manager->getStage(), strm);
-                strm.get(buffer, size);
-                return std::min(static_cast<size_t>(strm.gcount()), size);
+                std::string out = strm.str();
+                if (out.length() > size - 1) out.resize(size - 1);
+                std::strncpy(buffer, out.c_str(), size);
+                return std::min(out.length() + 1, size);
             }
             catch (const std::exception &e)
             {
@@ -141,8 +143,10 @@ extern "C"
                 std::stringstream strm;
                 MetadataNode root = ptr->manager->getMetadata().clone("metadata");
                 pdal::Utils::toJSON(root, strm);
-                strm.get(metadata, size);
-                return std::min(static_cast<size_t>(strm.gcount()), size);
+                std::string out = strm.str();
+                if (out.length() > size - 1) out.resize(size - 1);
+                std::strncpy(metadata, out.c_str(), size);
+                return std::min(out.length() + 1, size);
             }
             catch (const std::exception &e)
             {
@@ -165,8 +169,10 @@ extern "C"
                 MetadataNode meta = ptr->manager->pointTable().layout()->toMetadata();
                 MetadataNode root = meta.clone("schema");
                 pdal::Utils::toJSON(root, strm);
-                strm.get(schema, size);
-                return std::min(static_cast<size_t>(strm.gcount()), size);
+                std::string out = strm.str();
+                if (out.length() > size - 1) out.resize(size - 1);
+                std::strncpy(schema, out.c_str(), size);
+                return std::min(out.length() + 1, size);
             }
             catch (const std::exception &e)
             {
