@@ -118,7 +118,7 @@ extern "C"
                 std::string out = strm.str();
                 if (out.length() > size - 1) out.resize(size - 1);
                 std::strncpy(buffer, out.c_str(), size);
-                return std::min(out.length() + 1, size);
+                return strlen(out.c_str());
             }
             catch (const std::exception &e)
             {
@@ -146,7 +146,7 @@ extern "C"
                 std::string out = strm.str();
                 if (out.length() > size - 1) out.resize(size - 1);
                 std::strncpy(metadata, out.c_str(), size);
-                return std::min(out.length() + 1, size);
+                return strlen(out.c_str());
             }
             catch (const std::exception &e)
             {
@@ -165,6 +165,9 @@ extern "C"
 
             try
             {
+                if (! ptr->m_executed)
+                    throw pdal_error("Pipeline has not been executed!");
+                
                 std::stringstream strm;
                 MetadataNode meta = ptr->manager->pointTable().layout()->toMetadata();
                 MetadataNode root = meta.clone("schema");
@@ -172,7 +175,7 @@ extern "C"
                 std::string out = strm.str();
                 if (out.length() > size - 1) out.resize(size - 1);
                 std::strncpy(schema, out.c_str(), size);
-                return std::min(out.length() + 1, size);
+                return strlen(out.c_str());
             }
             catch (const std::exception &e)
             {
