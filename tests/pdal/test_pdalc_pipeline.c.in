@@ -146,6 +146,23 @@ TEST testPDALGetPipelineAsString(void)
         FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"pipeline\"");
     }
 
+    char json10[10];
+    size = PDALGetPipelineAsString(pipeline, json10, 10);
+
+    if (size != 9)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString truncation not working");
+    }
+
+    if (json[0] == '\0')
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineAsString generated a JSON string whose first character is null");
+    }
+
     PDALDisposePipeline(pipeline);
     PASS();
 }
@@ -200,6 +217,16 @@ TEST testPDALGetPipelineMetadata(void)
         FAILm("PDALGetPipelineMetadata generated a JSON string whose object name is not \"schema\"");
     }
 
+    char json10[10];
+    size = PDALGetPipelineMetadata(pipeline, json10, 10);
+
+    if (size != 9)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineMetadata truncation not working");
+    }
+
     PDALDisposePipeline(pipeline);
     PASS();
 }
@@ -252,6 +279,16 @@ TEST testPDALGetPipelineSchema(void)
         PDALDisposePipeline(pipeline);
         pipeline = NULL;
         FAILm("PDALGetPipelineSchema generated a JSON string whose object name is not \"schema\"");
+    }
+
+    char json10[10];
+    size = PDALGetPipelineSchema(pipeline, json10, 10);
+
+    if (size != 9)
+    {
+        PDALDisposePipeline(pipeline);
+        pipeline = NULL;
+        FAILm("PDALGetPipelineSchema truncation not working");
     }
 
     PDALDisposePipeline(pipeline);
@@ -344,6 +381,31 @@ TEST testPDALExecutePipeline(void)
     PASS();
 }
 
+TEST testPDALExecutePipelineStream(void)
+{
+    PDALPipelinePtr pipeline = PDALCreatePipeline(gPipelineJson);
+    ASSERT(pipeline);
+
+    bool isStreamable = PDALPipelineIsStreamable(pipeline);
+
+    ASSERT_EQ(isStreamable, true);
+
+    bool result = PDALExecutePipelineAsStream(pipeline);
+
+    ASSERT_EQ(result, true);
+
+    result = PDALExecutePipelineAsStream(NULL);
+
+    ASSERT_EQ(result, false);
+
+    isStreamable = PDALPipelineIsStreamable(NULL);
+
+    ASSERT_EQ(isStreamable, false);
+
+    PDALDisposePipeline(pipeline);
+    PASS();
+}
+
 TEST testPDALValidatePipeline(void)
 {
     bool valid = PDALValidatePipeline(NULL);
@@ -369,6 +431,7 @@ GREATEST_SUITE(test_pdalc_pipeline)
 
     RUN_TEST(testPDALCreateAndDisposePipeline);
     RUN_TEST(testPDALExecutePipeline);
+    RUN_TEST(testPDALExecutePipelineStream);
     RUN_TEST(testPDALGetSetPipelineLog);
     RUN_TEST(testPDALGetPipelineAsString);
     RUN_TEST(testPDALGetPipelineMetadata);

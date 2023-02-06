@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2019, Simverge Software LLC. All rights reserved.
+ * Copyright (c) 2019, Simverge Software LLC & Runette Software. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following
@@ -32,6 +32,7 @@
 
 #include "pdalc_forward.h"
 
+
 /**
  * @file pdalc_pipeline.h
  * Functions to launch and inspect the results of a PDAL pipeline.
@@ -45,6 +46,7 @@ namespace capi
 {
 extern "C"
 {
+
 #else
 #include <stdbool.h> // for bool
 #include <stddef.h> // for size_t
@@ -135,6 +137,22 @@ PDALC_API int PDALGetPipelineLogLevel(PDALPipelinePtr pipeline);
 PDALC_API int64_t PDALExecutePipeline(PDALPipelinePtr pipeline);
 
 /**
+ * Executes a pipeline as a streamable pipeline. Will run as non-streamed pipeline if the pipeline is not streamable.
+ *
+ * @param pipeline The pipeline
+ * @return true for success
+ */
+PDALC_API bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline);
+
+/**
+ * Determines if a pipeline is streamable
+ *
+ * @param pipeline The pipeline
+ * @return Whether the pipeline is streamable
+ */
+PDALC_API bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline);
+
+/**
  * Validates a pipeline.
  *
  * @param pipeline The pipeline
@@ -156,8 +174,8 @@ PDALC_API PDALPointViewIteratorPtr PDALGetPointViews(PDALPipelinePtr pipeline);
 
 #ifdef __cplusplus
 
-}
-}
-}
+} /* extern C */
+} /* capi*/
+} /* pdal*/
 #endif /* _cplusplus */
 #endif /* PDALC_PIPELINE_H */

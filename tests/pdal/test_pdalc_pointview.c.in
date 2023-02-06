@@ -166,7 +166,7 @@ TEST testPDALGetPointViewSize(void)
     PDALDisposePointView(view);
     ASSERT(size > 0);
 
-    
+
     PASS();
 }
 
@@ -189,7 +189,7 @@ TEST testPDALGetMeshSize(void)
     PDALDisposePointView(view);
     ASSERT(size == 2114);
 
-    
+
     PASS();
 }
 
@@ -538,7 +538,7 @@ TEST testPDALGetPackedPoint(void)
 
             size_t expected = (hasView && hasDims && hasBuffer ? layoutPointSize : 0);
             size_t actual = PDALGetPackedPoint(
-                hasView ? view : NULL, hasDims ? dims : NULL, i, hasBuffer ? buffer : NULL);
+                                hasView ? view : NULL, hasDims ? dims : NULL, i, hasBuffer ? buffer : NULL);
 
             if (expected != actual)
             {

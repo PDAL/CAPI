@@ -32,6 +32,7 @@
 
 #include "pdalc_forward.h"
 
+
 /**
  * @file pdalc_config.h
  * Functions to retrieve PDAL version and configuration information.
