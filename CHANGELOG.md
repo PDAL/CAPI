@@ -16,6 +16,7 @@ bool PDALPipelineIsStreamable(PDALPipelinePtr pipeline)
 bool PDALExecutePipelineAsStream(PDALPipelinePtr pipeline)
 ```
 
+NOTE: The methods that return strings have beeen slightly modified to guarantee a null terminated string return and that the length returned is that which would be returned by `strlen`. This may mean that there are small changes in the return value between version 2.2.0 and previous versions.
 
 # Version 2.1.1
 
