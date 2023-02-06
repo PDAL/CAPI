@@ -25,21 +25,7 @@
 var NAVTREE =
 [
   [ "pdal-c", "index.html", [
-    [ "pdal-c: PDAL C API", "index.html", [
-      [ "Basics", "index.html#autotoc_md0", null ],
-      [ "Documentation", "index.html#autotoc_md1", null ],
-      [ "Installation", "index.html#autotoc_md2", [
-        [ "Dependencies", "index.html#autotoc_md3", null ]
-      ] ],
-      [ "Usage", "index.html#autotoc_md4", [
-        [ "Example C# Program", "index.html#autotoc_md5", null ]
-      ] ],
-      [ "For Developers", "index.html#autotoc_md6", [
-        [ "Build on Windows", "index.html#autotoc_md7", null ],
-        [ "Build on Linux and Mac", "index.html#autotoc_md8", null ],
-        [ "Code Style", "index.html#autotoc_md9", null ]
-      ] ]
-    ] ],
+    [ "pdal-c: PDAL C API", "index.html", "index" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
