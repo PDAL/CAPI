@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['offset_0',['offset',['../struct_p_d_a_l_dim_type.html#a0af425fc25a644d8915222b393264911',1,'PDALDimType']]]
+  ['basics_0',['Basics',['../index.html#autotoc_md0',1,'']]],
+  ['build_20on_20linux_20and_20mac_1',['Build on Linux and Mac',['../index.html#autotoc_md8',1,'']]],
+  ['build_20on_20windows_2',['Build on Windows',['../index.html#autotoc_md7',1,'']]]
 ];

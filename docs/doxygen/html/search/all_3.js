@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['readme_2emd_0',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]]
+  ['dependencies_0',['Dependencies',['../index.html#autotoc_md3',1,'']]],
+  ['developers_1',['For Developers',['../index.html#autotoc_md6',1,'']]],
+  ['documentation_2',['Documentation',['../index.html#autotoc_md1',1,'']]]
 ];
