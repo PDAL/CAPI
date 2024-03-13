@@ -1,5 +1,7 @@
 set(TARGET pdalc)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
 find_package(PDAL REQUIRED CONFIG)
 message(STATUS "Found PDAL ${PDAL_VERSION}")
 
@@ -38,7 +40,7 @@ include_directories(
 
 add_definitions(${PDAL_DEFINITIONS})
 
-add_library(${TARGET} SHARED ${SOURCES} ${HEADERS})
+add_library(${TARGET} ${SOURCES} ${HEADERS})
 
 string(TOUPPER "${TARGET}_BUILD_DLL" BUILD_SYMBOL)
 
