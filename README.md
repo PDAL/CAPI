@@ -136,6 +136,8 @@ make
 make install
 ```
 
+Setting `-DBUILD_SHARED_LIBS=OFF` enables the generation of a static (`.a`) library. 
+
 ## Code Style
 
 This project enforces the PDAL code styles, which can checked as follows :
