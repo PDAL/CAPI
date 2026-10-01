@@ -45,6 +45,8 @@
  * Forward declarations for the PDAL C API.
  */
 
+#include <stdint.h> // for uint32_t, uint64_t
+
 #ifdef __cplusplus
 #include <memory>
 #include <set>
@@ -70,9 +72,6 @@ using DimTypeList = std::unique_ptr<pdal::DimTypeList>;
 
 }
 }
-
-#else
-#include <stdint.h> // for uint64_t
 #endif /* __cplusplus */
 
 typedef struct PDALDimType PDALDimType;
